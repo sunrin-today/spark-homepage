@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function AboutPage() {
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -44,16 +45,13 @@ export default function AboutPage() {
         onClick={() => window.history.back()}
         aria-label="뒤로가기"
       >
-        <svg
-          width="26"
-          height="26"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
+        <Image
+          src="/icons/back.svg"
+          alt="뒤로가기"
+          width={24}
+          height={24}
+          className="mix-blend-overlay !opacity-60" // TODO: 반투명하게 처리 안 되는 오류 수정
+        />
       </button>
       <div className="flex items-center justify-center h-full px-8">
         <div className="flex items-center justify-center gap-16 max-w-6xl w-full">
@@ -67,7 +65,13 @@ export default function AboutPage() {
               width: "420px",
             }}
           >
-            <img src="/logo/logo.svg" alt="SPARK!" className="w-full" />
+            <Image
+              src="/logo/logo.svg"
+              alt="SPARK!"
+              width={200}
+              height={200}
+              className="w-full"
+            />
           </div>
 
           <div
