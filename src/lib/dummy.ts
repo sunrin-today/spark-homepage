@@ -11,6 +11,18 @@ export const imgs: string[] = [
     "https://placehold.co/347x462",
     "https://placehold.co/347x462",
 ]
+export const lostImgs: string[] = [
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+    "https://placehold.co/365x365",
+]
 export const otherEvents : Event[] = [
     {
         id: "1001",

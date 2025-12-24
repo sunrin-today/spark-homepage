@@ -8,11 +8,6 @@ export const EventItem = ({event}: {event: Event}) => {
                 <Image src={ "https://placehold.co/150x150"} unoptimized width={315} height={150} alt="event image"
                 className="rounded-[20px] aspect-[5/3] bg-gray"
                 />
-                <div className="absolute top-0 left-0 w-full h-full">
-                
-                    <button>E</button>
-                    <button>X</button>
-                </div>
             </div>
             <div className="gap-1">
                 <h4 className=" text-lg text-black w-full">{event.name ? event.name : "제목 없음"}</h4>
