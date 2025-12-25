@@ -3,7 +3,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getPageColor } from "@/utils/color";
 const NAV_ITEMS = [
-  { href: "/search", label: "검색", icon: "/search.svg" },
+  { href: "/search", label: "검색", icon: "/icons/search.svg" },
   { href: "/about", label: "학생회 서비스"},
   { href: "/schedule", label: "일정"  },
   { href: "/events", label: "이벤트" },
@@ -14,7 +14,7 @@ export const Header = () => {
     const color = getPageColor(path);
     console.log(color);
     return (
-        <header className="sticky flex space-between h-[64px] top-0 left-0 right-0 justify-between items-center px-[50px] py-[5px] z-50">
+        <header className="fixed flex space-between h-[64px] top-0 left-0 right-0 justify-between items-center px-[50px] py-[5px] z-50">
             <Link href="/about">
                 <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
             </Link>
