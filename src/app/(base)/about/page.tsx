@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { ChevronLeft } from "lucide-react";
+import AboutBackground from "@/components/about/AboutBackgroud";
 
 export default function AboutPage() {
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -15,44 +17,16 @@ export default function AboutPage() {
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
-      {/* 피그마에 나와있는 색상대로 하면 보기보다 연해서 살짝 더 진한 색상 사용함 */}
-      <div
-        className="absolute inset-0 -z-30"
-        style={{
-          background:
-            "linear-gradient(135deg, #FFE58A 0%, #FFB06A 40%, #FF785A 65%, #FF4A4A 100%)",
-        }}
-      />
-      {/* 도트 */}
-      <div
-        className="absolute inset-0 -z-20 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(circle, rgba(255, 90, 90, 0.28) 2px, transparent 2px),
-            radial-gradient(circle, rgba(255, 90, 90, 0.28) 2px, transparent 2px)
-          `,
-          backgroundSize: "18px 18px",
-          backgroundPosition: "0 0, 9px 9px",
-          maskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0) 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.22) 55%, rgba(0,0,0,0) 100%)",
-        }}
-      />
+      <AboutBackground />
 
       <button
-        className="absolute z-40 text-white hover:opacity-80 transition-opacity top-10 left-12 md:top-12 md:left-14"
+        className="absolute z-40 text-white hover:opacity-80 transition-opacity top-14 left-12 md:top-16 md:left-16"
         onClick={() => window.history.back()}
         aria-label="뒤로가기"
       >
-        <Image
-          src="/icons/back.svg"
-          alt="뒤로가기"
-          width={24}
-          height={24}
-          className="mix-blend-overlay !opacity-60" // TODO: 반투명하게 처리 안 되는 오류 수정
-        />
+        <ChevronLeft size={24} className="text-[#0d0d0d] opacity-60" />
       </button>
+
       <div className="flex items-center justify-center h-full px-8">
         <div className="flex items-center justify-center gap-16 max-w-6xl w-full">
           <div
