@@ -63,12 +63,17 @@ export default function Weather() {
       const diffData = await diffRes.json();
 
       const now = new Date();
+      const currentDate = now.getDate();
       const currentHour = now.getHours();
+      
+      const currentDateTime = parseInt(
+        `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(currentDate).padStart(2, '0')}${String(currentHour).padStart(2, '0')}`
+      );
       
       const filteredForecast = forecastData.data
         .filter((item: APIForecastItem) => {
-          const fcstHour = parseInt(item.fcstTime.substring(0, 2));
-          return fcstHour >= currentHour && fcstHour < currentHour + 5;
+          const fcstDateTime = parseInt(item.fcstDate + item.fcstTime.substring(0, 2));
+          return fcstDateTime >= currentDateTime;
         })
         .slice(0, 5)
         .map((item: APIForecastItem) => ({
