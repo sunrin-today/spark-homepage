@@ -28,15 +28,13 @@ export default function HomePage() {
           <AnnouncementPreview />
         </div>
 
-        <div className="grid grid-cols-7 gap-6 mb-12">
+        <div className="grid grid-cols-5 gap-6 mb-12">
           <div className="col-span-2 flex flex-col">
             <h3 className="font-bold text-xl mb-4">날씨</h3>
-            <div className="flex-1">
-              <Weather />
-            </div>
+            <Weather />
           </div>
 
-          <div className="col-span-5 flex flex-col">
+          {/* <div className="col-span-5 flex flex-col">
             <h3 className="font-bold text-xl mb-4">학생회 서비스</h3>
 
             <div className="bg-[#eee] rounded-[28px] p-8 flex-1 flex items-center">
@@ -61,7 +59,7 @@ export default function HomePage() {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <WeeklySchedule schedules={dummySchedules} />
