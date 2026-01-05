@@ -39,7 +39,7 @@ export default function AnnouncementPreview({
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-xl">공지사항</h3>
+        <h3 className="font-semi-bold text-xl">공지사항</h3>
         <Link
           href="/announcements"
           className="text-sm text-gray-500 hover:text-gray-700"

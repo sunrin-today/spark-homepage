@@ -30,7 +30,7 @@ export default function TodayMenu() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-xl">급식</h3>
+        <h3 className="font-semi-bold text-xl">급식</h3>
       </div>
 
       <div className="bg-white rounded-[20px] p-6 border border-[#EEE] flex-1">

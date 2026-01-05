@@ -21,7 +21,7 @@ export default function WeeklySchedule({ schedules }: WeeklyScheduleProps) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-xl">일정표</h3>
+        <h3 className="font-semi-bold text-xl">일정표</h3>
 
         <button className="px-4 py-2 text-sm font-medium hover:bg-gray-100 rounded transition-colors">
           자세히보기 +
