@@ -75,7 +75,7 @@ export default function Weather() {
           time: `${parseInt(item.fcstTime.substring(0, 2))}시`,
           temp: item.fcstValue,
           state: item.state,
-          icon: getWeatherIcon(item.state),
+          icon: item.state,
         }));
 
       setWeatherData({
@@ -93,18 +93,6 @@ export default function Weather() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getWeatherIcon = (state: string): string => {
-    const stateMap: Record<string, string> = {
-      맑음: "sunny",
-      구름많음: "cloudy",
-      흐림: "cloudy",
-      비: "rainy",
-      눈: "snowy",
-      "비/눈": "rainy",
-    };
-    return stateMap[state] || "cloudy";
   };
 
   const getTempDiffDescription = () => {
@@ -165,7 +153,7 @@ export default function Weather() {
       {/* 현재 날씨 */}
       <div className="flex items-center gap-8">
         <Image
-          src={`/weather-icons/${getWeatherIcon(weatherData.current.state)}.svg`}
+          src={`/weather-icons/${weatherData.current.state}.svg`}
           alt={weatherData.current.state}
           width={108}
           height={108}

@@ -40,19 +40,19 @@ export default function HomePage() {
                   title="월간 분실물함"
                   description="해당 서비스를 이용하여 잃어버린 물건을 찾아보세요!"
                   href="/losts"
-                  iconSrc="/icons/lost_box.svg"
+                  iconSrc="/example-image/event1.png"
                 />
                 <ServiceCard
                   title="충전기 대여"
                   description="학생회에서 충전기를 대여해드립니다!"
                   href="/charger"
-                  iconSrc="/icons/charger.svg"
+                  iconSrc="/example-image/event1.png"
                 />
                 <ServiceCard
                   title="소회의실 대여"
                   description="학생회에서 소회의실을 대여해드립니다!"
                   href="/conference"
-                  iconSrc="/icons/conforence_room.svg"
+                  iconSrc="/example-image/event1.png "
                 />
               </div>
             </div>
