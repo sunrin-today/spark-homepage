@@ -21,36 +21,55 @@ export default function EventDetail() {
         acquisitionDate : "2023-08-01",
         acquisitionPlace : "1호관 복도",
     };
+    const handleApi = async () => {
+        try {
+            const response = await fetch("http://13.209.189.170/api/notice");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response;
+            console.log('Fetched data:', data);
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error; // Re-throw to allow calling code to handle the error
+        }
+    }
     return (
         <div className="flex flex-col items-center justify-center">
-            <LostInfo lost={lost}/>
             
-            <ul className='
-                    flex gap-3 list-none max-w-[1552px] border-t-2 border-lightgray pt-[110px] mt-[135px]
-                    snap-x snap-mandatory overflow-x-auto border-b-2
-                '>
-                    {
+            <div className="flex flex-col items-center max-w-[1552px] p-20">
+                <LostInfo lost={lost}/>
                 
-                    lost.detailImages.map((image, index) => (
-                        <Image className="snap-start w-[365px] h-[365px] object-cover" key={index} src={image} alt="LostDetailImage" width={365} height={365} unoptimized={true} />
-                    ))
-                }
-            </ul>
-
-            <div className='
-                    flex flex-col max-w-[1552px] gap-[22px]
-                    pt-[160px] mb-[176px] mt-[263px] border-t-2 border-lightgray
-                ' >
-                
-                <ul className="list-none flex gap-[30px] overflow-auto">
-                    {
-                        lostDummy.map((lost, index) => (
-                            <Link href={`/lost/${lost.id}`} key={lost.id}>   
-                                <LostItem key={lost.id} lost={lost} />
-                            </Link>
+                <ul className='
+                        flex gap-3 list-none border-t-2 border-lightgray pt-[110px] mt-[135px]
+                        snap-x snap-mandatory overflow-x-auto border-b-2
+                    '>
+                        {
+                    
+                        lost.detailImages.map((image, index) => (
+                            <Image className="snap-start w-[365px] h-[365px] object-cover" key={index} src={image} alt="LostDetailImage" width={365} height={365} unoptimized={true} />
                         ))
                     }
                 </ul>
+
+                <div className='
+                        flex flex-col gap-[22px] max-w-[1552px]
+                        pt-[160px] mb-[176px] mt-[263px] border-t-2 border-lightgray
+                    ' >
+                    
+                    <ul className="list-none flex gap-[30px] overflow-auto">
+                        {   lostDummy && ( 
+                                lostDummy.map((lost, index) => (
+                                    <Link href={`/lost/${lost.id}`} key={lost.id}>   
+                                        <LostItem key={lost.id} lost={lost} />
+                                    </Link>
+                                    )
+                                )
+                            )
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     )

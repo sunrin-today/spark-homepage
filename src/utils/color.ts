@@ -1,23 +1,24 @@
-export function getPageColor(path: string): string {
+export type PageColor = 'main' | 'white' | 'black';
+
+export function getPageColor(path: string): PageColor {
   const cleanPath = path.split('?')[0].split('#')[0];
   
-  const colorMap: { [key: string]: string } = {
+  const colorMap: Record<string, PageColor> = {
     '/': 'white', 
-    '/charger' : 'black',
-    '/losts' : 'black',
-    '/miniroom' : 'black'
+    '/charger': 'black',
+    '/losts': 'black',
+    '/miniroom': 'black'
   };
 
   const matchedPath = Object.keys(colorMap).find(key => 
     cleanPath === key || cleanPath.startsWith(`${key}/`)
   );
 
-  return matchedPath ? colorMap[matchedPath] : 'main'; 
+  return matchedPath ? colorMap[matchedPath] : 'main';
 }
 
-
-// (auth)
-//
-//
-// (base)
-//
+export const textColorMap = {
+  main: "text-main",
+  white: "text-white",
+  black: "text-black",
+} as const;

@@ -7,6 +7,7 @@ import { DetailImageList } from "@/components/events/DetailImageList"
 import { otherEvents } from "@/lib/dummy"
 import {EventItem} from "@/components/events/EventItem"
 import Link from "next/link"
+import { ImageList } from "@/components/ui/list/ImageList"
 export default function EventDetail() {
     const { eventId } = useParams()
     console.log(eventId);
@@ -23,31 +24,22 @@ export default function EventDetail() {
             detailImages: ["https://placehold.co/150x150", "https://placehold.co/150x150", "https://placehold.co/150x150"],
         }
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4">
             <EventInfo event={event}/>
-            {/* <DetailImageList imgs={imgs}/>? */}
+
+            <ImageList items={event.detailImages} />
             
-            <ul className='
-                    flex gap-3 list-none max-w-[1552px] border-t-2 border-lightgray pt-[110px] mt-[135px]
-                    snap-x snap-mandatory overflow-x-auto border-b-2
-                '>
-                    {
-                
-                    imgs.map((image, index) => (
-                        <img className="snap-start" src={image} alt="" />
-                    ))
-                }
-            </ul>
             <div className='flex flex-col max-w-[1552px] gap-[22px]
-                            pt-[160px] mb-[176px] mt-[263px] border-t-2 border-lightgray' >
-                <div className="flex items-center    justify-between">
+                            pt-[160px] mb-[176px] mt-[263px] border-t-2 border-lightgray
+                            snap-x snap-mandatory overflow-x-auto' >
+                <div className="flex items-center justify-between">
                     <h4 className="text-2xl">다른 이벤트 구경하기</h4>
                     <p className="text-lg">자세히 보기 +</p>
                 </div>
                 <ul className="list-none flex gap-[30px] overflow-auto">
                     {
                         otherEvents.map((event, index) => (
-                            <Link href={`/events/${event.id}`} key={event.id}>   
+                            <Link href={`/events/${event.id}`} key={event.id} className="snap-start">   
                                 <EventItem key={event.id} event={event} />
                             </Link>
                         ))

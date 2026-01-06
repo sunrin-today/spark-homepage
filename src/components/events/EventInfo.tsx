@@ -5,7 +5,7 @@ export const EventInfo = ({event}: {event: Event}) => {
     
 
     return (
-        <div className="w-[1024px] flex items-center gap-8">
+        <div className="w-full max-w-4xl mx-auto flex items-center gap-8">
             <Image src={event.thumbnail} unoptimized width={629} height={391} alt="event image" className="rounded-[20px]"/>
             <div className="flex flex-col">
                 <div className="flex flex-col gap-3 pb-[13px] text-black">

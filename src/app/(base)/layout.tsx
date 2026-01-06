@@ -8,5 +8,5 @@ export default function BaseLayout({
     return <div className="w-full">
         <Header />
         {children}
-        </div>;
+    </div>;
 }

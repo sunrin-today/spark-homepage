@@ -5,9 +5,10 @@ export const LostInfo = ({lost}: {lost: Lost}) => {
     
 
     return (
-        <div className="w-[1024px] flex items-center gap-8">
+        <div className='max-w-[1024px] flex items-center gap-8
+                        md:flex-row flex-col'>
             <Image src={lost.thumbnail} unoptimized width={500} height={500} alt="lost image" className="rounded-[20px]"/>
-            <div className="flex flex-col">
+            <div className="flex flex-colw">
                 <div className="flex flex-col gap-3 pb-[13px] text-black">
                     <h4 className="font-semibold text-[32px] text-black">{lost.name}</h4>
                     <div className="flex gap-[11px] items-center">
