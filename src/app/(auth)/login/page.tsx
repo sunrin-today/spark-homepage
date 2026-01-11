@@ -18,11 +18,10 @@ export default function LoginPage() {
       setIsLoading(true);
       setError(null);
 
-      await login();
+      // login()에서 직접 받음
+      const token = await login();
 
-      // 로그인 성공 시 사용자 정보 확인
-      const token = localStorage.getItem("firebase_auth_token");
-      console.log("저장된 토큰:", token);
+      console.log("받은 토큰:", token);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/me`,

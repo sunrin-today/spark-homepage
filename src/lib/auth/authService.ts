@@ -16,7 +16,7 @@ googleProvider.setCustomParameters({
 });
 
 // Google 로그인
-export async function signInWithGoogle(): Promise<User> {
+export async function signInWithGoogle(): Promise<{ user: User; token: string }> {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
@@ -27,7 +27,7 @@ export async function signInWithGoogle(): Promise<User> {
     // localStorage에 토큰 저장
     saveTokenToLocalStorage(idToken);
 
-    return user;
+    return { user, token: idToken }; // 토큰도 함께 반환
   } catch (error: any) {
     console.error("Google 로그인 실패:", error);
     throw new Error(error.message || "로그인에 실패했습니다.");
