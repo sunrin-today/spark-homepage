@@ -1,35 +1,43 @@
-import { Notice } from '@/types/notice';
-// import apiClient from './api';
-import { noticeDummyData, getNoticeById } from '@/lib/noticeDummy';
+import { Notice, NoticeListResponse, NoticeDetailResponse } from '@/types/notice';
+import api from './api';
+
+// api 응답을 ui 타입으로 변환
+const transformNoticeFromApi = (apiNotice: NoticeDetailResponse): Notice => {
+  return {
+    id: apiNotice.id,
+    title: apiNotice.title,
+    content: apiNotice.content,
+    author: 'Admin', // api에 author 필드가 없어서 일단 기본값 설정
+    createdAt: apiNotice.createdAt,
+    updatedAt: apiNotice.updatedAt,
+    viewCount: apiNotice.viewCount,
+    views: apiNotice.viewCount,
+    images: apiNotice.images,
+    imageUrl: apiNotice.images,
+  };
+};
 
 export const noticesApi = {
   getNotices: async (): Promise<Notice[]> => {
-    // const response = await apiClient.get('/api/notice');
-    // const data = response.data;
-    // return Array.isArray(data) ? data : (data.notices || []);
-    
-    // 더미 데이터
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(noticeDummyData);
-      }, 500);
-    });
+    try {
+      const response = await api.get<NoticeListResponse>('/api/notice');
+      const data = response.data;
+      
+      // items 배열을 ui 타입으로 변환
+      return data.items.map(transformNoticeFromApi);
+    } catch (error) {
+      console.error('Failed to fetch notices:', error);
+      throw error;
+    }
   },
 
   getNoticeById: async (id: string): Promise<Notice> => {
-    // const response = await apiClient.get(`/api/notice/${id}`);
-    // return response.data;
-    
-    // 더미 데이터
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const notice = getNoticeById(id);
-        if (notice) {
-          resolve(notice);
-        } else {
-          reject(new Error('Notice not found'));
-        }
-      }, 500);
-    });
+    try {
+      const response = await api.get<NoticeDetailResponse>(`/api/notice/${id}`);
+      return transformNoticeFromApi(response.data);
+    } catch (error) {
+      console.error('Failed to fetch notice:', error);
+      throw error;
+    }
   },
 };
