@@ -1,6 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import TodayMenu from "@/components/home/TodayMenu";
-import AnnouncementPreview from "@/components/home/AnnouncementPreview";
+import NoticePreview from "@/components/home/NoticePreview";
 import Weather from "@/components/home/Weather";
 import ServiceCard from "@/components/home/ServiceCard";
 import WeeklySchedule from "@/components/home/WeeklySchedule";
@@ -25,7 +25,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <AnnouncementPreview />
+          <NoticePreview />
         </div>
 
         <div className="grid grid-cols-7 gap-6 mb-12">
