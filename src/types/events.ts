@@ -1,3 +1,5 @@
+import { ImageItem } from "./common";
+
 export interface Event {
     id: string;
     name: string;
@@ -5,14 +7,6 @@ export interface Event {
     startedAt: string;
     deadline: string;
     link: string;
-    thumbnail: string;
-    detailImages: string[];
-}
-
-
-export interface EventListResponse {
-  items: Event[];
-  total: number;
-  currentPage: number;
-  totalPages: number;
+    thumbnail: ImageItem;
+    detailImages: ImageItem[];
 }

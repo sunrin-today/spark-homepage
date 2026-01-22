@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function BackButton() {
@@ -8,8 +9,8 @@ export function BackButton() {
     };
     
     return (
-        <button onClick={handleBack} className="flex justify-start text-2xl">
-        &lt;
+        <button onClick={handleBack} className="flex justify-start w-6 h-6">
+         <ChevronLeft />
         </button>
     );
 }

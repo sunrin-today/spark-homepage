@@ -24,7 +24,7 @@ export default function Losts() {
                     <BackButton/>
                     <div className="w-full flex flex-col gap-[15px]">
                         <h1 className="text-black font-semibold text-left text-4xl w-full">월간 분실물</h1>
-                        <p className="text-[#777777] text-lg">매달 나오는 분실물 목록입니다.매달 나오는 분실물 목록입니다. </p>
+                        <p className="text-[#777777] text-lg">매달 나오는 분실물 목록입니다. </p>
                     </div>
                     {/* TODO : search_bar 컴포넌트화 */}
                     <div className="w-full flex flex-col items-center justify-center gap-[30px] pb-16 border-b-2 border-b-lightgray">

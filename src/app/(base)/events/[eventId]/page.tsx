@@ -1,38 +1,20 @@
 "use client"
 import { useParams } from "next/navigation"
 import { EventInfo } from "@/components/events/EventInfo"
-import { Event } from "@/types/events"
-import { imgs } from "@/lib/dummy"
 import { otherEvents } from "@/lib/dummy"
 import {EventItem} from "@/components/events/EventItem"
 import Link from "next/link"
 import { ImageList } from "@/components/ui/list/ImageList"
-import { useEffect, useState } from "react"
-import { getEventById } from "@/lib/api/events"
-
+import { useEventByIdQuery } from "@/lib/queries/events/queries"
 export default function EventDetail() {
     const { eventId } = useParams()
-    console.log(eventId);
-    const [event, setEvent] = useState<Event | null>(null);
     
-    useEffect(() => {
-        const fetchEvent = async () => {
-            const eventData = await getEventById(eventId as string);
-            console.log(eventData);
-            setEvent(eventData);
-        };
-        
-        fetchEvent();
-    }, [eventId]);
-    if(event == null) {
-        return <div>이벤트를 찾을 수 없습니다.</div>;
-    }
+    const { data: eventDetail } = useEventByIdQuery(eventId!.toString())
     return (
         
         <div className="flex flex-col items-center justify-center p-4">
-            <EventInfo event={event}/>
-
-            <ImageList items={event?.detailImages || []} />
+            {eventDetail && <EventInfo event={eventDetail}/>}
+            {eventDetail && <ImageList items={eventDetail.detailImages.map((image) => image.url) || []} />}
 
             <div className='flex flex-col max-w-[1480px] gap-[22px]
                             pt-[160px] mb-[180px] mt-[256px] border-t-2 border-lightgray

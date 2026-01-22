@@ -11,16 +11,16 @@ export default function Charger() {
     ]
     
     const locations = [
-        {"name": "취업부", "charge": false},
-        {"name": "소회의실", "charge": true},
-        {"name": "빈 교실", "charge": false},
-        {"name": "3-1", "charge": false},
-        {"name": "3-2", "charge": false},
-        {"name": "3-3", "charge": false}
+        {"name": "취업부", "charge": false, "width": "86px", "height": "55px"},
+        {"name": "소회의실", "charge": true, "width": "86px", "height": "55px"},
+        {"name": "빈 교실", "charge": false, "width": "86px", "height": "55px"},
+        {"name": "3-1", "charge": false, "width": "86px", "height": "55px"},
+        {"name": "3-2", "charge": false, "width": "86px", "height": "55px"},
+        {"name": "3-3", "charge": false, "width": "86px", "height": "55px"}
     ]
 
     return (
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="w-full max-w-[1440px] mx-auto py-44 px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl sm:text-4xl font-semibold pb-8 sm:pb-16 border-b-2 border-lightgray">
                 충전기 대여
             </h1>        
@@ -29,7 +29,7 @@ export default function Charger() {
                 <Cautions title="충전기 대여시 주의할 안내사항" items={cautions} />
                 
                 <div className="w-full">
-                    <LocationList locations={locations} title="충전기 대여하러 오는 곳" />
+                    <LocationList width="773px" locations={locations} title="충전기 대여하러 오는 곳" />
                 </div>
             </div>
 
@@ -37,9 +37,6 @@ export default function Charger() {
                 <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-black text-white hover:bg-gray-800 transition-colors">
                     충전기 대여하기
                 </button>
-                <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-lightgray text-gray border border-gray hover:bg-gray-100 transition-colors">
-                    반납하기
-                </button> 
             </div>
         </div>
     )

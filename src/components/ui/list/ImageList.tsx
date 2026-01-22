@@ -1,7 +1,7 @@
 export const ImageList = ({items}: { items: string[] }) => {
     return (
         <ul className='
-                flex gap-3 list-none w-full max-w-[1400px] border-t-2 border-lightgray pt-[70px] mt-[50px]
+                flex gap-3 list-none w-full max-w-[1440px] border-t-2 border-lightgray pt-[70px] mt-[50px]
                 snap-x snap-mandatory overflow-x-auto'>
             {items.length > 0 ? (
                 items.map((item, index) => (
