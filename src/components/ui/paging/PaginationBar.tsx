@@ -4,20 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 
 interface PaginationBarProps {
-  totalItems: number;
-  itemsPerPage?: number;
+  totalPages: number;
   currentPage: number;
   onPageChange: (page: number) => void;
 }
 
 export const PaginationBar = ({
-  totalItems,
-  itemsPerPage = 8,
+  totalPages,
   currentPage,
   onPageChange,
 }: PaginationBarProps) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const maxVisiblePages = 5; // 한 번에 보여줄 페이지 번호의 최대 개수
+
+  const maxVisiblePages = 8; 
 
   // 현재 페이지를 중심으로 보여줄 페이지 번호들을 계산
   const getPageNumbers = () => {
@@ -58,7 +56,7 @@ export const PaginationBar = ({
       </button>
 
       {/* 첫 페이지로 가는 버튼 (생략된 경우) */}
-      {!pageNumbers.includes(1) && (
+      {/* {!pageNumbers.includes(1) && (
         <>
           <button
             onClick={() => onPageChange(1)}
@@ -72,7 +70,7 @@ export const PaginationBar = ({
           </button>
           {!pageNumbers.includes(2) && <span className="px-1">...</span>}
         </>
-      )}
+      )} */}
 
       {/* 페이지 번호들 */}
       {pageNumbers.map((page) => (
@@ -90,7 +88,7 @@ export const PaginationBar = ({
       ))}
 
       {/* 마지막 페이지로 가는 버튼 (생략된 경우) */}
-      {!pageNumbers.includes(totalPages) && (
+      {/* {!pageNumbers.includes(totalPages) && (
         <>
           {!pageNumbers.includes(totalPages - 1) && (
             <span className="px-1">...</span>
@@ -106,7 +104,7 @@ export const PaginationBar = ({
             {totalPages}
           </button>
         </>
-      )}
+      )} */}
 
       {/* 다음 페이지 버튼 */}
       <button

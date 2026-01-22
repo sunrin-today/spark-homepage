@@ -3,19 +3,14 @@ import { useState } from "react";
 import type {Lost} from "@/types/losts"
 import { LostItem } from "@/components/losts/LostItem";
 import Link from "next/link";
-import Image from "next/image";
 import { lostDummy } from "@/lib/lostDummy";
 import { useSearchParams, useRouter } from "next/navigation";
 import { PaginationBar } from "@/components/ui/paging/PaginationBar";
 import { SearchBar } from "@/components/ui/search/SearchBar";
 import { BackButton } from "@/components/ui/button/BackButton";
 export default function Losts() {
-    function lostsSearch() {
-        //api 요청 및 데이터 저장
-        // await fetch("http://localhost:3000/api/losts")
-    }
-    const [losts, setLosts] = useState<Lost[]>(lostDummy);
-    const [inputValue, setInputValue] = useState<string>("");
+    const [searchValue, setSearchValue] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const searchParams = useSearchParams();
     const router = useRouter();
     const page = searchParams.get("page");
@@ -33,7 +28,7 @@ export default function Losts() {
                     </div>
                     {/* TODO : search_bar 컴포넌트화 */}
                     <div className="w-full flex flex-col items-center justify-center gap-[30px] pb-16 border-b-2 border-b-lightgray">
-                        <SearchBar placeholder="물건 검색하기" handleSubmit={lostsSearch} onChangeText={setInputValue}/>
+                        <SearchBar placeholder="물건 검색하기" handleSubmit={() => setSearchQuery(searchValue)} onChangeText={setSearchValue}/>
                     </div>
                    
                 </div>

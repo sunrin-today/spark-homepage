@@ -6,7 +6,7 @@ export const ImageList = ({items}: { items: string[] }) => {
             {items.length > 0 ? (
                 items.map((item, index) => (
                     <li key={index} className="snap-start">
-                        <img src={item} alt={`Item ${index}`} className="w-full h-auto" />
+                        <img src={item} alt={`Item ${index}`} className="w-full h-full" />
                     </li>
                 ))
             ) : (

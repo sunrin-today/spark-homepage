@@ -37,8 +37,7 @@ export default function EventDetail() {
     }
     return (
         <div className="flex flex-col items-center justify-center">
-            
-            <div className="flex flex-col items-center max-w-[1552px] p-20">
+            <div className="flex flex-col items-center max-w-[1480px] p-20">
                 <LostInfo lost={lost}/>
                 
                 <ul className='
@@ -54,8 +53,8 @@ export default function EventDetail() {
                 </ul>
 
                 <div className='
-                        flex flex-col gap-[22px] max-w-[1552px]
-                        pt-[160px] mb-[176px] mt-[263px] border-t-2 border-lightgray
+                        flex flex-col gap-[20px] max-w-[1480px]
+                        pt-[160px] mb-[160px] mt-[256px] border-t-2 border-lightgray
                     ' >
                     
                     <ul className="list-none flex gap-[30px] overflow-auto">
