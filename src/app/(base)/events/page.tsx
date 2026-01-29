@@ -54,18 +54,14 @@ export default function Events() {
                     </div>
                 </div>
                 { events?.items && events.items.length > 0 ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center align-items-center">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center align-items-center">
                         {events?.items.map((event: Event) => (
                             <Link href={`/events/${event.id}`} key={event.id}>   
                                 <EventItem key={event.id} event={event} />
                             </Link>
                         ))}
                     </div>
-                ) : isLoading ? (
-                <div className="text-center text-gray py-12">
-                    <p>이벤트를 불러오는 중입니다...</p>
-                </div>
-                ) : (
+                )  : (
                 <div className="text-center text-gray py-12">
                     <p>이벤트가 없습니다.</p>
                 </div>

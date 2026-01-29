@@ -1,6 +1,8 @@
 "use client"
 import { Cautions } from "@/components/ui/cautions/Cautions"
 import { LocationList } from "@/components/ui/list/LocationList"
+import { useChargerRequestMutation } from "@/lib/queries/charger-request/mutations"
+import { useGetRemainingChargerQuery } from "@/lib/queries/charger/queries"
 
 export default function Charger() {
     const cautions = [
@@ -18,7 +20,15 @@ export default function Charger() {
         {"name": "3-2", "charge": false, "width": "86px", "height": "55px"},
         {"name": "3-3", "charge": false, "width": "86px", "height": "55px"}
     ]
-
+    const { data: remainingChargers } = useGetRemainingChargerQuery()
+    const { mutate: chargerRequestMutate, isPending } = useChargerRequestMutation()
+    const handleChargeRequest = () => {
+        if(!remainingChargers) {
+            alert("현재 대여 가능한 충전기 수량이 부족하여 대여가 불가능합니다")
+            return
+        }
+        chargerRequestMutate()
+    }
     return (
         <div className="w-full max-w-[1440px] mx-auto py-44 px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl sm:text-4xl font-semibold pb-8 sm:pb-16 border-b-2 border-lightgray">
@@ -34,8 +44,10 @@ export default function Charger() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
-                <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-black text-white hover:bg-gray-800 transition-colors">
-                    충전기 대여하기
+                <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-black text-white"
+                    onClick={handleChargeRequest}
+                    disabled={isPending}>
+                    {isPending ? "대여 중..." : "충전기 대여하기"}
                 </button>
             </div>
         </div>

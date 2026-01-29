@@ -55,30 +55,17 @@ export const PaginationBar = ({
         &lt;
       </button>
 
-      {/* 첫 페이지로 가는 버튼 (생략된 경우) */}
-      {/* {!pageNumbers.includes(1) && (
-        <>
-          <button
-            onClick={() => onPageChange(1)}
-            className={`px-3 py-1 rounded-md ${
-              1 === currentPage
-                ? "bg-main text-white"
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            1
-          </button>
-          {!pageNumbers.includes(2) && <span className="px-1">...</span>}
-        </>
-      )} */}
 
       {/* 페이지 번호들 */}
       {pageNumbers.map((page) => (
         <button
           key={page}
           onClick={() => onPageChange(page)}
+          disabled={page > totalPages}
           className={`px-3 py-1 rounded-md ${
-            page === currentPage
+            page > totalPages
+              ? "text-gray-300 cursor-not-allowed bg-gray-100"
+              : page === currentPage
               ? "bg-main text-white"
               : "text-gray-700 hover:bg-gray-100"
           }`}
@@ -86,25 +73,6 @@ export const PaginationBar = ({
           {page}
         </button>
       ))}
-
-      {/* 마지막 페이지로 가는 버튼 (생략된 경우) */}
-      {/* {!pageNumbers.includes(totalPages) && (
-        <>
-          {!pageNumbers.includes(totalPages - 1) && (
-            <span className="px-1">...</span>
-          )}
-          <button
-            onClick={() => onPageChange(totalPages)}
-            className={`px-3 py-1 rounded-md ${
-              totalPages === currentPage
-                ? "bg-main text-white"
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-          >
-            {totalPages}
-          </button>
-        </>
-      )} */}
 
       {/* 다음 페이지 버튼 */}
       <button

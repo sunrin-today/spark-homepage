@@ -1,9 +1,15 @@
+import { ImageItem } from "./common";
+
 export interface Lost {
     id: string;
-    name: string;
+    title: string;
     description: string;
-    thumbnail: string;
-    detailImages: string[];
-    acquisitionDate : string;
-    acquisitionPlace : string;
+    thumbnailUrl: ImageItem;
+    detailImageUrls: ImageItem[];
+    location: string;
+    taker: string;
+    status: string;
+    foundDate: string;
+    createdAt: string;
+    updatedAt: string;
 }

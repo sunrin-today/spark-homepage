@@ -45,7 +45,7 @@ export const SearchBar = ({
                 />
                 <button 
                     type="submit"
-                    className={`bg-${buttonColor}  text-white
+                    className={` text-white bg-main
                             text-[9px] px-[1rem] py-[0.5rem]
                             md:text-[18px] md:px-[2rem] md:py-[1rem]
                             rounded-[100px] whitespace-nowrap`}

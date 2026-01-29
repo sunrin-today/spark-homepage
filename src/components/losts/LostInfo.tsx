@@ -1,29 +1,36 @@
 import { Lost } from "@/types/losts"
 import Image from "next/image"
-import { copyLink, linkToEvent } from "@/utils/events"
+import { copyLink } from "@/utils/events"
+import { Share2 } from "lucide-react"
+import { getDashedFormattedDate } from "@/utils/date"
+
 export const LostInfo = ({lost}: {lost: Lost}) => {
-    
+    const handleFindLost = () => {
+        // TODO: 분실물 찾으러 가기 버튼 클릭 시 처리
+        console.log('분실물 찾으러 가기')
+    }
 
     return (
         <div className='max-w-[1024px] flex items-center gap-8
-                        md:flex-row flex-col'>
-            <Image src={lost.thumbnail} unoptimized width={500} height={500} alt="lost image" className="rounded-[20px]"/>
-            <div className="flex flex-colw">
-                <div className="flex flex-col gap-3 pb-[13px] text-black">
-                    <h4 className="font-semibold text-[32px] text-black">{lost.name}</h4>
+                        lg:flex-row flex-col'>
+            <Image src={lost.thumbnailUrl.url} unoptimized width={500} height={500} alt="lost image" 
+                    className="w-[500px] h-[500px] aspect-square object-cover rounded-[20px]"/>
+            <div className="w-full flex flex-col max-w-[365px]">
+                <div className="w-full flex flex-col gap-3 pb-[13px] text-black">
+                    <h4 className="font-semibold text-[32px] text-black w-full truncate">{lost.title}</h4>
                     <div className="flex gap-[11px] items-center">
-                        <h4 className="text-black">습득일</h4>
-                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{lost.acquisitionDate}</p>
+                        <h4 className="text-black font-semibold">습득일</h4>
+                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{getDashedFormattedDate(lost.foundDate)}</p>
                     </div>
                     <div className="flex gap-[11px] items-center">
-                        <h4 className="text-black">습득장소</h4>
-                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{lost.acquisitionPlace}</p>
+                        <h4 className="text-black font-semibold">습득장소</h4>
+                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{lost.location}</p>
                     </div>
                 </div>
-                <p className="text-xs line-clamp-6 text-black">{lost.description}</p>
-                <div className="pt-[27px] flex items-center gap-[28px]">
-                    <i onClick={() => copyLink()} className="bi bi-share-fill cursor-pointer text-2xl"></i>
-                    <button className="w-[234px] h-[49px] text-white bg-black rounded-[100px] text-[18px]" onClick={() => {}}>분실물 찾으러 가기</button>
+                <p className="w-full text-xs break-words line-clamp-6 text-black">{lost.description}</p>
+                <div className="pt-[27px] flex items-center justify-between px-[7px]">
+                    <Share2 onClick={() => copyLink()} className="cursor-pointe w-8 h-8" />
+                    <button className="w-[234px] h-[49px] text-white bg-black rounded-[100px] text-lg" onClick={handleFindLost}>분실물 찾으러 가기</button>
                 </div>
             </div>
         </div>

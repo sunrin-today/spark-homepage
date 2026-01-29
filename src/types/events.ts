@@ -9,4 +9,5 @@ export interface Event {
     link: string;
     thumbnail: ImageItem;
     detailImages: ImageItem[];
+    isLinkOn: boolean;
 }
