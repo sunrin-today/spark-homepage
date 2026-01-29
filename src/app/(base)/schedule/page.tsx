@@ -3,48 +3,17 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import PageCalendar from '@/components/schedule/PageCalendar';
+import Calendar from '@/components/schedule/Calendar';
 import ScheduleList from '@/components/schedule/ScheduleList';
-import ScheduleDetailPopup from '@/components/schedule/ScheduleDetailPopup';
 import { useAllSchedules } from '@/lib/queries/schedule/queries';
 import { Schedule } from '@/types/schedule';
 
-interface PopupState {
-  schedules: Schedule[];
-  position: { top: number; left: number };
-}
-
 export default function SchedulePage() {
   const router = useRouter();
-  const [selectedDate, setSelectedDate] = useState<Date>();
-  const [popup, setPopup] = useState<PopupState | null>(null);
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
 
+  // API를 통해 전체 스케줄 조회
   const { data: schedules = [], isLoading, isError } = useAllSchedules();
-
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
-  };
-
-  const handleScheduleClick = (schedules: Schedule[], position?: { top: number; left: number }) => {
-    if (position) {
-      setPopup({
-        schedules,
-        position
-      });
-    } else {
-      setPopup({ 
-        schedules: schedules,
-        position: { 
-          top: window.scrollY + window.innerHeight / 2, 
-          left: window.innerWidth / 2 - 140 
-        } 
-      });
-    }
-  };
-
-  const handleClosePopup = () => {
-    setPopup(null);
-  };
 
   if (isError) {
     return (
@@ -59,47 +28,38 @@ export default function SchedulePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
+        {/* 뒤로가기 버튼 */}
         <button
           onClick={() => router.back()}
-          className="mb-8 text-gray-700 hover:text-gray-900"
+          className="mb-6 text-gray-700 hover:text-gray-900"
           aria-label="뒤로가기"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
 
-        <h1 className="text-4xl font-semibold mb-8">일정</h1>
-
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 mt-6">
-          <div className="flex-1 w-full">
-            <PageCalendar
-              selectedDate={selectedDate}
-              onDateSelect={handleDateSelect}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            <Calendar
               schedules={schedules}
-              onScheduleClick={handleScheduleClick}
+              selectedSchedule={selectedSchedule}
+              onScheduleClick={setSelectedSchedule}
             />
           </div>
 
           <div className="flex-shrink-0" style={{ marginTop: "68px" }}>
             <ScheduleList
               schedules={schedules}
-              onScheduleClick={(schedule) => handleScheduleClick([schedule])}
+              onScheduleClick={setSelectedSchedule}
             />
           </div>
         </div>
       </div>
 
-      {popup && (
-        <>
-          <div 
-            className="fixed inset-0 z-40" 
-            onClick={handleClosePopup}
-          />
-          <ScheduleDetailPopup
-            schedules={popup.schedules}
-            position={popup.position}
-            onClose={handleClosePopup}
-          />
-        </>
+      {selectedSchedule && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setSelectedSchedule(null)}
+        />
       )}
     </div>
   );
