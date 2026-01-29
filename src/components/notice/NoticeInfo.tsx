@@ -1,35 +1,30 @@
-import { Notice } from '@/types/notice';
+import { Notice } from "@/types/notice";
 
 interface NoticeInfoProps {
   notice: Notice;
 }
 
-// ISO 날짜를 한국 형식으로 변환시킴
-const formatDate = (isoDate: string): string => {
-  try {
-    const date = new Date(isoDate);
+export default function NoticeInfo({ notice }: NoticeInfoProps) {
+  const authorName = typeof notice.author === 'string' 
+    ? notice.author 
+    : notice.author?.name || '알 수 없음';
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  } catch {
-    return isoDate;
-  }
-};
-
-export default function NoticeInfo({ notice }: NoticeInfoProps) {
-  const formattedDate = formatDate(notice.createdAt);
-  const author = notice.author || 'Admin';
+    return `${year}년 ${month}월 ${day}일`;
+  };
 
   return (
-    <div className="border-b border-gray-200 px-6 py-4">
-      <div className="flex items-start justify-between">
-        <h2 className="text-sm font-normal text-gray-900 flex-1">
-          {notice.title}
-        </h2>
-        <div className="flex items-center gap-6 text-sm text-gray-500 flex-shrink-0 ml-4">
-          <span>{formattedDate}</span>
-          <span>({author})</span>
+    <div className="px-6 py-6 border-b border-gray-200">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold text-black">{notice.title}</h2>
+
+        <div className="flex items-center gap-6 font-regular text-xs text-black">
+          <span>{formatDate(notice.createdAt)}</span>
+          <span>({authorName})</span>
         </div>
       </div>
     </div>

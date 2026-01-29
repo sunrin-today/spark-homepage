@@ -1,15 +1,31 @@
+export interface NoticeImage {
+  url: string;
+  index: number;
+}
+
+export interface NoticeAuthor {
+  id: string;
+  email: string;
+  name: string;
+  avatarUrl: string;
+  studentNumber: number;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Notice {
   id: string;
   title: string;
   content: string;
-  author?: string; // api에 아직 author 필드가 없어서 일단 optional 처리
+  author?: NoticeAuthor;
   createdAt: string;
   updatedAt: string;
   viewCount: number;
-  images?: string;
+  images?: NoticeImage[];
   views?: number;
-  isPinned?: boolean; 
-  imageUrl?: string; 
+  isPinned?: boolean;
+  imageUrls?: string[];
 }
 
 export interface NoticeListResponse {
@@ -24,7 +40,8 @@ export interface NoticeDetailResponse {
   title: string;
   content: string;
   viewCount: number;
-  images?: string;
+  images?: NoticeImage[];
   createdAt: string;
   updatedAt: string;
+  author?: NoticeAuthor;
 }
