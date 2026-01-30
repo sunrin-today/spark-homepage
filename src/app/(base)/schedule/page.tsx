@@ -6,14 +6,26 @@ import { ChevronLeft } from 'lucide-react';
 import Calendar from '@/components/schedule/Calendar';
 import ScheduleList from '@/components/schedule/ScheduleList';
 import { useAllSchedules } from '@/lib/queries/schedule/queries';
-import { Schedule } from '@/types/schedule';
+import { Schedule, CalendarDate } from '@/types/schedule';
 
 export default function SchedulePage() {
   const router = useRouter();
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
   // API를 통해 전체 스케줄 조회
   const { data: schedules = [], isLoading, isError } = useAllSchedules();
+
+  const handleEmptyDateClick = (date: CalendarDate) => {
+    console.log('빈 날짜 클릭:', date);
+    // TODO: 빈 날짜 클릭 시 실행할 로직 추가
+  };
+
+  const handleMonthChange = (year: number, month: number) => {
+    setCurrentYear(year);
+    setCurrentMonth(month);
+  };
 
   if (isError) {
     return (
@@ -43,6 +55,8 @@ export default function SchedulePage() {
               schedules={schedules}
               selectedSchedule={selectedSchedule}
               onScheduleClick={setSelectedSchedule}
+              onEmptyDateClick={handleEmptyDateClick}
+              onMonthChange={handleMonthChange}
             />
           </div>
 

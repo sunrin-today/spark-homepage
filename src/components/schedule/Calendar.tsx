@@ -8,12 +8,18 @@ interface CalendarProps {
   schedules: Schedule[];
   selectedSchedule?: Schedule | null;
   onScheduleClick?: (schedule: Schedule) => void;
+  onEmptyDateClick?: (date: CalendarDate) => void;
+  reservedDates?: string[]; // YYYY-MM-DD 형식의 예약된 날짜 배열
+  onMonthChange?: (year: number, month: number) => void;
 }
 
 export default function Calendar({
   schedules,
   selectedSchedule,
   onScheduleClick,
+  onEmptyDateClick,
+  reservedDates = [],
+  onMonthChange,
 }: CalendarProps) {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -30,20 +36,38 @@ export default function Calendar({
   );
 
   const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentYear(currentYear - 1);
-      setCurrentMonth(11);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
+    const newYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    const newMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    
+    setCurrentYear(newYear);
+    setCurrentMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
   };
 
   const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentYear(currentYear + 1);
-      setCurrentMonth(0);
-    } else {
-      setCurrentMonth(currentMonth + 1);
+    const newYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+    const newMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+    
+    setCurrentYear(newYear);
+    setCurrentMonth(newMonth);
+    onMonthChange?.(newYear, newMonth);
+  };
+
+  // 날짜가 예약돼 있는지 확인
+  const isDateReserved = (dateInfo: CalendarDate): boolean => {
+    const dateStr = `${dateInfo.year}-${String(dateInfo.month + 1).padStart(2, "0")}-${String(dateInfo.date).padStart(2, "0")}`;
+    return reservedDates.includes(dateStr);
+  };
+
+  const handleDateClick = (dateInfo: CalendarDate) => {
+    // 예약된 날짜는 클릭 불가
+    if (isDateReserved(dateInfo)) {
+      return;
+    }
+
+    // 일정이 없는 날짜 클릭시
+    if (dateInfo.schedules.length === 0 && onEmptyDateClick) {
+      onEmptyDateClick(dateInfo);
     }
   };
 
@@ -227,13 +251,23 @@ export default function Calendar({
               <div className="grid grid-cols-7 gap-2">
                 {week.map((dateInfo, dayIndex) => {
                   const isSunday = dayIndex === 0;
+                  const isReserved = isDateReserved(dateInfo);
+                  const hasSchedules = dateInfo.schedules.length > 0;
+                  
                   return (
                     <div
                       key={`${dateInfo.year}-${dateInfo.month}-${dateInfo.date}`}
-                      className="min-h-[120px] rounded-[5px] relative"
+                      className={`min-h-[120px] rounded-[5px] relative ${
+                        !isReserved && !hasSchedules && onEmptyDateClick 
+                          ? "cursor-pointer hover:opacity-80 transition-opacity" 
+                          : isReserved 
+                          ? "cursor-not-allowed" 
+                          : ""
+                      }`}
                       style={{
-                        backgroundColor: isSunday ? "#FFAF99" : "#EEE",
+                        backgroundColor: isReserved ? "#C0C0C0" : isSunday ? "#FFAF99" : "#EEE",
                       }}
+                      onClick={() => handleDateClick(dateInfo)}
                     >
                       <div className="p-2">
                         <div
