@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContexts";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "SPARK! 홈페이지",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

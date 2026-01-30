@@ -1,47 +1,62 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Calendar from "@/components/schedule/Calendar";
-import ScheduleList from "@/components/schedule/ScheduleList";
-import { Schedule } from "@/types/schedule";
-import { dummySchedules } from "@/lib/dummySchedule";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft } from 'lucide-react';
+import Calendar from '@/components/schedule/Calendar';
+import ScheduleList from '@/components/schedule/ScheduleList';
+import { useAllSchedules } from '@/lib/queries/schedule/queries';
+import { Schedule, CalendarDate } from '@/types/schedule';
 
 export default function SchedulePage() {
-  const [schedules] = useState<Schedule[]>(dummySchedules);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
-    null,
-  );
-  const pageRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+  // API를 통해 전체 스케줄 조회
+  const { data: schedules = [], isLoading, isError } = useAllSchedules();
 
-      if (
-        !target.closest("[data-schedule-popup]") &&
-        !target.closest("[data-schedule-bar]") &&
-        !target.closest("[data-schedule-item]")
-      ) {
-        setSelectedSchedule(null);
-      }
-    };
+  const handleEmptyDateClick = (date: CalendarDate) => {
+    console.log('빈 날짜 클릭:', date);
+    // TODO: 빈 날짜 클릭 시 실행할 로직 추가
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
+  const handleMonthChange = (year: number, month: number) => {
+    setCurrentYear(year);
+    setCurrentMonth(month);
+  };
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4 sm:p-8 pt-20 lg:pt-8">
+        <div className="flex items-center justify-center h-96">
+          <p className="text-red-500 text-sm sm:text-base">일정을 불러오는데 실패했습니다.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8" ref={pageRef}>
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
+        {/* 뒤로가기 버튼 */}
+        <button
+          onClick={() => router.back()}
+          className="mb-6 text-gray-700 hover:text-gray-900"
+          aria-label="뒤로가기"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+
         <div className="flex gap-6">
           <div className="flex-1">
             <Calendar
               schedules={schedules}
               selectedSchedule={selectedSchedule}
               onScheduleClick={setSelectedSchedule}
+              onEmptyDateClick={handleEmptyDateClick}
+              onMonthChange={handleMonthChange}
             />
           </div>
 
@@ -53,6 +68,13 @@ export default function SchedulePage() {
           </div>
         </div>
       </div>
+
+      {selectedSchedule && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setSelectedSchedule(null)}
+        />
+      )}
     </div>
   );
 }

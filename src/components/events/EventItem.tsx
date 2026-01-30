@@ -3,18 +3,35 @@ import Image from "next/image"
 export const EventItem = ({event}: {event: Event}) => {
     
     return (
-        <div className="flex flex-col justify-center  w-[315px] gap-3">
+        <div className="flex flex-col justify-center max-w-[315px] gap-3">
             <div className="relative">
-                <Image src={ "https://placehold.co/150x150"} unoptimized width={315} height={150} alt="event image"
-                className="rounded-[20px] aspect-[5/3] bg-gray"
+                <Image src={event.thumbnail.url} unoptimized width={315} height={150} alt="event image"
+                className="rounded-[20px] w-full h-[196px] object-cover bg-gray"
                 />
             </div>
             <div className="gap-1">
-                <h4 className=" text-lg text-black w-full">{event.name ? event.name : "제목 없음"}</h4>
-                <p className="text-xs font-extralight text-black w-full max-h-[32px] overflow-hidden text-ellipsis">{event.description ? event.description : "내용 없음"}</p>
+                <h4 className=" text-lg text-black w-full truncate">{event.name ? event.name : "제목 없음"}</h4>
+                <p className="text-xs font-extralight text-black w-full line-clamp-2">{event.description ? event.description : "내용 없음"}ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
             </div>
-            <div className={`px-[22px] py-[10px] text-xs text-black w-[93px] rounded-[100px] ${event.deadline > new Date().toISOString().split("T")[0] ? "bg-main" : "bg-lightgray"}`}>{new Date().toDateString().split(" ")[2]}일 남음</div>
-            
+            {(() => {
+                const today = new Date();
+                const deadlineDate = new Date(event.deadline);
+                const daysRemaining = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                
+                if (daysRemaining < 0 || daysRemaining >= 6) {
+                    return (
+                        <div className={`px-[22px] py-[10px] text-xs w-fit text-white rounded-[100px] bg-black/50`}>
+                            {daysRemaining < 0 ? `${Math.abs(daysRemaining)}일 지났음` : `${daysRemaining}일 남음`}
+                        </div>
+                    );
+                } else {
+                    return (
+                        <div className={`px-[22px] py-[10px] text-xs w-fit text-black rounded-[100px] bg-main`}>
+                            {daysRemaining}일 남음
+                        </div>
+                    );
+                }
+            })()}
         </div>
     )
 }

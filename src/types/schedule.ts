@@ -1,14 +1,14 @@
+export type ScheduleType = "ACADEMIC";
+
 export interface Schedule {
   id: string;
   title: string;
+  description: string;
   startDate: string;
   endDate: string;
-  startTime?: string;
-  endTime?: string;
   color: string;
-  description?: string;
-  location?: string;
-  isHighlighted?: boolean;
+  type: ScheduleType;
+  eventId: string | null;
 }
 
 export interface CalendarDate {

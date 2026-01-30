@@ -2,29 +2,20 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useEventsQuery } from "@/lib/queries/events/queries";
+import { Event } from "@/types/events";
 
-interface EventItem {
-  id: string;
-  image: string;
-  deadline: string; // YYYY-MM-DD
-  link?: string;
-}
-
-interface EventCarouselProps {
-  events?: EventItem[];
-}
-
-export default function EventCarousel({ events }: EventCarouselProps) {
-  const defaultEvents: EventItem[] = [
-    { id: "1", image: "/example-image/event1.png", deadline: "2025-12-31" },
-    { id: "2", image: "/example-image/event2.png", deadline: "2025-12-28" },
-    { id: "3", image: "/example-image/event3.png", deadline: "2025-12-25" },
-    { id: "4", image: "/example-image/event4.png", deadline: "2026-01-10" },
-    { id: "5", image: "/example-image/event5.png", deadline: "2026-01-15" },
-  ];
-
-  const eventList = events || defaultEvents;
+export default function EventCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // 최근 이벤트 5개 
+  const { data: eventsData, isLoading } = useEventsQuery({
+    url: "",
+    page: 1,
+    limit: 5,
+  });
+
+  const events = eventsData?.items || [];
 
   // d-day 연산
   const calculateDaysLeft = (deadline: string): number => {
@@ -41,31 +32,39 @@ export default function EventCarousel({ events }: EventCarouselProps) {
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? eventList.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === eventList.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1));
   };
 
-  const currentEvent = eventList[currentIndex];
-  const daysLeft = calculateDaysLeft(currentEvent.deadline);
-
-  const handleEventClick = () => {
-    if (currentEvent.link) {
-      window.open(currentEvent.link, "_blank");
+  const handleEventClick = (event: Event) => {
+    if (event.link && event.isLinkOn) {
+      window.open(event.link, "_blank");
     }
   };
+
+  if (!events || events.length === 0) {
+    return (
+      <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gray-200 flex items-center justify-center">
+        <p className="text-gray-500">진행 중인 이벤트가 없습니다</p>
+      </div>
+    );
+  }
+
+  const currentEvent = events[currentIndex];
+  const daysLeft = calculateDaysLeft(currentEvent.deadline);
 
   return (
     <div className="relative w-full h-full rounded-[20px] overflow-hidden">
       <div
         className="relative w-full h-full cursor-pointer"
-        onClick={handleEventClick}
+        onClick={() => handleEventClick(currentEvent)}
       >
         <Image
-          src={currentEvent.image}
-          alt={`이벤트 ${currentIndex + 1}`}
+          src={currentEvent.thumbnail.url}
+          alt={currentEvent.name}
           fill
           className="object-cover"
           unoptimized
@@ -111,7 +110,7 @@ export default function EventCarousel({ events }: EventCarouselProps) {
         </button>
 
         <div className="flex gap-2">
-          {eventList.map((_, index) => (
+          {events.map((_, index) => (
             <button
               key={index}
               onClick={(e) => {
