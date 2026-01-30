@@ -9,7 +9,7 @@ export const dummySchedules: Schedule[] = [
     color: "#FFE284",
     description: "신입생입생신입생신입생신입생신입생신입생신입생",
     type: "ACADEMIC",
-    eventId: "1"
+    eventId: null,
   },
   {
     id: "2",
@@ -19,7 +19,7 @@ export const dummySchedules: Schedule[] = [
     color: "#8ED0FF",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "2"
+    eventId: null,
   },
   {
     id: "3",
@@ -29,7 +29,7 @@ export const dummySchedules: Schedule[] = [
     color: "#8ED0FF",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "3"
+    eventId: null,
   },
   {
     id: "4",
@@ -39,7 +39,7 @@ export const dummySchedules: Schedule[] = [
     color: "#FF8E94",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "4"
+    eventId: null,
   },
   {
     id: "5",
@@ -49,7 +49,7 @@ export const dummySchedules: Schedule[] = [
     color: "#FF8E94",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "5"
+    eventId: null,
   },
   {
     id: "6",
@@ -59,7 +59,7 @@ export const dummySchedules: Schedule[] = [
     color: "#FFE284",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "6"
+    eventId: null,
   },
   {
     id: "7",
@@ -69,7 +69,7 @@ export const dummySchedules: Schedule[] = [
     color: "#8ED0FF",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "7"
+    eventId: null,
   },
   {
     id: "8",
@@ -79,7 +79,7 @@ export const dummySchedules: Schedule[] = [
     color: "#FF8E94",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "8"
+    eventId: null,
   },
   {
     id: "9",
@@ -89,7 +89,7 @@ export const dummySchedules: Schedule[] = [
     color: "#8ED0FF",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "9"
+    eventId: null,
   },
   {
     id: "10",
@@ -99,6 +99,6 @@ export const dummySchedules: Schedule[] = [
     color: "#8ED0FF",
     description: "dummy data 입니다.",
     type: "ACADEMIC",
-    eventId: "10"
+    eventId: null,
   },
 ];

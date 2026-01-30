@@ -1,21 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Schedule } from "@/types/schedule";
+import { Schedule, CalendarDate } from "@/types/schedule";
 import Calendar from "@/components/schedule/Calendar";
 import ScheduleList from "@/components/schedule/ScheduleList";
 
 interface WeeklyScheduleProps {
   schedules: Schedule[];
+  onEmptyDateClick?: (date: CalendarDate) => void;
 }
 
-export default function WeeklySchedule({ schedules }: WeeklyScheduleProps) {
+export default function WeeklySchedule({ schedules, onEmptyDateClick }: WeeklyScheduleProps) {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
     null,
   );
 
   const handleScheduleClick = (schedule: Schedule) => {
     setSelectedSchedule(schedule);
+  };
+
+  const handleMonthChange = (year: number, month: number) => {
+    console.log('월 변경:', year, month + 1);
+    // TODO: 메인 페이지에서의 월 변경 로직
   };
 
   return (
@@ -34,6 +40,8 @@ export default function WeeklySchedule({ schedules }: WeeklyScheduleProps) {
             schedules={schedules}
             selectedSchedule={selectedSchedule}
             onScheduleClick={handleScheduleClick}
+            onEmptyDateClick={onEmptyDateClick}
+            onMonthChange={handleMonthChange}
           />
         </div>
 
