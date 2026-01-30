@@ -8,6 +8,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-03",
     color: "#FFE284",
     description: "신입생입생신입생신입생신입생신입생신입생신입생",
+    type: "ACADEMIC",
+    eventId: "1"
   },
   {
     id: "2",
@@ -16,6 +18,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-05",
     color: "#8ED0FF",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "2"
   },
   {
     id: "3",
@@ -24,6 +28,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-18",
     color: "#8ED0FF",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "3"
   },
   {
     id: "4",
@@ -32,6 +38,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-20",
     color: "#FF8E94",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "4"
   },
   {
     id: "5",
@@ -40,6 +48,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-05",
     color: "#FF8E94",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "5"
   },
   {
     id: "6",
@@ -48,6 +58,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-17",
     color: "#FFE284",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "6"
   },
   {
     id: "7",
@@ -56,6 +68,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-20",
     color: "#8ED0FF",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "7"
   },
   {
     id: "8",
@@ -64,6 +78,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-12-31",
     color: "#FF8E94",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "8"
   },
   {
     id: "9",
@@ -72,6 +88,8 @@ export const dummySchedules: Schedule[] = [
     endDate: "2025-11-31",
     color: "#8ED0FF",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "9"
   },
   {
     id: "10",
@@ -80,5 +98,7 @@ export const dummySchedules: Schedule[] = [
     endDate: "2026-1-5",
     color: "#8ED0FF",
     description: "dummy data 입니다.",
+    type: "ACADEMIC",
+    eventId: "10"
   },
 ];

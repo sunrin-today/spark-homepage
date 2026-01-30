@@ -9,6 +9,9 @@ export const buildMeetingRoomRequestIntoSchedule = (data: ListResponse<MeetingRo
     title: item.borrower.name,
     startDate: item.wantedDate,
     endDate: item.wantedDate,
-    color: "red"
+    color: "blue",
+    description: "",
+    type: "ACADEMIC",
+    eventId: ""
   }))
 }
