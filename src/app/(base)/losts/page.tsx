@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { LostItem } from "@/components/losts/LostItem";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,16 +8,19 @@ import { SearchBar } from "@/components/ui/search/SearchBar";
 import { BackButton } from "@/components/ui/button/BackButton";
 import { useLostsQuery } from "@/lib/queries/losts/queries";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
-export default function Losts() {
+
+function LostsContent() {
     const [searchValue, setSearchValue] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
-    const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1  );
+    const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1);
     const {data: lostsData } = useLostsQuery(currentPage, 20, searchQuery);
+    
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
         router.replace(`/losts?page=${page}`);
     }    
+    
     return (
         <div className="w-full flex flex-col items-center justify-center">
             <div className="w-full flex flex-col mt-36 max-w-[1280px]">
@@ -50,6 +53,13 @@ export default function Losts() {
                 <PaginationBar totalPages={lostsData?.totalPages || 0} currentPage={currentPage} onPageChange={(page) => { handlePageChange(page)}}/>
             </div>
         </div>
-        
+    )
+}
+
+export default function Losts() {
+    return (
+        <Suspense fallback={null}>
+            <LostsContent />
+        </Suspense>
     )
 }
