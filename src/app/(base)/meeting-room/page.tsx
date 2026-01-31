@@ -4,7 +4,7 @@ import { LocationList } from "@/components/ui/list/LocationList"
 import { BackButton } from "@/components/ui/button/BackButton"
 import Calendar from "@/components/schedule/Calendar"
 import { useGetMeetingRoomSchedule } from "@/lib/queries/meeting-room/queries"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { buildMeetingRoomRequestIntoSchedule } from "@/utils/meeting-room"
 import Link from "next/link"
 
@@ -15,25 +15,24 @@ export default function Charger() {
         "대여 전 충전기 상태를 꼭 확인해주세요"
     ]
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
-    console.log(currentMonth)
-    const { data: currentMeeting } = useGetMeetingRoomSchedule({ month: currentMonth })
+    const { data: currentMeeting } = useGetMeetingRoomSchedule({ month: currentMonth + 1 })
     const locations = [
         {name: "1-6", width: "86px", height: "55px", charge: false},
         {name: "1-5", width: "86px", height: "55px", charge: false},
         {name: "1-4", width: "86px", height: "55px", charge: false},
         {name: "소회의실", width: "86px", height: "55px", charge: true},
-        {name: "중앙계단", width: "140px", height: "110px", charge: false},
+        {name: "중앙계단", width: "140px", height: "65px", charge: false},
         {name: "성찰교실", width: "86px", height: "55px", charge: false},
         {name: "2-4", width: "86px", height: "55px", charge: false},
         {name: "2-5", width: "86px", height: "55px", charge: false},
         {name: "2-6", width: "86px", height: "55px", charge: false},
     ]
-    
-
-    
+    useEffect(() => {
+        console.log(currentMeeting?.data);
+    }, [currentMeeting])
     return (
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <h1 className="text-3xl sm:text-4xl font-semibold pb-8 sm:pb-16">
+        <div className="w-full max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 py-24">
+            <h1 className="text-3xl flex flex-col gap-11 sm:text-4xl font-semibold pb-8 sm:pb-16">
                 <BackButton />
                 소회의실 대여
             </h1>        
@@ -45,9 +44,10 @@ export default function Charger() {
                     <LocationList width="1110px" locations={locations} title="소회의실 대여하러 오는 곳" />
                 </div>
             </div>
-            { currentMeeting &&
-                <Calendar schedules={buildMeetingRoomRequestIntoSchedule(currentMeeting.data)} />
-            }
+            <div className="w-full max-w-[1280px] md:pl-40 pt-16">
+                <Calendar schedules={currentMeeting?.data ? buildMeetingRoomRequestIntoSchedule(currentMeeting?.data) : []}
+                 onMonthChange={(year, month) => setCurrentMonth(month)} />
+            </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
                 <Link
                     href="/meeting-room/rental"

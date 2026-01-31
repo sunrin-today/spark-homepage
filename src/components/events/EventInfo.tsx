@@ -2,12 +2,12 @@ import type { Event } from "@/types/events"
 import Image from "next/image"
 import { copyLink, linkToEvent } from "@/utils/events"
 import { Share2 } from "lucide-react"
-import { getDashedFormattedDate } from "@/utils/date"
+import { formatKoreanDate } from "@/utils/date"
 
 export const EventInfo = ({ event }: { event: Event }) => {
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-4">
+      <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
         <div className="w-full lg:w-[60%]">
           <div className="relative w-full aspect-[16/10] lg:aspect-[629/391] rounded-2xl overflow-hidden">
             <Image
@@ -28,7 +28,7 @@ export const EventInfo = ({ event }: { event: Event }) => {
               {event.name}
             </h2>
             <p className="text-xs md:text-sm text-[#767676]">
-              {getDashedFormattedDate(event.deadline)}
+              {formatKoreanDate(event.deadline)}
             </p>
           </div>
           

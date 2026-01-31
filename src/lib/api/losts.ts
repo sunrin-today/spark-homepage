@@ -15,7 +15,7 @@ export const lostsApi = {
   },
 
   postLostClaim: async (id: string) => {
-    const response = await api.post(`/api/lost-claims/${id}`);
+    const response = await api.post(`/api/lost-claims`, {lostId: id});
     return response.data;
   }
 };

@@ -49,7 +49,7 @@ export default function Charger() {
                     disabled={isPending}>
                     {isPending ? "대여 중..." : "충전기 대여하기"}
                 </button>
-            </div>
+            </div>  
         </div>
     )
 }

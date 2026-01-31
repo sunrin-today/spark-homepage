@@ -82,7 +82,7 @@ export const Header = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-xl font-medium py-2 hover:underline `}
+                  className={`text-xl font-semibold py-2 hover:underline hover:bg-gray px-3 `}
                 >
                   {item.label}
                 </Link>
@@ -91,21 +91,16 @@ export const Header = () => {
               {!loading && user ? (
                 <div className="pt-8 border-t border-gray-200">
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: getPageColor(path)}}>
-                      <span className=" font-medium">
-                        {user.displayName?.[0] || user.email?.[0]?.toUpperCase()}
-                      </span>
-                    </div>
+                        <Image src={user.photoURL || "/logo/logo.svg"} className="rounded-full" alt="profile" width={40} height={40} />
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{color: getPageColor(path).textColor}}>
                         {user.displayName || user.email?.split("@")[0]}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className={`w-full text-left py-3 px-4 rounded-lg font-medium`}
-                    style={{backgroundColor: getPageColor(path)}}
+                    className={`w-full text-center py-3 px-4 rounded-lg bg-main text-white  `}
                   >
                     로그아웃
                   </button>
@@ -113,7 +108,7 @@ export const Header = () => {
               ) : (
                 <Link
                   href="/login"
-                  className={`mt-8 inline-block w-full text-center py-3 px-4 rounded-lg text-white font-medium hover:underline`}
+                  className={`w-full text-center py-3 px-4 rounded-lg text-white bg-main`}
                 >
                   로그인
                 </Link>
@@ -143,8 +138,8 @@ export const Header = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-medium hover:underline"
-                style={{color: getPageColor(path)}}
+                className="font-semibold hover:underline"
+                style={{color: getPageColor(path).textColor}}
               >
                 {item.label}
               </Link>
@@ -153,13 +148,13 @@ export const Header = () => {
 
           {!loading && user ? (
             <div className="flex items-center gap-3">
-              <span className={`font-semibold`} style={{color: getPageColor(path)}}>
+              <span className={`font-semibold`} style={{color: getPageColor(path).textColor}}>
                 {user.displayName || user.email?.split("@")[0]}
               </span>
               <button
                 onClick={handleLogout}
-                className={`rounded-[100px] px-[22px] py-[10px] font-semibold hover:opacity-80 transition-opacity`}
-                style={{backgroundColor: getPageColor(path), color: getPageColor(path) === "white" ? "black" : "white"}}
+                className={`rounded-[100px] px-[22px] py-[10px] hover:opacity-80 transition-opacity`}
+                style={{backgroundColor: getPageColor(path).textColor, color: getPageColor(path).buttonColor}}
               >
                 로그아웃
               </button>
@@ -167,9 +162,8 @@ export const Header = () => {
           ) : (
             <Link
               href="/login"
-              className={`bg-${color} text-${
-                color === "white" ? "black" : "white"
-              } rounded-[100px] px-[22px] py-[10px] font-semibold`}
+              className={`rounded-[100px] px-[22px] py-[10px]`}
+              style={{backgroundColor: getPageColor(path).textColor, color: getPageColor(path).buttonColor}}
             >
               로그인
             </Link>
