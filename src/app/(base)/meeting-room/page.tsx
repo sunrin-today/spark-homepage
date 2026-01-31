@@ -4,7 +4,7 @@ import { LocationList } from "@/components/ui/list/LocationList"
 import { BackButton } from "@/components/ui/button/BackButton"
 import Calendar from "@/components/schedule/Calendar"
 import { useGetMeetingRoomSchedule } from "@/lib/queries/meeting-room/queries"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { buildMeetingRoomRequestIntoSchedule } from "@/utils/meeting-room"
 import Link from "next/link"
 
@@ -27,7 +27,9 @@ export default function Charger() {
         {name: "2-5", width: "86px", height: "55px", charge: false},
         {name: "2-6", width: "86px", height: "55px", charge: false},
     ]
-    
+    useEffect(() => {
+        console.log(currentMeeting?.data);
+    }, [currentMeeting])
     return (
         <div className="w-full max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 py-24">
             <h1 className="text-3xl flex flex-col gap-11 sm:text-4xl font-semibold pb-8 sm:pb-16">
