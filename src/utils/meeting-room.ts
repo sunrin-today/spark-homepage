@@ -10,7 +10,7 @@ export const buildMeetingRoomRequestIntoSchedule = (data: ListResponse<MeetingRo
     description: item.purpose || "",
     startDate: item.wantedDate,
     endDate: item.wantedDate,
-    color: "#FF8E94",
+    color: item.color,
     type: "ACADEMIC" as const,
     eventId: null,
   }))

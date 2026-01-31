@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useEventByIdQuery, useEventsQuery } from "@/lib/queries/events/queries"
 import { useState } from "react"
 import Image from "next/image"
+import { Minus, Plus } from "lucide-react"
 export default function EventDetail() {
     const { eventId } = useParams()
     const [limit, setLimit] = useState(5)
@@ -36,13 +37,18 @@ export default function EventDetail() {
                     <h4 className="text-2xl">다른 이벤트 구경하기</h4>
                     {
                         limit < 20 && (
-                            <button onClick={() => {setLimit(20)}} className="text-lg">자세히 보기 +</button>
+                            <button onClick={() => {setLimit(20)}} className="text-lg flex items-center gap-2">자세히 보기 <Plus className="w-5 h-5"/></button>
+                        )
+                    }
+                    {
+                        limit === 20 && (
+                            <button onClick={() => {setLimit(5)}} className="text-lg flex items-center gap-2">간단히 보기 <Minus className="w-5 h-5"/></button>
                         )
                     }
                 </div>
                 <ul className="list-none flex gap-[30px] overflow-auto">
                     {
-                        otherEvents?.items.map((event) => (
+                        otherEvents?.items.filter((event) => event.id !== eventId).map((event) => (
                             <Link href={`/events/${event.id}`} key={event.id} className="snap-start">   
                                 <EventItem key={event.id} event={event} />
                             </Link>

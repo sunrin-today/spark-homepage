@@ -7,6 +7,7 @@ interface SearchBarProps {
   buttonColor? : string;
   handleSubmit: () => void;
   onChangeText: (value: string) => void;
+  value: string;
   className?: string;
 }
 
@@ -16,6 +17,7 @@ export const SearchBar = ({
   buttonColor = "orange", 
   handleSubmit,
   onChangeText,
+  value,
   className = ""
 }: SearchBarProps) => {
 
@@ -35,6 +37,7 @@ export const SearchBar = ({
                 />         
                 <div className="flex w-full gap-[50px]">
                 <input 
+                    value={value}
                     type="text" 
                     name="search"
                     className="bg-lightgray font-semibold text-lg border-[1px] text-gray

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 
 interface PaginationBarProps {
   totalPages: number;

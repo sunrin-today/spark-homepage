@@ -14,8 +14,8 @@ export default function Charger() {
         "충전기 대여기간은 3일입니다. 연체 시 추가 대여가 제한될 수 있습니다.",
         "대여 전 충전기 상태를 꼭 확인해주세요"
     ]
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()+1)
-    const { data: currentMeeting } = useGetMeetingRoomSchedule({ month: currentMonth })
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
+    const { data: currentMeeting } = useGetMeetingRoomSchedule({ month: currentMonth + 1 })
     const locations = [
         {name: "1-6", width: "86px", height: "55px", charge: false},
         {name: "1-5", width: "86px", height: "55px", charge: false},
@@ -27,8 +27,6 @@ export default function Charger() {
         {name: "2-5", width: "86px", height: "55px", charge: false},
         {name: "2-6", width: "86px", height: "55px", charge: false},
     ]
-    
-
     
     return (
         <div className="w-full max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 py-24">
@@ -44,11 +42,10 @@ export default function Charger() {
                     <LocationList width="1110px" locations={locations} title="소회의실 대여하러 오는 곳" />
                 </div>
             </div>
-            { currentMeeting &&
             <div className="w-full max-w-[1280px] md:pl-40 pt-16">
-                <Calendar schedules={buildMeetingRoomRequestIntoSchedule(currentMeeting.data)} />
+                <Calendar schedules={currentMeeting?.data ? buildMeetingRoomRequestIntoSchedule(currentMeeting?.data) : []}
+                 onMonthChange={(year, month) => setCurrentMonth(month)} />
             </div>
-            }
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
                 <Link
                     href="/meeting-room/rental"

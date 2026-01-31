@@ -9,7 +9,7 @@ export const LostItem = ({lost}: {lost: Lost}) => {
             />
             <div className="gap-1">
                 <h4 className=" text-lg font-semibold text-black w-full truncate">{lost.title ? lost.title : "제목 없음"}</h4>
-                <p className="text-xs text-black w-full line-clamp-2 break-words">{lost.description ? lost.description : "내용 없음"}</p>
+                <p className="text-xs text-black w-full h-8 line-clamp-2 break-words">{lost.description ? lost.description : "내용 없음"}</p>
             </div>
             
         </div>

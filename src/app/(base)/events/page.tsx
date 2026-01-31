@@ -8,6 +8,7 @@ import { SearchBar } from "@/components/ui/search/SearchBar";
 import { PaginationBar } from "@/components/ui/paging/PaginationBar";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useEventsQuery } from "@/lib/queries/events/queries";
+import { useSearchParams } from "next/navigation";
 
 const TAGS = [
     { title: "전체", url: "" },
@@ -20,14 +21,14 @@ const TAGS = [
 export default function Events() {
     const [selectedTag, setSelectedTag] = useState<{ title: string, url: string }>(TAGS[0]); 
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [searchQuery, setSearchQuery] = useState<string>(useSearchParams().get("search") || "");
     const {page: paginationPage, setPage: setPaginationPage} = usePaginationQuery("page", 1);
     const {data: events, isLoading} = useEventsQuery(
         {url: selectedTag.url, page: paginationPage, limit: 16, query: searchQuery}
     );
     return (
         <div className="w-full flex flex-col items-center justify-center">
-            <div className="w-full flex flex-col mt-36 max-w-[1280px] p-4">
+            <div className="w-full flex flex-col my-36 max-w-[1280px] p-4">
                 <div className="w-full flex flex-col gap-16 mb-16">
                     <div className="w-full flex flex-col gap-[15px]">
                         <h1 className="text-black font-semibold text-left text-4xl w-full">학생회 이벤트</h1>
@@ -35,8 +36,13 @@ export default function Events() {
                     </div>
                     <div className="w-full flex flex-col items-center justify-center gap-[30px] pb-16 border-b-2 border-b-lightgray">
                         
-                        <SearchBar onChangeText={setSearchValue} placeholder="학생회 이벤트 검색하기"
-                            handleSubmit={() => setSearchQuery(searchValue)} buttonColor="main" buttonText="검색하기" className="bg-orange"/>
+                        <SearchBar
+                            value={searchValue}
+                            onChangeText={setSearchValue}
+                            placeholder="학생회 이벤트 검색하기"
+                            handleSubmit={() => {setSearchQuery(searchValue); setPaginationPage(1)}}
+                            buttonText="검색하기"
+                        />
 
                         <div className="w-full overflow-x-auto pb-2 border-x border-lightgray sm:border-none">
                             <div className="flex w-max space-x-[15px] px-1">

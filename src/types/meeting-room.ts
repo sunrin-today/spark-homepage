@@ -6,9 +6,11 @@ export interface MeetingRoomRequest {
       borrower: User,
       purpose: string,
       status: number,
-      createdAt: string
+      createdAt: string,
+      color: string
 }
 export interface MeetingRoomRequestPost {
       wantedDate: string,
       purpose: string
+      color: string
 }
