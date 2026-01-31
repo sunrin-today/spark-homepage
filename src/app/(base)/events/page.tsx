@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import type {Event} from "@/types/events"
 import { EventItem } from "@/components/events/EventItem";
 import { Tag} from "@/components/ui/search/Tag"
@@ -18,7 +18,7 @@ const TAGS = [
     { title: "종료된 이벤트", url: "finished" }
 ];
 
-export default function Events() {
+function EventsContent() {
     const [selectedTag, setSelectedTag] = useState<{ title: string, url: string }>(TAGS[0]); 
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState<string>(useSearchParams().get("search") || "");
@@ -75,5 +75,13 @@ export default function Events() {
                 <PaginationBar totalPages={events?.totalPages || 1} currentPage={paginationPage} onPageChange={setPaginationPage} />
             </div>
         </div>
+    )
+}
+
+export default function Events() {
+    return (
+        <Suspense fallback={null}>
+            <EventsContent />
+        </Suspense>
     )
 }

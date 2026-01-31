@@ -16,3 +16,11 @@ export const useNotices = () => {
     queryFn: () => noticesApi.getNotices(),
   });
 };
+
+export const useRecentNotices = (page: number = 1, limit: number = 4) => {
+  return useQuery({
+    queryKey: [...noticeKeys.lists(), 'recent', page, limit],
+    queryFn: () => noticesApi.getRecentNotices(page, limit),
+    staleTime: 5 * 60 * 1000, // 5분
+  });
+};

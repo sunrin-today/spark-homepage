@@ -29,6 +29,20 @@ export const noticesApi = {
     }
   },
 
+  getRecentNotices: async (page: number = 1, limit: number = 4): Promise<Notice[]> => {
+    try {
+      const response = await api.get<NoticeListResponse>('/api/notice/recent', {
+        params: { page, limit }
+      });
+      const data = response.data;
+      
+      return data.items.map(transformNoticeFromApi);
+    } catch (error) {
+      console.error('Failed to fetch recent notices:', error);
+      throw error;
+    }
+  },
+
   getNoticeById: async (id: string): Promise<Notice> => {
     try {
       const response = await api.get<NoticeDetailResponse>(`/api/notice/${id}`);

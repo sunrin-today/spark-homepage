@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { LostItem } from "@/components/losts/LostItem";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -8,7 +8,8 @@ import { SearchBar } from "@/components/ui/search/SearchBar";
 import { BackButton } from "@/components/ui/button/BackButton";
 import { useLostsQuery } from "@/lib/queries/losts/queries";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
-export default function Losts() {
+
+function LostsContent() {
     const [searchValue, setSearchValue] = useState("");
     const [searchQuery, setSearchQuery] = useState(useSearchParams().get("search") || "");
     const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1  );
@@ -50,6 +51,13 @@ export default function Losts() {
                 <PaginationBar totalPages={lostsData?.totalPages || 0} currentPage={currentPage} onPageChange={setCurrentPage}/>
             </div>
         </div>
-        
+    )
+}
+
+export default function Losts() {
+    return (
+        <Suspense fallback={null}>
+            <LostsContent />
+        </Suspense>
     )
 }
