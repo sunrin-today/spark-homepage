@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 
 interface ServiceCardProps {
   title: string;
@@ -50,6 +51,12 @@ export default function ServiceCard({
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
+      </div>
+
+      <div className="flex-shrink-0">
+        <ChevronRight
+          className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-transform group-hover:translate-x-1"
+        />
       </div>
     </Link>
   );

@@ -58,6 +58,9 @@ export default function EventCarousel() {
 
   return (
     <div className="relative w-full h-full rounded-[20px] overflow-hidden">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-semi-bold text-xl">이벤트</h3>
+      </div>
       <div
         className="relative w-full h-full cursor-pointer"
         onClick={() => handleEventClick(currentEvent)}
