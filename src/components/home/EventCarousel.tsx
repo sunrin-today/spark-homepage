@@ -84,7 +84,7 @@ export default function EventCarousel() {
 
   return (
     <div className="flex flex-col h-full">
-      <h3 className="font-semibold text-[24px] mb-4">이벤트</h3>
+      <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
 
       <div
         className="relative flex-1 rounded-[10px] overflow-hidden"
