@@ -9,20 +9,22 @@ export default function EventCarousel() {
   const { data: eventsData } = useEventsQuery({ url: "", page: 1, limit: 5 });
   const events = eventsData?.items ?? [];
 
-  const extended = events.length > 0
-    ? [events[events.length - 1], ...events, events[0]]
-    : [];
+  const isSingle = events.length === 1;
 
-  const [extendedIndex, setExtendedIndex] = useState(1);
+  const extended = events.length > 1
+    ? [events[events.length - 1], ...events, events[0]]
+    : events;
+
+  const [extendedIndex, setExtendedIndex] = useState(isSingle ? 0 : 1);
   const [animated, setAnimated] = useState(true);
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   const touchStartX = useRef<number | null>(null);
   const isTransitioning = useRef(false);
 
-  const currentIndex = extendedIndex - 1;
+  const currentIndex = isSingle ? 0 : extendedIndex - 1;
 
   const goToExtended = (idx: number) => {
-    if (isTransitioning.current) return;
+    if (isSingle || isTransitioning.current) return;
     setAnimated(true);
     setExtendedIndex(idx);
   };
@@ -32,6 +34,7 @@ export default function EventCarousel() {
 
   const resetAutoPlay = () => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    if (isSingle) return;
     autoPlayRef.current = setInterval(() => {
       goToExtended(extendedIndex + 1);
     }, 7000);
@@ -42,6 +45,10 @@ export default function EventCarousel() {
     resetAutoPlay();
     return () => clearInterval(autoPlayRef.current);
   }, [extendedIndex, events.length]);
+
+  useEffect(() => {
+    setExtendedIndex(isSingle ? 0 : 1);
+  }, [isSingle]);
 
   const handleTransitionEnd = () => {
     isTransitioning.current = false;
@@ -104,7 +111,7 @@ export default function EventCarousel() {
           className="flex h-full"
           style={{
             transform: `translateX(-${extendedIndex * 100}%)`,
-            transition: animated ? "transform 500ms ease-in-out" : "none",
+            transition: animated && !isSingle ? "transform 500ms ease-in-out" : "none",
           }}
           onTransitionEnd={handleTransitionEnd}
           onTransitionStart={handleTransitionStart}
@@ -146,8 +153,10 @@ export default function EventCarousel() {
               key={idx}
               onClick={(e) => {
                 e.preventDefault();
-                goToExtended(idx + 1);
-                resetAutoPlay();
+                if (!isSingle) {
+                  goToExtended(idx + 1);
+                  resetAutoPlay();
+                }
               }}
               className="rounded-full transition-all"
               style={{
