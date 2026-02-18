@@ -3,32 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-const DUMMY_EVENTS = [
-  { id: "1", dDay: 18, thumbnail: "/example-image/event1.png", href: "/events/1" },
-  { id: "2", dDay: 12, thumbnail: "/example-image/event2.png", href: "/events/2" },
-  { id: "3", dDay: 7,  thumbnail: "/example-image/event3.png", href: "/events/3" },
-  { id: "4", dDay: 3,  thumbnail: "/example-image/event4.png", href: "/events/4" },
-  { id: "5", dDay: 25, thumbnail: "/example-image/event5.png", href: "/events/5" },
-];
-
-// 앞뒤로 복제 슬라이드 추가
-const EXTENDED = [
-  DUMMY_EVENTS[DUMMY_EVENTS.length - 1],
-  ...DUMMY_EVENTS,
-  DUMMY_EVENTS[0],
-];
+import { useEventsQuery } from "@/lib/queries/events/queries";
 
 export default function EventCarousel() {
-  // extendedIndex: EXTENDED 기준 인덱스 (1 ~ events.length)
+  const { data: eventsData } = useEventsQuery({ url: "", page: 1, limit: 5 });
+  const events = eventsData?.items ?? [];
+
+  const extended = events.length > 0
+    ? [events[events.length - 1], ...events, events[0]]
+    : [];
+
   const [extendedIndex, setExtendedIndex] = useState(1);
   const [animated, setAnimated] = useState(true);
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   const touchStartX = useRef<number | null>(null);
   const isTransitioning = useRef(false);
 
-  const events = DUMMY_EVENTS;
-  // 실제 인디케이터용 인덱스
   const currentIndex = extendedIndex - 1;
 
   const goToExtended = (idx: number) => {
@@ -48,17 +38,17 @@ export default function EventCarousel() {
   };
 
   useEffect(() => {
+    if (events.length === 0) return;
     resetAutoPlay();
     return () => clearInterval(autoPlayRef.current);
-  }, [extendedIndex]);
+  }, [extendedIndex, events.length]);
 
-  // 복제 슬라이드 도달 시 애니메이션 없이 진짜 슬라이드로 점프함
   const handleTransitionEnd = () => {
     isTransitioning.current = false;
     if (extendedIndex === 0) {
       setAnimated(false);
       setExtendedIndex(events.length);
-    } else if (extendedIndex === EXTENDED.length - 1) {
+    } else if (extendedIndex === extended.length - 1) {
       setAnimated(false);
       setExtendedIndex(1);
     }
@@ -80,7 +70,25 @@ export default function EventCarousel() {
     touchStartX.current = null;
   };
 
-  const current = EXTENDED[extendedIndex];
+  const getDaysRemaining = (deadline: string) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    return Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  if (events.length === 0) {
+    return (
+      <div className="flex flex-col h-full">
+        <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
+        <div className="relative flex-1 rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center" style={{ minHeight: "366px" }}>
+          <p className="text-gray-400 text-sm">이벤트가 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentEvent = extended[extendedIndex];
+  const daysRemaining = getDaysRemaining(currentEvent?.deadline ?? "");
 
   return (
     <div className="flex flex-col h-full">
@@ -101,12 +109,12 @@ export default function EventCarousel() {
           onTransitionEnd={handleTransitionEnd}
           onTransitionStart={handleTransitionStart}
         >
-          {EXTENDED.map((event, idx) => (
+          {extended.map((event, idx) => (
             <div key={idx} className="relative min-w-full h-full">
-              <Link href={event.href} className="block w-full h-full">
+              <Link href={`/events/${event.id}`} className="block w-full h-full">
                 <Image
-                  src={event.thumbnail}
-                  alt="이벤트썸네일"
+                  src={event.thumbnail.url}
+                  alt={event.name}
                   fill
                   className="object-cover"
                   unoptimized
@@ -125,7 +133,7 @@ export default function EventCarousel() {
             backgroundColor: "rgba(13,13,13,0.5)",
           }}
         >
-          {current.dDay}일 남음
+          {daysRemaining < 0 ? `${Math.abs(daysRemaining)}일 지남` : `${daysRemaining}일 남음`}
         </div>
 
         {/* 인디케이터 */}
@@ -133,10 +141,10 @@ export default function EventCarousel() {
           className="absolute flex gap-1.5 z-10"
           style={{ bottom: "20px", right: "24px" }}
         >
-          {events.map((_, idx: number) => (
+          {events.map((_, idx) => (
             <button
               key={idx}
-              onClick={(e: React.MouseEvent) => {
+              onClick={(e) => {
                 e.preventDefault();
                 goToExtended(idx + 1);
                 resetAutoPlay();
