@@ -2,148 +2,73 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useEventsQuery } from "@/lib/queries/events/queries";
-import { Event } from "@/types/events";
+import Link from "next/link";
+
+const DUMMY_EVENTS = [
+  { id: "1", dDay: 18, thumbnail: "/example-image/event1.png", href: "/events/1" },
+];
 
 export default function EventCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // 최근 이벤트 5개 
-  const { data: eventsData, isLoading } = useEventsQuery({
-    url: "",
-    page: 1,
-    limit: 5,
-  });
+  const events = DUMMY_EVENTS;
+  const current = events[currentIndex];
 
-  const events = eventsData?.items || [];
-
-  // d-day 연산
-  const calculateDaysLeft = (deadline: string): number => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
-
-    today.setHours(0, 0, 0, 0);
-    deadlineDate.setHours(0, 0, 0, 0);
-
-    const diffTime = deadlineDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    return diffDays;
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1));
-  };
-
-  const handleEventClick = (event: Event) => {
-    if (event.link && event.isLinkOn) {
-      window.open(event.link, "_blank");
-    }
-  };
-
-  if (!events || events.length === 0) {
-    return (
-      <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gray-200 flex items-center justify-center">
-        <p className="text-gray-500">진행 중인 이벤트가 없습니다</p>
-      </div>
-    );
-  }
-
-  const currentEvent = events[currentIndex];
-  const daysLeft = calculateDaysLeft(currentEvent.deadline);
+  const INDICATOR_COUNT = 5;
 
   return (
-    <div className="relative w-full h-full rounded-[20px] overflow-hidden">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semi-bold text-xl">이벤트</h3>
-      </div>
+    <div className="flex flex-col h-full">
+      <h3 className="font-semibold text-[24px] mb-4">이벤트</h3>
+
       <div
-        className="relative w-full h-full cursor-pointer"
-        onClick={() => handleEventClick(currentEvent)}
+        className="relative flex-1 rounded-[10px] overflow-hidden cursor-pointer"
+        style={{ minHeight: "366px" }}
       >
-        <Image
-          src={currentEvent.thumbnail.url}
-          alt={currentEvent.name}
-          fill
-          className="object-cover"
-          unoptimized
-        />
-
-        {/* d-day 뱃지 */}
-        <div
-          className="absolute top-4 right-4 text-white text-sm font-medium"
-          style={{
-            display: "inline-flex",
-            padding: "10px 22px",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "100px",
-            background: "rgba(13, 13, 13, 0.50)",
-          }}
-        >
-          {daysLeft > 0
-            ? `${daysLeft}일 남음`
-            : daysLeft === 0
-              ? "오늘 마감"
-              : "마감"}
-        </div>
-      </div>
-
-      <div className="absolute bottom-6 left-6 flex items-center gap-3">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handlePrev();
-          }}
-          className="hover:opacity-80 transition-opacity"
-          aria-label="이전"
-        >
+        <Link href={current.href} className="block w-full h-full">
           <Image
-            src="/icons/back.svg"
-            alt="이전"
-            width={24}
-            height={24}
-            className="invert"
+            src={current.thumbnail}
+            alt="이벤트썸네일"
+            fill
+            className="object-cover"
+            unoptimized
           />
-        </button>
+        </Link>
 
-        <div className="flex gap-2">
-          {events.map((_, index) => (
+        {/* D-day 배지 */}
+        <div
+          className="absolute text-white text-[18px] font-regular px-[22px] py-1.5 rounded-full z-10"
+          style={{
+            top: "14.5px",
+            left: "18px",
+            backgroundColor: "rgba(13,13,13,0.5)",
+          }}
+        >
+          {current.dDay}일 남음
+        </div>
+
+        {/* 인디케이터 */}
+        <div
+          className="absolute flex gap-1.5 z-10"
+          style={{
+            bottom: "20px",
+            right: "24px",
+          }}
+        >
+          {Array.from({ length: INDICATOR_COUNT }).map((_, idx) => (
             <button
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentIndex(index);
+              key={idx}
+              onClick={() => setCurrentIndex(idx < events.length ? idx : 0)}
+              className="rounded-full transition-all"
+              style={{
+                width: "12px",
+                height: "12px",
+                backgroundColor:
+                  idx === currentIndex
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.5)",
               }}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentIndex ? "bg-white" : "bg-white/50"
-              }`}
-              aria-label={`${index + 1}번 이벤트로 이동`}
             />
           ))}
         </div>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNext();
-          }}
-          className="hover:opacity-80 transition-opacity"
-          aria-label="다음"
-        >
-          <Image
-            src="/icons/forward.svg"
-            alt="다음"
-            width={24}
-            height={24}
-            className="invert"
-          />
-        </button>
       </div>
     </div>
   );
