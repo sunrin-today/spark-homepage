@@ -48,7 +48,7 @@ export const Header = () => {
 
   return (
     <>
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50">
+      <header className="lg:hidden sticky top-0 left-0 right-0 z-50">
         <div className="flex justify-between items-center h-16 px-4 bg-white shadow-sm">
           <Link href="/" className="z-50">
             <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
@@ -119,7 +119,7 @@ export const Header = () => {
       </header>
 
       {/* 데스크탑 헤더 */}
-      <header className="hidden lg:flex fixed h-[64px] top-0 left-0 right-0 justify-between items-center px-[50px] py-[5px] z-50">
+      <header className="hidden lg:flex sticky h-[64px] top-0 left-0 right-0 justify-between items-center px-[50px] py-[5px] z-50">
         <Link href="/">
           <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
         </Link>
