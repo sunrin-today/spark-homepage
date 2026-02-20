@@ -1,17 +1,18 @@
-export const Cautions = ({ title, items }: { title: string; items: string[] }) => {
+import { TriangleAlert } from "lucide-react";
+
+export const Cautions = ({ title, items }: { title: string; items: string }) => {
     return (
-        <div className="w-full max-w-[628px] bg-lightgray border border-gray rounded-xl p-6 sm:p-8 md:p-12">
-            <h4 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
-                {title}
-            </h4>
-            <ul className="space-y sm:space-y-1">
-                {items.map((caution, index) => (
-                    <li key={index} className="flex items-start text-lg">
-                        <span className="mr-2 text-xl font-bold">•</span>
-                        {caution}
-                    </li>
-                ))}
-            </ul>
+        <div className='w-fit bg-[#EC8303] bg-opacity-10 border border-[#EC8303] rounded-xl
+        flex flex-col gap-4 py-4 px-[34px]'>
+            <div className="flex items-center gap-[10px]">
+                <TriangleAlert className="text-[#EC8303]" width={20} height={20} />
+                <h4 className="text-base font-semibold text-[#EC8303]">
+                    {title}
+                </h4>
+            </div>
+            <p className="text-sm whitespace-pre-line font-medium text-[#EC8303]">
+                {items}    
+            </p>
         </div>
     );
 };

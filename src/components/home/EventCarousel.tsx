@@ -1,149 +1,175 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEventsQuery } from "@/lib/queries/events/queries";
-import { Event } from "@/types/events";
 
 export default function EventCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // 최근 이벤트 5개 
-  const { data: eventsData, isLoading } = useEventsQuery({
-    url: "",
-    page: 1,
-    limit: 5,
-  });
+  const { data: eventsData } = useEventsQuery({ url: "", page: 1, limit: 5 });
+  const events = eventsData?.items ?? [];
 
-  const events = eventsData?.items || [];
+  const isSingle = events.length === 1;
 
-  // d-day 연산
-  const calculateDaysLeft = (deadline: string): number => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
+  const extended = events.length > 1
+    ? [events[events.length - 1], ...events, events[0]]
+    : events;
 
-    today.setHours(0, 0, 0, 0);
-    deadlineDate.setHours(0, 0, 0, 0);
+  const [extendedIndex, setExtendedIndex] = useState(isSingle ? 0 : 1);
+  const [animated, setAnimated] = useState(true);
+  const autoPlayRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const touchStartX = useRef<number | null>(null);
+  const isTransitioning = useRef(false);
 
-    const diffTime = deadlineDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const currentIndex = isSingle ? 0 : extendedIndex - 1;
 
-    return diffDays;
+  const goToExtended = (idx: number) => {
+    if (isSingle || isTransitioning.current) return;
+    setAnimated(true);
+    setExtendedIndex(idx);
   };
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1));
+  const goNext = () => goToExtended(extendedIndex + 1);
+  const goPrev = () => goToExtended(extendedIndex - 1);
+
+  const resetAutoPlay = () => {
+    if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    if (isSingle) return;
+    autoPlayRef.current = setInterval(() => {
+      goToExtended(extendedIndex + 1);
+    }, 7000);
   };
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1));
-  };
+  useEffect(() => {
+    if (events.length === 0) return;
+    resetAutoPlay();
+    return () => clearInterval(autoPlayRef.current);
+  }, [extendedIndex, events.length]);
 
-  const handleEventClick = (event: Event) => {
-    if (event.link && event.isLinkOn) {
-      window.open(event.link, "_blank");
+  useEffect(() => {
+    setExtendedIndex(isSingle ? 0 : 1);
+  }, [isSingle]);
+
+  const handleTransitionEnd = () => {
+    isTransitioning.current = false;
+    if (extendedIndex === 0) {
+      setAnimated(false);
+      setExtendedIndex(events.length);
+    } else if (extendedIndex === extended.length - 1) {
+      setAnimated(false);
+      setExtendedIndex(1);
     }
   };
 
-  if (!events || events.length === 0) {
+  const handleTransitionStart = () => {
+    isTransitioning.current = true;
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      diff > 0 ? goNext() : goPrev();
+    }
+    touchStartX.current = null;
+  };
+
+  const getDaysRemaining = (deadline: string) => {
+    const today = new Date();
+    const deadlineDate = new Date(deadline);
+    return Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  if (events.length === 0) {
     return (
-      <div className="relative w-full h-full rounded-[20px] overflow-hidden bg-gray-200 flex items-center justify-center">
-        <p className="text-gray-500">진행 중인 이벤트가 없습니다</p>
+      <div className="flex flex-col h-full">
+        <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
+        <div className="relative flex-1 rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center" style={{ minHeight: "366px" }}>
+          <p className="text-gray-400 text-sm">이벤트가 없습니다.</p>
+        </div>
       </div>
     );
   }
 
-  const currentEvent = events[currentIndex];
-  const daysLeft = calculateDaysLeft(currentEvent.deadline);
+  const currentEvent = extended[extendedIndex];
+  const daysRemaining = getDaysRemaining(currentEvent?.deadline ?? "");
 
   return (
-    <div className="relative w-full h-full rounded-[20px] overflow-hidden">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semi-bold text-xl">이벤트</h3>
-      </div>
+    <div className="flex flex-col h-full">
+      <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
+
       <div
-        className="relative w-full h-full cursor-pointer"
-        onClick={() => handleEventClick(currentEvent)}
+        className="relative flex-1 rounded-[10px] overflow-hidden"
+        style={{ minHeight: "366px" }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
-        <Image
-          src={currentEvent.thumbnail.url}
-          alt={currentEvent.name}
-          fill
-          className="object-cover"
-          unoptimized
-        />
-
-        {/* d-day 뱃지 */}
         <div
-          className="absolute top-4 right-4 text-white text-sm font-medium"
+          className="flex h-full"
           style={{
-            display: "inline-flex",
-            padding: "10px 22px",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "10px",
-            borderRadius: "100px",
-            background: "rgba(13, 13, 13, 0.50)",
+            transform: `translateX(-${extendedIndex * 100}%)`,
+            transition: animated && !isSingle ? "transform 500ms ease-in-out" : "none",
           }}
+          onTransitionEnd={handleTransitionEnd}
+          onTransitionStart={handleTransitionStart}
         >
-          {daysLeft > 0
-            ? `${daysLeft}일 남음`
-            : daysLeft === 0
-              ? "오늘 마감"
-              : "마감"}
-        </div>
-      </div>
-
-      <div className="absolute bottom-6 left-6 flex items-center gap-3">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handlePrev();
-          }}
-          className="hover:opacity-80 transition-opacity"
-          aria-label="이전"
-        >
-          <Image
-            src="/icons/back.svg"
-            alt="이전"
-            width={24}
-            height={24}
-            className="invert"
-          />
-        </button>
-
-        <div className="flex gap-2">
-          {events.map((_, index) => (
-            <button
-              key={index}
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentIndex(index);
-              }}
-              className={`w-2 h-2 rounded-full transition-all ${
-                index === currentIndex ? "bg-white" : "bg-white/50"
-              }`}
-              aria-label={`${index + 1}번 이벤트로 이동`}
-            />
+          {extended.map((event, idx) => (
+            <div key={idx} className="relative min-w-full h-full">
+              <Link href={`/events/${event.id}`} className="block w-full h-full">
+                <Image
+                  src={event.thumbnail.url}
+                  alt={event.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              </Link>
+            </div>
           ))}
         </div>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNext();
+        {/* D-day 배지 */}
+        <div
+          className="absolute text-white text-[18px] font-regular px-[22px] py-1.5 rounded-full z-10"
+          style={{
+            top: "14.5px",
+            left: "18px",
+            backgroundColor: "rgba(13,13,13,0.5)",
           }}
-          className="hover:opacity-80 transition-opacity"
-          aria-label="다음"
         >
-          <Image
-            src="/icons/forward.svg"
-            alt="다음"
-            width={24}
-            height={24}
-            className="invert"
-          />
-        </button>
+          {daysRemaining < 0 ? `${Math.abs(daysRemaining)}일 지남` : `${daysRemaining}일 남음`}
+        </div>
+
+        {/* 인디케이터 */}
+        <div
+          className="absolute flex gap-1.5 z-10"
+          style={{ bottom: "20px", right: "24px" }}
+        >
+          {events.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={(e) => {
+                e.preventDefault();
+                if (!isSingle) {
+                  goToExtended(idx + 1);
+                  resetAutoPlay();
+                }
+              }}
+              className="rounded-full transition-all"
+              style={{
+                width: "12px",
+                height: "12px",
+                backgroundColor:
+                  idx === currentIndex % events.length
+                    ? "rgba(255,255,255,1)"
+                    : "rgba(255,255,255,0.5)",
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
