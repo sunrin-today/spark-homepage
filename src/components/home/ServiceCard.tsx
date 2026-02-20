@@ -1,62 +1,49 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
 
 interface ServiceCardProps {
   title: string;
-  description: string;
+  description: React.ReactNode;
   href: string;
-  iconSrc?: string;
+  imageSrc?: string;
 }
 
 export default function ServiceCard({
   title,
   description,
   href,
+  imageSrc = "/example-image/event1.png",
 }: ServiceCardProps) {
   return (
     <Link
       href={href}
       className="
-        flex items-center gap-4
-        w-full min-h-[140px]
-        rounded-[20px] bg-white
-        hover:shadow-lg transition-all
+        block
+        w-[315px] sm:w-[360px]
+        rounded-[32px]
+        border border-[#C0C0C0]
         p-6
-        group
+        transition-all duration-300
       "
     >
-      <div className="relative w-[120px] h-[100px] flex-shrink-0 rounded-[12px] overflow-hidden">
-        <Image 
-          src="/example-image/event1.png" 
-          alt={title} 
+      <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden border border-black/25">
+        <Image
+          src={imageSrc}
+          alt={title}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          unoptimized
         />
       </div>
 
-      <div className="flex-1 flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <h4 className="font-bold text-[18px] text-black">{title}</h4>
-          <p className="text-[14px] text-gray-600 leading-relaxed">
-            {description}
-          </p>
-        </div>
+      <div className="mt-5 flex flex-col gap-2">
+        <h4 className="text-xl font-semibold text-black">
+          {title}
+        </h4>
 
-        <svg 
-          className="w-6 h-6 text-gray-400 flex-shrink-0 ml-4 group-hover:text-gray-600 transition-colors" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </div>
-
-      <div className="flex-shrink-0">
-        <ChevronRight
-          className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-transform group-hover:translate-x-1"
-        />
+        <p className="text-sm font-medium text-[#8E8E8E] leading-relaxed">
+          {description}
+        </p>
       </div>
     </Link>
   );

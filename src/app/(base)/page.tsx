@@ -1,65 +1,67 @@
 import HeroSection from "@/components/home/HeroSection";
-import TodayMenu from "@/components/home/TodayMenu";
-import NoticePreview from "@/components/home/NoticePreview";
 import Weather from "@/components/home/Weather";
-import ServiceCard from "@/components/home/ServiceCard";
-import WeeklySchedule from "@/components/home/WeeklySchedule";
 import EventCarousel from "@/components/home/EventCarousel";
-import { dummySchedules } from "@/lib/dummySchedule";
+import NoticePreview from "@/components/home/NoticePreview";
+import ServiceCard from "@/components/home/ServiceCard";
+import MealCalendar from "@/components/home/Mealcalendar";
 
 export default function HomePage() {
   return (
     <main className="w-full">
       <HeroSection />
 
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-12">
-        <div className="grid grid-cols-3 gap-6 mb-12">
-          <TodayMenu />
+      <div className="max-w-[1920px] mx-auto px-[6px] lg:px-[128px]">
 
-          <div className="flex flex-col h-full">
-            <div className="flex-1">
-              <EventCarousel />
-            </div>
-          </div>
+        <section className="mt-12 mb-14">
+          <Weather />
+        </section>
 
+        <section className="grid grid-cols-1 lg:grid-cols-[141fr_127fr] gap-6 lg:gap-[56px] mb-14">
+          <EventCarousel />
           <NoticePreview />
-        </div>
+        </section>
 
-        <div className="grid grid-cols-5 gap-6 mb-12">
-          <div className="col-span-2 flex flex-col">
-            <h3 className="font-semi-bold text-xl mb-4">날씨</h3>
-            <Weather />
+        <section className="mb-14">
+          <h3 className="font-bold text-xl mb-6">학생회 서비스</h3>
+          <div className="flex flex-wrap gap-[22px] justify-start">
+            <ServiceCard
+              title="월간 분실물함"
+              description={
+                <>
+                  해당 서비스를 이용하여<br />잃어버린 물건을 찾아보세요!
+                </>
+              }
+              href="/losts"
+              imageSrc="/example-image/rough.png"
+            />
+            <ServiceCard
+              title="충전기 대여"
+              description={
+                <>
+                  해당 서비스를 이용하여<br />충전기를 대여해보세요!
+                </>
+              }
+              href="/charger"
+              imageSrc="/example-image/rough.png"
+            />
+            <ServiceCard
+              title="소회의실 대여"
+              description={
+                <>
+                  해당 서비스를 이용하여<br />소회의실을 대여해보세요!
+                </>
+              }
+              href="/meeting-room"
+              imageSrc="/example-image/rough.png"
+            />
           </div>
+        </section>
 
-          <div className="col-span-3 flex flex-col">
-            <h3 className="font-semi-bold text-xl mb-4">학생회 서비스</h3>
+        {/* 급식 캘린더 */}
+        <section className="mb-20">
+          <MealCalendar />
+        </section>
 
-            <div className="bg-[#eee] rounded-[28px] p-8 flex-1 flex items-center">
-              <div className="grid grid-cols-3 gap-6 w-full">
-                <ServiceCard
-                  title="월간 분실물함"
-                  description="해당 서비스를 이용하여 잃어버린 물건을 찾아보세요!"
-                  href="/losts"
-                  iconSrc="/icons/lost_box.svg"
-                />
-                <ServiceCard
-                  title="충전기 대여"
-                  description="학생회에서 충전기를 대여해드립니다!"
-                  href="/charger"
-                  iconSrc="/icons/charger.svg"
-                />
-                <ServiceCard
-                  title="소회의실 대여"
-                  description="소회의실 예약을 할 수 있습니다"
-                  href="/meeting-room"
-                  iconSrc="/icons/conforence_room.svg"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <WeeklySchedule/>
       </div>
     </main>
   );
