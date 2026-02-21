@@ -53,17 +53,9 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 pt-16 pb-8">
-        <button
-          onClick={() => router.back()}
-          className="mb-8 text-gray-700 hover:text-gray-900"
-          aria-label="뒤로가기"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-
-        <h1 className="text-4xl font-semibold mb-8">일정</h1>
+    <div className="w-full flex flex-col py-12 px-32 items-center justify-center">
+      <div className="w-full flex flex-col gap-3 mb-6 ">
+        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">일정</h1>  
 
         <Calendar
           year={currentYear}

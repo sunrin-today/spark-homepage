@@ -187,6 +187,7 @@ export default function Calendar({
                 <CalendarEventLayer
                   segments={segments}
                   eventRowCount={eventRowCount}
+                  cellHeight={desktopMinHeight}
                 />
               )}
             </div>
