@@ -20,28 +20,28 @@ export default function ServiceCard({
       className="
         block
         w-[315px] sm:w-[360px]
-        rounded-[32px]
+        rounded-[20px]
         border border-[#C0C0C0]
         p-6
         transition-all duration-300
       "
     >
-      <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden border border-black/25">
+      <div className="relative w-[312px] h-[147px] rounded-[25px] overflow-hidden border border-[rgba(0,0,0,0.25)]">
         <Image
           src={imageSrc}
           alt={title}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover"
           unoptimized
         />
       </div>
 
-      <div className="mt-5 flex flex-col gap-2">
-        <h4 className="text-xl font-semibold text-black">
+      <div className="mt-5 flex flex-col gap-[5px]">
+        <h4 className="text-xl font-semibold text-black leading-[24px]">
           {title}
         </h4>
 
-        <p className="text-sm font-medium text-[#8E8E8E] leading-relaxed">
+        <p className="text-sm font-medium text-[#8E8E8E] leading-relaxed leading-[17px]">
           {description}
         </p>
       </div>

@@ -103,7 +103,7 @@ export default function EventCarousel() {
 
       <div
         className="relative flex-1 rounded-[10px] overflow-hidden"
-        style={{ minHeight: "366px" }}
+        style={{ maxHeight: "366px" }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >

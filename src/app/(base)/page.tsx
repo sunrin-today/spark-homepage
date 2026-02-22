@@ -22,7 +22,7 @@ export default function HomePage() {
         </section>
 
         <section className="mb-14">
-          <h3 className="font-bold text-xl mb-6">학생회 서비스</h3>
+          <h3 className="font-semibold text-[24px] mb-[17px]">학생회 서비스</h3>
           <div className="flex flex-wrap gap-[22px] justify-start">
             <ServiceCard
               title="월간 분실물함"
@@ -58,7 +58,7 @@ export default function HomePage() {
         </section>
 
         {/* 급식 캘린더 */}
-        <section className="mb-20">
+        <section className="mb-12">
           <MealCalendar />
         </section>
 

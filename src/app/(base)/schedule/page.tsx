@@ -3,78 +3,68 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import Calendar from '@/components/schedule/Calendar';
-import ScheduleList from '@/components/schedule/ScheduleList';
-import { useAllSchedules } from '@/lib/queries/schedule/queries';
-import { Schedule, CalendarDate } from '@/types/schedule';
+import Calendar from '@/components/common/Calendar/Calendar';
+import { useCalendarSchedules } from '@/lib/queries/schedule/queries';
+import { CalendarItem } from '@/types/calendar';
 
 export default function SchedulePage() {
   const router = useRouter();
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const today = new Date();
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
 
-  // API를 통해 전체 스케줄 조회
-  const { data: schedules = [], isLoading, isError } = useAllSchedules();
+  const { data: schedules = [], isError } = useCalendarSchedules(
+    String(currentYear),
+    String(currentMonth + 1)
+  );
 
-  const handleEmptyDateClick = (date: CalendarDate) => {
-    console.log('빈 날짜 클릭:', date);
-    // TODO: 빈 날짜 클릭 시 실행할 로직 추가
+  const calendarItems: CalendarItem[] = schedules.map((s) => ({
+    id: s.id,
+    title: s.title,
+    startDate: s.startDate,
+    endDate: s.endDate,
+    color: s.color,
+  }));
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentYear((y) => y - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
   };
 
-  const handleMonthChange = (year: number, month: number) => {
-    setCurrentYear(year);
-    setCurrentMonth(month);
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentYear((y) => y + 1);
+      setCurrentMonth(0);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
   };
 
   if (isError) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-8 pt-20 lg:pt-8">
-        <div className="flex items-center justify-center h-96">
-          <p className="text-red-500 text-sm sm:text-base">일정을 불러오는데 실패했습니다.</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-500">일정을 불러오는데 실패했습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* 뒤로가기 버튼 */}
-        <button
-          onClick={() => router.back()}
-          className="mb-6 text-gray-700 hover:text-gray-900"
-          aria-label="뒤로가기"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
+    <div className="w-full flex flex-col py-12 px-32 items-center justify-center">
+      <div className="w-full flex flex-col gap-3 mb-6 ">
+        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">일정</h1>  
 
-        <div className="flex gap-6">
-          <div className="flex-1">
-            <Calendar
-              schedules={schedules}
-              selectedSchedule={selectedSchedule}
-              onScheduleClick={setSelectedSchedule}
-              onEmptyDateClick={handleEmptyDateClick}
-              onMonthChange={handleMonthChange}
-            />
-          </div>
-
-          <div className="flex-shrink-0" style={{ marginTop: "68px" }}>
-            <ScheduleList
-              schedules={schedules}
-              onScheduleClick={setSelectedSchedule}
-            />
-          </div>
-        </div>
-      </div>
-
-      {selectedSchedule && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setSelectedSchedule(null)}
+        <Calendar
+          year={currentYear}
+          month={currentMonth}
+          items={calendarItems}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
         />
-      )}
+      </div>
     </div>
   );
 }
