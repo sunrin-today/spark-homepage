@@ -44,18 +44,14 @@ export default function SchedulePage() {
     }
   };
 
-  if (isError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">일정을 불러오는데 실패했습니다.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full flex flex-col py-12 px-32 items-center justify-center">
-      <div className="w-full flex flex-col gap-3 mb-6 ">
-        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">일정</h1>  
+      <div className="w-full flex flex-col gap-3 mb-6">
+        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">일정</h1>
+
+        {isError && (
+          <p className="text-sm text-[#FF0000]">일정을 불러오는데 실패했습니다.</p>
+        )}
 
         <Calendar
           year={currentYear}
