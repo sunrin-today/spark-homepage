@@ -8,7 +8,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const PaginationBar: React.FC<PaginationProps> = ({
+export const PaginationBar: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   totalItems,
@@ -84,8 +84,6 @@ const PaginationBar: React.FC<PaginationProps> = ({
     </div>
   );
 };
-
-export default PaginationBar;
 
 
 // 사용 예시
