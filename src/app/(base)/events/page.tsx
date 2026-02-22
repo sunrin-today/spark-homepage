@@ -1,34 +1,27 @@
 "use client"
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import type {Event} from "@/types/events"
 import { EventItem } from "@/components/events/EventItem";
-import { Tag} from "@/components/ui/search/Tag"
 import Link from "next/link";
 import { SearchBar } from "@/components/ui/search/SearchBar";
-import { PaginationBar } from "@/components/ui/paging/PaginationBar";
+import { ResponsivePagination } from "@/components/ui/paging/ResponsivePagination";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
-import { useEventsQuery } from "@/lib/queries/events/queries";
+import { useEventsInfiniteQuery } from "@/lib/queries/events/queries";
 import { useSearchParams } from "next/navigation";
 
-const TAGS = [
-    { title: "전체", url: "" },
-    { title: "진행중", url: "onGoing" },
-    { title: "예정된 이벤트", url: "planned" },
-    { title: "끝나가는 이벤트", url: "ending-soon" },
-    { title: "종료된 이벤트", url: "finished" }
-];
-
 function EventsContent() {
-    const [selectedTag, setSelectedTag] = useState<{ title: string, url: string }>(TAGS[0]); 
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState<string>(useSearchParams().get("search") || "");
     const {page: paginationPage, setPage: setPaginationPage} = usePaginationQuery("page", 1);
-    const {data: events, isLoading} = useEventsQuery(
-        {url: selectedTag.url, page: paginationPage, limit: 16, query: searchQuery}
+    const {data: events} = useEventsInfiniteQuery(
+        {limit: 9, query: searchQuery}
     );
+    useEffect(() => {
+        console.log(events);
+    }, [events]);
     return (
-        <div className="w-full flex flex-col py-12 px-32 items-center justify-center">
-                <div className="w-full flex flex-col gap-3 mb-6 ">
+        <div className='w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center '>
+                <div className="w-full flex flex-col gap-3 ">
                     
                     <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">이벤트</h1>
                         
@@ -41,20 +34,32 @@ function EventsContent() {
                         searched={searchQuery}
                     />
                 </div>
-                { events?.items && events.items.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center align-items-center">
-                        {events?.items.map((event: Event) => (
-                            <Link href={`/events/${event.id}`} key={event.id}>   
+                { events?.pages[0]?.items?.length ? (
+                
+                    <ResponsivePagination
+                        totalItems={events?.pages[0]?.total || 0}
+                        currentPage={paginationPage}
+                        totalPages={events?.pages[0]?.totalPages || 1}
+                        onPageChange={setPaginationPage}
+                        hasMore={events?.pages.length < events?.pages[0]?.totalPages || false}
+                        onLoadMore={() => {
+                            const nextPage = paginationPage + 1;
+                            setPaginationPage(nextPage);
+                        }}
+                        mobileGridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                        desktopGridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                    >
+                        {events?.pages.flatMap(page => page?.items || []).map((event: Event) => (
+                            <Link href={`/events/${event.id}`} key={event.id} className="w-full">   
                                 <EventItem key={event.id} event={event} />
                             </Link>
                         ))}
-                    </div>
+                    </ResponsivePagination>
                 )  : (
                 <div className="text-center text-gray py-12">
                     <p>이벤트가 없습니다.</p>
                 </div>
                 )}
-                <PaginationBar totalPages={events?.totalPages || 1} currentPage={paginationPage} onPageChange={setPaginationPage} />
             </div>
     )
 }

@@ -3,13 +3,16 @@ import Image from "next/image"
 export const LostItem = ({lost}: {lost: Lost}) => {
     
     return (
-        <div className="flex flex-col justify-center  w-[234px] gap-3">
-            <Image src={lost.thumbnailUrl.url} unoptimized width={234} height={234} alt="event image"
-            className="rounded-[5px] aspect-[1/1] object-cover bg-gray"
-            />
+        <div className="w-fullflex flex-col justify-center w-full gap-3">
+            
+            <div className="relative w-full aspect-[323/201] overflow-hidden rounded-[20px]">   
+                <Image src={lost.thumbnailUrl.url} unoptimized fill alt="event image"
+                className="object-cover"
+                />
+            </div>
             <div className="gap-1">
-                <h4 className=" text-lg font-semibold text-black w-full truncate">{lost.title ? lost.title : "제목 없음"}</h4>
-                <p className="text-xs text-black w-full h-8 line-clamp-2 break-words">{lost.description ? lost.description : "내용 없음"}</p>
+                <h4 className="text-lg font-semibold text-black w-full truncate">{lost.title ? lost.title : "제목 없음"}</h4>
+                <p className="text-sm text-[#767676] w-full truncate">{lost.location ? lost.location : "내용 없음"}</p>
             </div>
             
         </div>

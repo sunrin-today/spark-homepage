@@ -5,14 +5,28 @@ export const eventKeys = {
   lists: () => [...eventKeys.all(), "list"] as const,
 
   list: (params: {
-    url: string;   // /event/onGoing
     page: number;
+    limit: number;
+    query?: string;
   }) =>
     [
       ...eventKeys.lists(),
-      params.url,
       params.page,
+      params.limit,
+      params.query ?? "",
     ] as const,
-  
-  detail: (id: string) => [...eventKeys.all(), "detail", id] as const,
+
+  infiniteList: (params: {
+    limit: number;
+    query?: string;
+  }) =>
+    [
+      ...eventKeys.all(),
+      "infinite-list",
+      params.limit,
+      params.query ?? "",
+    ] as const,
+
+  detail: (id: string) =>
+    [...eventKeys.all(), "detail", id] as const,
 };
