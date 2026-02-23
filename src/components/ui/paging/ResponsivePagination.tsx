@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import PaginationBar from './PaginationBar';
+import { PaginationBar } from './PaginationBar';
 
 interface ResponsivePaginationProps {
   totalPages: number;

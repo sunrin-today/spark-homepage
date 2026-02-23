@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { getPageColor } from "@/utils/color";
 import { useAuth } from "@/contexts/AuthContexts";
 import { useState, useEffect } from "react";
 import { Menu, Search, X } from "lucide-react";
@@ -20,24 +19,13 @@ export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
   const router = useRouter();
-  const color = getPageColor(path);
   const { user, logout, loading } = useAuth();
- const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    setIsOpen(false);
-    if(path!=="/") {
-      setScrolled(false);
-      return;
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return path === "/";
     }
-     const onScroll = () => {
-      setScrolled(window.scrollY > 200);
-    };
-
-    window.addEventListener("scroll", onScroll);
-    onScroll();
-
-  }, [path]);
-
+    return path.startsWith(href);
+  };
   const handleLogout = async () => {
     try {
       await logout();
@@ -76,22 +64,21 @@ export const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 사이드바 */}
-        <div
-          className={`
-            fixed inset-0 transform transition-transform duration-300 ease-in-out z-40
+          {/* 모바일 사이드바 */}
+          <div
+          className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 bg-[#FFFFFF]
             ${isOpen ? "translate-x-0" : "-translate-x-full"}
             lg:hidden
           `}
         >
-          <div className="h-full pt-20 px-6 space-y-8 overflow-y-auto">
-            <nav className="flex flex-col space-y-6">
+          <div className="h-full pt-[88px] px-6 overflow-y-auto">
+            <nav className="w-full max-w-[140px] flex flex-col gap-[16px]">
               {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
 
-                  className={`text-xl font-semibold py-2 hover:underline active:bo hover:bg-gray px-3 `}
+                  className={`w-full text-base px-2 py-1.5 font-medium hover:border-b-2 hover:border-main ` + (isActive(item.href) ? " border-b-2 border-main text-[#010101]" : "text-[#525252]")}
                 >
                   {item.label}
                 </Link>
@@ -120,16 +107,16 @@ export const Header = () => {
       </header>
 
       {/* 데스크탑 헤더 */}
-      <header className="hidden lg:flex w-full sticky h-[72px] top-0 left-0 right-0 justify-between items-center px-[50px] py-[5px] z-50">
+      <header className="hidden lg:flex w-full sticky h-[72px] top-0 left-0 right-0 justify-between items-center px-[24px] z-50">
         <Link href="/">
           <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
         </Link>
-        <div className="flex items-center ">
+        <div className="w-full max-w-[600px] flex items-center justify-between">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="w-[120px] py-1.5 px-2 font-medium hover:border-b-2 border-main transition-all text-center"
+              className={'max-w-[120px] w-full py-1.5 px-2 font-medium hover:border-b-2 border-main transition-all text-center' + (isActive(item.href) ? " border-b-2 border-main" : "")}
             >
               {item.label}
             </Link>

@@ -69,10 +69,10 @@ export default function Charger() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
-                <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-black text-white"
+                <button className=" px-4 py-3 text-base font-medium rounded-2xl bg-black text-white"
                     onClick={handleChargeRequest}
                     disabled={isPending}>
-                    {isPending ? "대여 중..." : "충전기 대여하기"}
+                    {isPending ? "대여 중..." : "대여하기"}
                 </button>
             </div>
             <Table
