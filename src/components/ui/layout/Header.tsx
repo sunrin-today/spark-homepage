@@ -37,7 +37,7 @@ export const Header = () => {
 
   return (
     <>
-      <header className="lg:hidden sticky top-0 left-0 right-0  px-6 z-50">
+      <header className="lg:hidden sticky top-0 left-0 right-0  px-6 z-50 bg-[#ffffff]">
         <div className="flex justify-between items-center h-[72px]">
           {!isOpen ? (
             <Link href="/" className="z-50">
@@ -107,7 +107,7 @@ export const Header = () => {
       </header>
 
       {/* 데스크탑 헤더 */}
-      <header className="hidden lg:flex w-full sticky h-[72px] top-0 left-0 right-0 justify-between items-center px-[24px] z-50">
+      <header className="hidden lg:flex w-full sticky h-[72px] top-0 left-0 right-0 justify-between items-center px-[24px] z-50 bg-[#ffffff]">
         <Link href="/">
           <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
         </Link>
