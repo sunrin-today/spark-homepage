@@ -2,7 +2,6 @@
 import { Cautions } from "@/components/ui/cautions/Cautions"
 import { LocationList } from "@/components/ui/list/LocationList"
 import { BackButton } from "@/components/ui/button/BackButton"
-import Calendar from "@/components/schedule/Calendar"
 import { useGetMeetingRoomSchedule } from "@/lib/queries/meeting-room/queries"
 import { useEffect, useState } from "react"
 import { buildMeetingRoomRequestIntoSchedule } from "@/utils/meeting-room"
@@ -16,16 +15,15 @@ export default function Charger() {
         console.log(currentMeeting?.data);
     }, [currentMeeting])
     return (
-        <div className='w-full max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-8 py-24
-                        flex flex-col gap-9'>
-            <h1 className="flex w-full items-center gap-3 text-2xl font-semibold border-lightgray">
-                <BackButton/> 학생회 서비스: 소회의실 대여
+        <div className='w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center'>
+            <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">
+                <BackButton/>   학생회 서비스: 소회의실 대여
             </h1>   
             
             <Cautions title="소회의실 대여시, 주의할 사항" items={cautions} />
             
             <div className="w-full">
-                <LocationList width="1110px" url="/locations/location-meeting-room.png" title="소회의실 대여하러 오는 곳" />
+                <LocationList width="1110px" url="/locations/location-meeting-room.png" title="소회의실 위치" />
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
                 <Link

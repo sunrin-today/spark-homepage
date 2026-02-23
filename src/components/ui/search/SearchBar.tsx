@@ -58,7 +58,7 @@ export const SearchBar = ({
 
                 {showSearchText && searched && (
                 <div className="font-medium text-[#767676]">
-                    검색어: <span className="text-black">{searched}</span>
+                    검색어 <span className="text-black">{searched}</span>
                 </div>
                 )}
             </div>

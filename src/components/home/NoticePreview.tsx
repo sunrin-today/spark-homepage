@@ -9,17 +9,20 @@ export default function NoticePreview() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-[24px] mb-[17px]">공지사항</h3>
+      <div className="flex items-center justify-between mb-[17px]">
+        <h3 className="font-semibold text-[24px]">공지사항</h3>
         <Link
           href="/notice"
-          className="font-medium text-base flex items-center gap-1"
+          className="font-medium text-base flex items-center gap-[5px]"
         >
           더보기 <Plus className="w-4 h-4" />
         </Link>
       </div>
 
-      <div className="flex-1 rounded-[20px] border border-gray overflow-hidden">
+      <div
+        className="flex-1 rounded-[20px] border border-gray overflow-hidden"
+        style={{ maxHeight: "366px" }}
+      >
         <div className="flex flex-col gap-[10px] px-[25px] py-[25px]">
           {isLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
@@ -36,12 +39,12 @@ export default function NoticePreview() {
               <Link
                 key={notice.id}
                 href={`/notice/${notice.id}`}
-                className="flex flex-col gap-1 px-[20px] py-[15px] bg-[#f9f9f9] rounded-[15px] transition-colors"
+                className="flex flex-col gap-[5px] px-[20px] py-[15px] bg-[#f9f9f9] rounded-[15px] transition-colors"
               >
-                <span className="text-base font-semibold text-black truncate">
+                <span className="text-base font-semibold text-black truncate leading-[19px]">
                   {notice.title}
                 </span>
-                <span className="text-sm font-medium text-gray">
+                <span className="text-sm font-medium text-gray leading-[17px]">
                   {new Date(notice.createdAt).toLocaleDateString("ko-KR", {
                     year: "numeric",
                     month: "long",

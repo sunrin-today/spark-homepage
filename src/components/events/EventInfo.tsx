@@ -1,7 +1,7 @@
 import type { Event } from "@/types/events"
 import Image from "next/image"
 import { copyLink, linkToEvent } from "@/utils/events"
-import { Share2 } from "lucide-react"
+import { ArrowRight, Share2 } from "lucide-react"
 import { formatKoreanDate } from "@/utils/date"
 
 export const EventInfo = ({ event }: { event: Event }) => {
@@ -9,25 +9,24 @@ export const EventInfo = ({ event }: { event: Event }) => {
     <div className="w-full max-w-4xl mx-auto">
       <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8">
         <div className="w-full lg:w-[60%]">
-          <div className="relative w-full aspect-[16/10] lg:aspect-[629/391] rounded-2xl overflow-hidden">
+          <div className="relative w-full aspect-[629/391] rounded-2xl overflow-hidden">
             <Image
               src={event.thumbnail.url}
               alt={event.name}
               fill
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 60vw"
               priority
               unoptimized
             />
           </div>
         </div>
 
-        <div className="w-full lg:w-[40%] flex flex-col">
+        <div className="w-full lg:max-w-[384px] flex flex-col">
           <div className="flex flex-col gap-2 pb-3 lg:pb-4">
-            <h2 className="text-2xl md:text-3xl lg:text-[32px] font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-[#010101]">
               {event.name}
             </h2>
-            <p className="text-xs md:text-sm text-[#767676]">
+            <p className="text-sm font-medium text-[#767676]">
               {formatKoreanDate(event.deadline)}
             </p>
           </div>
@@ -36,7 +35,7 @@ export const EventInfo = ({ event }: { event: Event }) => {
             {event.description}
           </p>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-6">
               <button 
                 onClick={() => copyLink()}
@@ -50,10 +49,10 @@ export const EventInfo = ({ event }: { event: Event }) => {
             <button 
               disabled={event.isLinkOn}
               onClick={() => linkToEvent(event.link)}
-              className={`w-[234px] h-[49px] bg-black text-white rounded-[63px] text-lg text-center 
+              className={`px-[70px] py-[13px] rounded-[63px] text-lg flex items-center justify-center gap-2 bg-black text-white
                         ${event.isLinkOn ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              참여하러가기
+              참여하러가기 <ArrowRight width={18} height={18}/>
             </button>
           </div>
         </div>

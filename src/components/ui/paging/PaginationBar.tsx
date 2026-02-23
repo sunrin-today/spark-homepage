@@ -1,90 +1,107 @@
-"use client";
+import React from 'react';
+import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'lucide-react';
 
-
-interface PaginationBarProps {
-  totalPages: number;
+interface PaginationProps {
   currentPage: number;
+  totalPages: number;
+  totalItems: number;
   onPageChange: (page: number) => void;
 }
 
-export const PaginationBar = ({
-  totalPages,
+export const PaginationBar: React.FC<PaginationProps> = ({
   currentPage,
+  totalPages,
+  totalItems,
   onPageChange,
-}: PaginationBarProps) => {
-
-  const maxVisiblePages = 8; 
-
-  // 현재 페이지를 중심으로 보여줄 페이지 번호들을 계산
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = startPage + maxVisiblePages - 1;
-
-    if (endPage > totalPages) {
-      endPage = totalPages;
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+}) => {
+  const handleFirstPage = () => {
+    if (currentPage > 1) {
+      onPageChange(1);
     }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return pageNumbers;
   };
 
-  const pageNumbers = getPageNumbers();
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
 
-  if (totalPages <= 1) return null;
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  const handleLastPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(totalPages);
+    }
+  };
 
   return (
-    <nav className="flex items-center justify-center space-x-2 mt-8">
-      {/* 이전 페이지 버튼 */}
-      <button
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage === 1}
-        className={`px-3 py-1 rounded-md ${
-          currentPage === 1
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-gray-700 hover:bg-gray-100"
-        }`}
-        aria-label="이전 페이지"
-      >
-        &lt;
-      </button>
+    <div className="flex items-center justify-end gap-3">
+      <span className="text-sm text-[#767676]">
+        {currentPage} / {totalPages} (총 {totalItems}개)
+      </span>
 
-
-      {/* 페이지 번호들 */}
-      {pageNumbers.map((page) => (
+      <div className="flex items-center gap-1">
         <button
-          key={page}
-          onClick={() => onPageChange(page)}
-          disabled={page > totalPages}
-          className={`px-3 py-1 rounded-md ${
-            page > totalPages
-              ? "text-gray-300 cursor-not-allowed bg-gray-100"
-              : page === currentPage
-              ? "bg-main text-white"
-              : "text-gray-700 hover:bg-gray-100"
-          }`}
+          onClick={handleFirstPage}
+          disabled={currentPage === 1}
+          className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
+          aria-label="첫 페이지"
         >
-          {page}
+          <ChevronsLeft className="h-4 w-4 text-[#767676]" />
         </button>
-      ))}
 
-      {/* 다음 페이지 버튼 */}
-      <button
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage === totalPages}
-        className={`px-3 py-1 rounded-md ${
-          currentPage === totalPages
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-gray-700 hover:bg-gray-100"
-        }`}
-        aria-label="다음 페이지"
-      >
-        &gt;
-      </button>
-    </nav>
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
+          aria-label="이전 페이지"
+        >
+          <ChevronLeft className="h-4 w-4 text-[#767676]" />
+        </button>
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
+          aria-label="다음 페이지"
+        >
+          <ChevronRight className="h-4 w-4 text-[#767676]" />
+        </button>
+
+        <button
+          onClick={handleLastPage}
+          disabled={currentPage === totalPages}
+          className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
+          aria-label="마지막 페이지"
+        >
+          <ChevronsRight className="h-4 w-4 text-[#767676]" />
+        </button>
+      </div>
+    </div>
   );
 };
+
+
+// 사용 예시
+/*
+const [currentPage, setCurrentPage] = useState(1);
+const ITEMS_PER_PAGE = 10;
+
+// 페이지네이션 연산
+const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
+const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+const endIndex = startIndex + ITEMS_PER_PAGE;
+const currentData = data.slice(startIndex, endIndex);
+
+// 컴포넌트 사용
+<Pagination
+  currentPage={currentPage}
+  totalPages={totalPages}
+  totalItems={data.length}
+  onPageChange={(page) => setCurrentPage(page)}
+/>
+*/

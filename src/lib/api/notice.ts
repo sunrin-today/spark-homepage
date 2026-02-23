@@ -17,12 +17,12 @@ const transformNoticeFromApi = (apiNotice: NoticeDetailResponse): Notice => {
 };
 
 export const noticesApi = {
-  getNotices: async (): Promise<Notice[]> => {
+  getNotices: async (page: number = 1, limit: number = 10): Promise<NoticeListResponse> => {
     try {
-      const response = await api.get<NoticeListResponse>('/api/notice');
-      const data = response.data;
-      
-      return data.items.map(transformNoticeFromApi);
+      const response = await api.get<NoticeListResponse>('/api/notice', {
+        params: { page, limit },
+      });
+      return response.data;
     } catch (error) {
       console.error('Failed to fetch notices:', error);
       throw error;
@@ -31,12 +31,10 @@ export const noticesApi = {
 
   getRecentNotices: async (page: number = 1, limit: number = 4): Promise<Notice[]> => {
     try {
-      const response = await api.get<NoticeListResponse>('/api/notice/recent', {
-        params: { page, limit }
+      const response = await api.get<NoticeListResponse>('/api/notice', {
+        params: { page, limit },
       });
-      const data = response.data;
-      
-      return data.items.map(transformNoticeFromApi);
+      return response.data.items.map(transformNoticeFromApi);
     } catch (error) {
       console.error('Failed to fetch recent notices:', error);
       throw error;

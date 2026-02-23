@@ -55,7 +55,7 @@ export default function Charger() {
         chargerRequestMutate()
     }
     return (
-        <div className="w-full max-w-[1440px] flex flex-col gap-12 mx-auto py-44 px-4 sm:px-6 lg:px-8">
+        <div className="w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center">
             <h1 className="flex w-full items-center gap-3 text-2xl font-semibold border-lightgray">
                 <BackButton/> 학생회 서비스: 충전기 대여
             </h1>        
@@ -69,10 +69,10 @@ export default function Charger() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
-                <button className="w-full sm:w-60 h-12 text-base sm:text-lg rounded-lg bg-black text-white"
+                <button className=" px-4 py-3 text-base font-medium rounded-2xl bg-black text-white"
                     onClick={handleChargeRequest}
                     disabled={isPending}>
-                    {isPending ? "대여 중..." : "충전기 대여하기"}
+                    {isPending ? "대여 중..." : "대여하기"}
                 </button>
             </div>
             <Table
