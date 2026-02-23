@@ -2,7 +2,6 @@
 import { Cautions } from "@/components/ui/cautions/Cautions"
 import { LocationList } from "@/components/ui/list/LocationList"
 import { BackButton } from "@/components/ui/button/BackButton"
-import Calendar from "@/components/schedule/Calendar"
 import { useGetMeetingRoomSchedule } from "@/lib/queries/meeting-room/queries"
 import { useEffect, useState } from "react"
 import { buildMeetingRoomRequestIntoSchedule } from "@/utils/meeting-room"
