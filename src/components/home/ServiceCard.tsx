@@ -18,15 +18,16 @@ export default function ServiceCard({
     <Link
       href={href}
       className="
-        block
+        flex flex-col
         w-[315px] sm:w-[360px]
+        h-[280px]
         rounded-[20px]
         border border-[#C0C0C0]
         p-6
         transition-all duration-300
       "
     >
-      <div className="relative w-[312px] h-[147px] rounded-[25px] overflow-hidden border border-[rgba(0,0,0,0.25)]">
+      <div className="relative w-full h-[140px] rounded-xl overflow-hidden border border-[rgba(0,0,0,0.25)]">
         <Image
           src={imageSrc}
           alt={title}
@@ -36,12 +37,22 @@ export default function ServiceCard({
         />
       </div>
 
-      <div className="mt-5 flex flex-col gap-[5px]">
+      <div className="mt-4 flex flex-col gap-[5px]">
         <h4 className="text-xl font-semibold text-black leading-[24px]">
           {title}
         </h4>
 
-        <p className="text-sm font-medium text-[#8E8E8E] leading-relaxed leading-[17px]">
+        <p
+          className="
+            text-sm md:text-[14px]
+            font-medium
+            text-[#8E8E8E]
+            leading-[17px]
+            h-[34px]
+            line-clamp-2
+            overflow-hidden
+          "
+        >
           {description}
         </p>
       </div>

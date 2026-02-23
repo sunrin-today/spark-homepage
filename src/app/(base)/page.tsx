@@ -12,7 +12,7 @@ export default function HomePage() {
 
       <div className="max-w-[1920px] mx-auto px-[6px] lg:px-[128px]">
 
-        <section className="mt-12 mb-14">
+        <section className="mt-12 mb-14 flex justify-center">
           <Weather />
         </section>
 

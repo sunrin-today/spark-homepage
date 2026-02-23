@@ -78,8 +78,10 @@ export default function EventCarousel() {
   };
 
   const getDaysRemaining = (deadline: string) => {
+    if (!deadline) return null;
     const today = new Date();
     const deadlineDate = new Date(deadline);
+    if (isNaN(deadlineDate.getTime())) return null;
     return Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   };
 
@@ -132,16 +134,22 @@ export default function EventCarousel() {
         </div>
 
         {/* D-day 배지 */}
-        <div
-          className="absolute text-white text-[18px] font-regular px-[22px] py-1.5 rounded-full z-10"
-          style={{
-            top: "14.5px",
-            left: "18px",
-            backgroundColor: "rgba(13,13,13,0.5)",
-          }}
-        >
-          {daysRemaining < 0 ? `${Math.abs(daysRemaining)}일 지남` : `${daysRemaining}일 남음`}
-        </div>
+        {(() => {
+          const days = getDaysRemaining(currentEvent?.deadline ?? "");
+          if (days === null) return null;
+          return (
+            <div
+              className="absolute text-white text-[18px] font-regular px-[22px] py-1.5 rounded-full z-10"
+              style={{
+                top: "14.5px",
+                left: "18px",
+                backgroundColor: "rgba(13,13,13,0.5)",
+              }}
+            >
+              {days < 0 ? `${Math.abs(days)}일 지남` : `${days}일 남음`}
+            </div>
+          );
+        })()}
 
         {/* 인디케이터 */}
         <div
