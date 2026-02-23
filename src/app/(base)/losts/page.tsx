@@ -10,9 +10,10 @@ import { useLostsQuery } from "@/lib/queries/losts/queries";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 
 function LostsContent() {
+    const searchParams = useSearchParams();
     const [searchValue, setSearchValue] = useState("");
-    const [searchQuery, setSearchQuery] = useState(useSearchParams().get("search") || "");
-    const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1  );
+    const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
+    const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1);
     const {data: lostsData } = useLostsQuery(currentPage, 20, searchQuery);
     return (
         <div className="w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center">

@@ -10,8 +10,9 @@ import { useEventsInfiniteQuery } from "@/lib/queries/events/queries";
 import { useSearchParams } from "next/navigation";
 
 function EventsContent() {
+    const searchParams = useSearchParams();
     const [searchValue, setSearchValue] = useState<string>("");
-    const [searchQuery, setSearchQuery] = useState<string>(useSearchParams().get("search") || "");
+    const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("search") || "");
     const {page: paginationPage, setPage: setPaginationPage} = usePaginationQuery("page", 1);
     const {data: events} = useEventsInfiniteQuery(
         {limit: 9, query: searchQuery}

@@ -45,7 +45,12 @@ function NoticesContent() {
         )}
       </div>
 
-        <PaginationBar totalPages={data?.totalPages || 1} currentPage={currentPage} onPageChange={setCurrentPage} />
+        <PaginationBar 
+          totalPages={data?.totalPages || 1} 
+          currentPage={currentPage} 
+          onPageChange={setCurrentPage}
+          totalItems={data?.total || 0}
+        />
       </div>
     </div>
   );
