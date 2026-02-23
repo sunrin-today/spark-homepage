@@ -12,7 +12,17 @@ interface PageProps {
 
 export default function NoticeDetailPage({ params }: PageProps) {
   const { noticeId } = use(params);
-  const { data: notice, error } = useNotice(noticeId);
+  const { data: notice, error, isLoading } = useNotice(noticeId);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-5xl flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 mx-auto min-h-screen">
+        <h1 className="flex items-center gap-3 text-[#010101] font-semibold text-left text-base md:text-2xl w-full">
+          <BackButton /> 공지사항 상세
+        </h1>
+      </div>
+    );
+  }
 
   if (error || !notice) {
     return (
@@ -24,7 +34,6 @@ export default function NoticeDetailPage({ params }: PageProps) {
 
   return (
     <div className="w-full max-w-5xl flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 mx-auto min-h-screen">
-
       <h1 className="flex items-center gap-3 text-[#010101] font-semibold text-left text-base md:text-2xl w-full">
         <BackButton /> 공지사항 상세: {notice.title}
       </h1>
@@ -35,7 +44,6 @@ export default function NoticeDetailPage({ params }: PageProps) {
         content={notice.content}
         imageUrls={notice.imageUrls}
       />
-
     </div>
   );
 }
