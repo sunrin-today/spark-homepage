@@ -3,11 +3,14 @@
 import { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMealByYearMonth } from "@/lib/queries/meal/queries";
-import { MealResponse } from "@/types/meal";
+import { MealResponse, MealMenuItem } from "@/types/meal";
+import MealDetailModal from "@/components/home/MealDetailModal";
 
 interface MealDay {
   date: number;
-  meals: string[];
+  allMealItems: MealMenuItem[];
+  displayMeals: string[];
+  mealData: MealResponse | null;
   isCurrentMonth: boolean;
   isToday: boolean;
   dayOfWeek: number;
@@ -16,18 +19,17 @@ interface MealDay {
 const WEEK_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const MAX_DISPLAY_MEALS = 2;
 
-function buildMealMap(meals: MealResponse[] | null | undefined): Record<number, string[]> {
+function buildMealMap(
+  meals: MealResponse[] | null | undefined,
+): Record<number, MealResponse> {
   if (!meals) return {};
-  const map: Record<number, string[]> = {};
-  
+  const map: Record<number, MealResponse> = {};
+
   for (const meal of meals) {
     const dateStr = meal.mealDate.replace(/-/g, "");
     const day = parseInt(dateStr.slice(6, 8), 10);
     if (!day) continue;
-
-    map[day] = Array.isArray(meal.menu) 
-      ? meal.menu.map(s => s.trim()).filter(Boolean) 
-      : [];
+    map[day] = meal;
   }
   return map;
 }
@@ -35,7 +37,7 @@ function buildMealMap(meals: MealResponse[] | null | undefined): Record<number, 
 function buildCalendar(
   year: number,
   month: number,
-  mealMap: Record<number, string[]>,
+  mealMap: Record<number, MealResponse>,
 ): MealDay[] {
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
@@ -49,7 +51,9 @@ function buildCalendar(
     const d = prevLastDate - i;
     days.push({
       date: d,
-      meals: [],
+      allMealItems: [],
+      displayMeals: [],
+      mealData: null,
       isCurrentMonth: false,
       isToday: false,
       dayOfWeek: days.length % 7,
@@ -64,14 +68,19 @@ function buildCalendar(
       today.getMonth() === month &&
       today.getDate() === d;
 
-    const allMeals = mealMap[d] ?? [];
-    const displayMeals = allMeals.slice(0, MAX_DISPLAY_MEALS);
-    const remaining = allMeals.length - MAX_DISPLAY_MEALS;
-    if (remaining > 0) displayMeals.push(`+ ${remaining}`);
+    const meal = mealMap[d] ?? null;
+    const allMealItems: MealMenuItem[] = Array.isArray(meal?.menu) ? meal.menu : [];
+
+    const names = allMealItems.map((m) => m.dishName);
+    const displayNames = names.slice(0, MAX_DISPLAY_MEALS);
+    const remaining = names.length - MAX_DISPLAY_MEALS;
+    if (remaining > 0) displayNames.push(`+ ${remaining}`);
 
     days.push({
       date: d,
-      meals: displayMeals,
+      allMealItems,
+      displayMeals: displayNames,
+      mealData: meal,
       isCurrentMonth: true,
       isToday,
       dayOfWeek: dow,
@@ -84,7 +93,9 @@ function buildCalendar(
     for (let d = 1; d <= remaining; d++) {
       days.push({
         date: d,
-        meals: [],
+        allMealItems: [],
+        displayMeals: [],
+        mealData: null,
         isCurrentMonth: false,
         isToday: false,
         dayOfWeek: days.length % 7,
@@ -99,6 +110,12 @@ export default function MealCalendar() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
+
+  // 모달 상태
+  const [modalData, setModalData] = useState<{
+    meal: MealResponse | null;
+    date: { year: number; month: number; day: number };
+  } | null>(null);
 
   const yearMonth = `${year}${String(month + 1).padStart(2, "0")}`;
 
@@ -119,6 +136,14 @@ export default function MealCalendar() {
   const handleNext = () => {
     if (month === 11) { setYear((y) => y + 1); setMonth(0); }
     else setMonth((m) => m + 1);
+  };
+
+  const handleDayClick = (day: MealDay) => {
+    if (!day.isCurrentMonth) return;
+    setModalData({
+      meal: day.mealData,
+      date: { year, month, day: day.date },
+    });
   };
 
   return (
@@ -166,7 +191,6 @@ export default function MealCalendar() {
           ))}
         </div>
 
-        {/* 로딩 상태 */}
         {isLoading && (
           <div className="flex justify-center items-center h-40 text-sm text-gray-400">
             급식 정보를 불러오는 중...
@@ -183,14 +207,15 @@ export default function MealCalendar() {
                 const opacity = !day.isCurrentMonth ? 0.4 : day.isToday ? 1 : 0.7;
                 const dateColor = isSun ? "#FA5353" : isSat ? "#4D71FF" : "#505050";
 
-                const regularMeals = day.meals.filter((m) => !m.trimStart().startsWith("+"));
-                const plusItem = day.meals.find((m) => m.trimStart().startsWith("+"));
+                const regularMeals = day.displayMeals.filter((m) => !m.trimStart().startsWith("+"));
+                const plusItem = day.displayMeals.find((m) => m.trimStart().startsWith("+"));
 
                 return (
                   <div
                     key={di}
-                    className="min-h-[80px]"
+                    className="min-h-[80px] cursor-pointer hover:bg-gray-50 transition-colors"
                     style={{ opacity, padding: 12 }}
+                    onClick={() => handleDayClick(day)}
                   >
                     {day.isToday ? (
                       <span
@@ -258,6 +283,14 @@ export default function MealCalendar() {
             </div>
           ))}
       </div>
+
+      {modalData && (
+        <MealDetailModal
+          meal={modalData.meal}
+          date={modalData.date}
+          onClose={() => setModalData(null)}
+        />
+      )}
     </div>
   );
 }
