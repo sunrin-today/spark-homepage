@@ -1,36 +1,48 @@
 import { Lost } from "@/types/losts"
 import Image from "next/image"
-import { copyLink } from "@/utils/events"
-import { Share2 } from "lucide-react"
-import { getDashedFormattedDate } from "@/utils/date"
+import { ArrowRight } from "lucide-react"
+import { formatKoreanDate } from "@/utils/date"
 import { useFindLostMutation } from "@/lib/queries/losts/mutations"
 
 export const LostInfo = ({lost}: {lost: Lost}) => {
     const { mutate } = useFindLostMutation(lost.id)
     return (
-        <div className='max-w-[1024px] w-full flex items-center gap-8
-                        lg:flex-row flex-col'>
-            <Image src={lost.thumbnailUrl.url} unoptimized width={500} height={500} alt="lost image" 
-                    className="w-[500px] h-[500px] aspect-square object-cover rounded-[20px]"/>
-            <div className="w-full flex flex-col max-w-[365px]">
-                <div className="w-full flex flex-col gap-3 pb-[13px] text-black">
-                    <h4 className="font-semibold text-[32px] text-black w-full truncate">{lost.title}</h4>
-                    <div className="flex gap-[11px] items-center">
-                        <h4 className="text-black font-semibold">습득일</h4>
-                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{getDashedFormattedDate(lost.foundDate)}</p>
-                    </div>
-                    <div className="flex gap-[11px] items-center">
-                        <h4 className="text-black font-semibold">습득장소</h4>
-                        <p className="text-black bg-lightgray px-[10px] py-[8px]">{lost.location}</p>
-                    </div>
-                </div>
-                <p className="w-full text-xs break-words line-clamp-6 text-black">{lost.description}</p>
-                <div className="pt-[27px] w-full flex items-center justify-between px-[7px]">
-                    <Share2 onClick={() => copyLink()} className="cursor-pointe w-8 h-8" />
-                    <button className="w-[234px] h-[49px] text-white bg-black rounded-[100px] text-lg" onClick={() => mutate()}>분실물 찾으러 가기</button>
-                </div>
-            </div>
+        <div className="w-full flex flex-col justify-center lg:flex-row items-center md:items-start gap-5">
+          <div className="relative w-full max-w-[516px] aspect-[516/315] rounded-[20px] overflow-hidden">
+            <Image
+              src={lost.thumbnailUrl.url}
+              alt={lost.title}
+              fill
+              className="object-cover flex-shrink-0"
+              priority
+              unoptimized
+            />
+          </div>
 
+        <div className="w-full lg:max-w-[300px] flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-base md:text-xl font-semibold text-[#010101]">
+                {lost.title}
+              </h2>
+              <p className="text-xs md:text-sm font-medium text-[#767676]">
+                {formatKoreanDate(lost.foundDate)}
+              </p>
+            </div>
+            
+            <p className="text-sm text-black">
+              {lost.location}
+            </p>
+          </div>
+            <button 
+              disabled={lost.taker != null}
+              onClick={() => mutate()}
+              className={`px-[70px] py-[10px] md:py-[13px] rounded-[63px] text-sm md:text-lg flex items-center justify-center gap-2 bg-black text-white
+                        ${lost.taker != null ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              분실물 찾으러 가기 <ArrowRight width={18} height={18}/>
+            </button>
         </div>
+      </div>
     )
 }

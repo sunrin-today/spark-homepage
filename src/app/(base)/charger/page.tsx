@@ -3,7 +3,7 @@ import { BackButton } from "@/components/ui/button/BackButton"
 import { Cautions } from "@/components/ui/cautions/Cautions"
 import { LocationList } from "@/components/ui/list/LocationList"
 import { useChargerRequestMutation } from "@/lib/queries/charger-request/mutations"
-import { useGetRemainingChargerQuery } from "@/lib/queries/charger/queries"
+import {useGetRemainingChargerQuery } from "@/lib/queries/charger/queries"
 import { Column } from "@/types/table"
 import { Table } from "@/components/common/Table/Table"
 import type { Charger } from "@/types/charger"
@@ -55,7 +55,7 @@ export default function Charger() {
         chargerRequestMutate()
     }
     return (
-        <div className="w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center">
+        <div className="w-full flex flex-col gap-9 px-3 py-6 md:py-12 md:px-32 justify-center">
             <h1 className="flex w-full items-center gap-3 text-2xl font-semibold border-lightgray">
                 <BackButton/> 학생회 서비스: 충전기 대여
             </h1>        
@@ -68,13 +68,14 @@ export default function Charger() {
                 </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-12 sm:pt-24">
-                <button className=" px-4 py-3 text-base font-medium rounded-2xl bg-black text-white"
+            <div className="flex gap-3">
+                <button className="px-4 py-3 text-base font-medium rounded-2xl bg-black text-white"
                     onClick={handleChargeRequest}
                     disabled={isPending}>
                     {isPending ? "대여 중..." : "대여하기"}
                 </button>
             </div>
+            <div className="w-full max-w-[1063px]">
             <Table
                 tableHeader={<h4 className="text-xl font-semibold">충전기 대여 기록</h4>}
                 sort={sortKey}
@@ -82,6 +83,7 @@ export default function Charger() {
                 onRefresh={() => {}}
                 columns={chargerColumn}
                 data={[{id: "1", chargerId: 1, description: "테스트", status: "대여 가능", currentRentalRecord: null}]} />
+            </div>
         </div>
     )
 }

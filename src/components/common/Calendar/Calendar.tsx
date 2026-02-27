@@ -86,6 +86,7 @@ export default function Calendar({
   items,
   onPrevMonth,
   onNextMonth,
+  onClickDate,
 }: CalendarProps) {
   const isMobile = useIsMobile();
   const weeks = buildCalendarCells(year, month);
@@ -173,6 +174,7 @@ export default function Calendar({
                       minHeight: cellHeight,
                       padding: CELL_PADDING,
                     }}
+                    onClick={() => onClickDate?.(`${cell.year}-${String(cell.month + 1).padStart(2, "0")}-${String(cell.date).padStart(2, "0")}`)}
                   >
                     <DateBadge
                       cell={cell}

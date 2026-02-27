@@ -3,8 +3,7 @@ import Image from "next/image"
 export const LostItem = ({lost}: {lost: Lost}) => {
     
     return (
-        <div className="w-fullflex flex-col justify-center w-full gap-3">
-            
+        <div className="w-full flex flex-col justify-center gap-3">
             <div className="relative w-full aspect-[323/201] overflow-hidden rounded-[20px]">   
                 <Image src={lost.thumbnailUrl.url} unoptimized fill alt="event image"
                 className="object-cover"

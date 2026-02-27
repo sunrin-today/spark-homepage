@@ -12,6 +12,7 @@ export interface CalendarProps {
   items: CalendarItem[];
   onPrevMonth?: () => void;
   onNextMonth?: () => void;
+  onClickDate?: (date: string) => void;
 }
 
 export interface CalendarDateCell {

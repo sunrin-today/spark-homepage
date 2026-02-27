@@ -21,7 +21,7 @@ function EventsContent() {
         console.log(events);
     }, [events]);
     return (
-        <div className='w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center '>
+        <div className='w-full flex flex-col gap-9 px-3 py-6 md:py-12 md:px-32 justify-center '>
                 <div className="w-full flex flex-col gap-3 ">
                     
                     <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">이벤트</h1>
