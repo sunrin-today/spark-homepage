@@ -16,10 +16,13 @@ export default function MeetingRoomRentalPage() {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [selectedDate, setSelectedDate] = useState<string | undefined>(new Date().toISOString().split("T")[0]);
+  const [selectedDate, setSelectedDate] = useState<string | undefined>(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`);
   const { data : meetingSchedule } = useGetMeetingRoomSchedule({ month: currentMonth + 1, limit: 100 });
   const { open, close } = useModal();
   const { mutate } = usePostMeetingRoomRequest();
+  useEffect(() => {
+    console.log(selectedDate, new Date());
+  }, [selectedDate]);
   const calendarItems: CalendarItem[] = meetingSchedule?.data.items.map((s) => ({
     id: s.id,
     title: s.borrower.name,
@@ -65,7 +68,9 @@ export default function MeetingRoomRentalPage() {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col py-1 gap-[10px]">
         <p className="text-sm text-[#767676]">대여 희망 날짜</p>
-        <DateInput value={selectedDate} onChange={setSelectedDate} />
+        <div className="w-full max-w-[400px]">
+          <DateInput value={selectedDate} onChange={setSelectedDate} />
+        </div>
       </div>
       <button disabled={!selectedDate} className="w-fit px-4 py-3 text-base font-medium rounded-2xl bg-black text-white" onClick={() => handlePostMeetingRoomRequest()}>대여하기</button>
     </div>

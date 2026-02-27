@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useFloating, offset, shift, useClick, useDismiss, useInteractions } from "@floating-ui/react";
+import { useFloating, offset, shift, flip, useClick, useDismiss, useInteractions } from "@floating-ui/react";
 import { CalendarDaysIcon } from "lucide-react";
 import BaseInput from "./Input";
 import { formatKoreanDate } from "@/utils/date";
@@ -29,7 +29,7 @@ export const DateInput = ({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement: "bottom-start",
-    middleware: [offset(8), shift()],
+    middleware: [offset(8), shift(), flip()],
   });
 
   const click = useClick(context);
@@ -68,7 +68,7 @@ export const DateInput = ({
           ref={refs.setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
-          className="z-50 bg-white rounded-lg border border-[#C3C3C3]"
+          className="z-50 bg-[#FFFFFF] rounded-lg border border-[#C3C3C3]"
         >
           <DatePicker 
             selectedDate={value ? new Date(value) : new Date()}

@@ -36,9 +36,7 @@ export default function Charger() {
                 render: (row) => <span className="text-[#505050]">{row.wantedDate}</span>
             }
         ]
-    const handleSortChange = (sort: Sort) => {
-        console.log(sort)
-    }
+    
     return (
         <div className='w-full flex flex-col gap-9 px-3 py-6 md:py-12 md:px-32 justify-center'>
             <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">

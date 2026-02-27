@@ -1,4 +1,4 @@
-import Calendar from "@/components/common/Calendar/Calendar";
+import InputCalendar from "@/components/common/Calendar/InputCalendar";
 import { X, Save } from "lucide-react";
 import { useState } from "react";
 
@@ -15,12 +15,13 @@ export const DatePicker = ({
 }: DatePickerProps) => {
     const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   return (
-    <div className="w-[324px] p-3">
-      <Calendar
+    <div className="w-[320px] p-3">
+      <InputCalendar
         year={selectedDate.getFullYear()}
         month={selectedDate.getMonth()}
         items={[]}
-        onClickDate={(date) => setSelectedDate(new Date(date))}
+        selectedDate={selectedDate}
+        onDateClick={(year, month, day) => setSelectedDate(new Date(year, month, day))}
       />
       <div className="flex w-full justify-end gap-2">
         <button 
