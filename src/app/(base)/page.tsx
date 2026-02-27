@@ -10,9 +10,9 @@ export default function HomePage() {
     <main className="w-full">
       <HeroSection />
 
-      <div className="max-w-[1920px] mx-auto px-[6px] lg:px-[128px]">
+      <div className="max-w-[1920px] mx-auto px-6 lg:px-[128px]">
 
-        <section className="mt-12 mb-14 flex justify-center">
+        <section className="mt-6 lg:mt-12 mb-14 flex justify-center">
           <Weather />
         </section>
 

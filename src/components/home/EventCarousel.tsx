@@ -97,14 +97,14 @@ export default function EventCarousel() {
   }
 
   const currentEvent = extended[extendedIndex];
-  const daysRemaining = getDaysRemaining(currentEvent?.deadline ?? "");
 
   return (
     <div className="flex flex-col h-full">
       <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
 
+      {/* 데스크탑: 기존 슬라이드 캐러셀 */}
       <div
-        className="relative flex-1 rounded-[10px] overflow-hidden"
+        className="hidden sm:block relative flex-1 rounded-[10px] overflow-hidden"
         style={{ maxHeight: "366px" }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -119,7 +119,7 @@ export default function EventCarousel() {
           onTransitionStart={handleTransitionStart}
         >
           {extended.map((event, idx) => (
-            <div key={idx} className="relative min-w-full h-full">
+            <div key={idx} className="relative min-w-full h-full" style={{ minHeight: "366px" }}>
               <Link href={`/events/${event.id}`} className="block w-full h-full">
                 <Image
                   src={event.thumbnail.url}
@@ -177,6 +177,43 @@ export default function EventCarousel() {
               }}
             />
           ))}
+        </div>
+      </div>
+
+      {/* 모바일: 가로 스크롤 */}
+      <div className="sm:hidden overflow-x-auto scrollbar-hide -mx-[6px] px-[6px]">
+        <div className="flex gap-[17px]">
+          {events.map((event) => {
+            const days = getDaysRemaining(event.deadline ?? "");
+            return (
+              <Link
+                key={event.id}
+                href={`/events/${event.id}`}
+                className="relative flex-shrink-0 rounded-[10px] overflow-hidden"
+                style={{ width: "238px", height: "276px" }}
+              >
+                <Image
+                  src={event.thumbnail.url}
+                  alt={event.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+                {days !== null && (
+                  <div
+                    className="absolute text-white text-[18px] font-regular px-[22px] py-1.5 rounded-full z-10"
+                    style={{
+                      top: "14.5px",
+                      left: "18px",
+                      backgroundColor: "rgba(13,13,13,0.5)",
+                    }}
+                  >
+                    {days < 0 ? `${Math.abs(days)}일 지남` : `${days}일 남음`}
+                  </div>
+                )}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
