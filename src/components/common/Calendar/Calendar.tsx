@@ -17,11 +17,9 @@ const BAR_HEIGHT = 37;
 const BAR_GAP = 3;
 const CELL_PADDING = 12;
 
-// 데스크탑 셀 고정 높이 140px, 모바일 40px
 const DESKTOP_CELL_HEIGHT = 140;
-const MOBILE_CELL_HEIGHT = 40;
 const DATE_BADGE_SIZE = 24;
-const DATE_BADGE_SIZE_MOBILE = 16;
+const DATE_BADGE_SIZE_MOBILE = 24;
 
 function getEventLayerHeight(rowCount: number): number {
   if (rowCount === 0) return 0;
@@ -39,7 +37,8 @@ function DateBadge({
 }) {
   const color = DAY_COLORS[dayIndex] ?? "#505050";
   const size = isMobile ? DATE_BADGE_SIZE_MOBILE : DATE_BADGE_SIZE;
-  const fontSize = isMobile ? 10 : 16;
+  const fontSize = isMobile ? 14 : 16;
+  const fontWeight = isMobile ? 500 : 400;
 
   if (cell.isToday) {
     return (
@@ -54,7 +53,6 @@ function DateBadge({
           backgroundColor: "#FF805C",
           color: "#FFFFFF",
           fontSize,
-          fontWeight: 600,
           lineHeight: 1,
           flexShrink: 0,
         }}
@@ -68,6 +66,7 @@ function DateBadge({
     <span
       style={{
         fontSize,
+        fontWeight,
         color,
         lineHeight: `${size}px`,
         display: "block",
@@ -86,20 +85,25 @@ export default function Calendar({
   items,
   onPrevMonth,
   onNextMonth,
-  onClickDate,
-}: CalendarProps) {
+  onDateClick,
+}: CalendarProps & {
+  onDateClick?: (year: number, month: number, day: number) => void;
+}) {
   const isMobile = useIsMobile();
   const weeks = buildCalendarCells(year, month);
+
+  const MOBILE_CELL_HEIGHT = 40;
+  const MOBILE_ROW_GAP = 12;
 
   return (
     <div className="w-full select-none">
       {/* Header */}
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center">
-          <span className="px-2 py-1 text-[20px] font-medium text-black">
+          <span className="px-2 py-1 text-sm md:text-[20px] font-medium text-black">
             {year}년
           </span>
-          <span className="px-2 py-1 text-[20px] font-medium text-black">
+          <span className="px-2 py-1 text-sm md:text-[20px] font-medium text-black">
             {String(month + 1).padStart(2, "0")}월
           </span>
         </div>
@@ -138,7 +142,13 @@ export default function Calendar({
       </div>
 
       {/* Grid */}
-      <div>
+      <div
+        style={
+          isMobile
+            ? { display: "flex", flexDirection: "column", gap: MOBILE_ROW_GAP }
+            : undefined
+        }
+      >
         {weeks.map((week, weekIndex) => {
           const segments = buildEventSegmentsForWeek(week, items);
           const eventRowCount =
@@ -146,7 +156,6 @@ export default function Calendar({
               ? Math.max(...segments.map((s) => s.rowIndex)) + 1
               : 0;
 
-          // 데스크탑: 고정 140px이지만 이벤트가 많으면 늘어남
           const desktopMinHeight = Math.max(
             DESKTOP_CELL_HEIGHT,
             CELL_PADDING + DATE_BADGE_SIZE + CELL_PADDING + getEventLayerHeight(eventRowCount) + CELL_PADDING
@@ -160,11 +169,7 @@ export default function Calendar({
               style={{ minHeight: cellHeight }}
             >
               {week.map((cell, dayIndex) => {
-                const opacity = !cell.isCurrentMonth
-                  ? 0.4
-                  : cell.isToday
-                  ? 1
-                  : 0.7;
+                const opacity = !cell.isCurrentMonth ? 0.4 : cell.isToday ? 1 : 0.7;
 
                 return (
                   <div
@@ -173,8 +178,14 @@ export default function Calendar({
                       opacity,
                       minHeight: cellHeight,
                       padding: CELL_PADDING,
+                      cursor: isMobile ? "pointer" : "default",
                     }}
-                    onClick={() => onClickDate?.(`${cell.year}-${String(cell.month + 1).padStart(2, "0")}-${String(cell.date).padStart(2, "0")}`)}
+                    onClick={() => {
+                      if (isMobile && onDateClick) {
+                        onDateClick(cell.year, cell.month, cell.date);
+                      }
+                    }}
+                    className={isMobile ? "active:bg-[#F5F5F5] rounded-lg transition-colors" : ""}
                   >
                     <DateBadge
                       cell={cell}

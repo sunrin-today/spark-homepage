@@ -1,11 +1,12 @@
-export interface MealItem {
-  meal: string;
-  code: string | null;
+export interface MealMenuItem {
+  dishName: string;
+  allergyNumbers: number[];
 }
 
 export interface MealResponse {
-  date: string;
-  meals: MealItem[];
-  existence: boolean;
-  rest: boolean;
+  schoolName: string;
+  mealDate: string;
+  mealTypeName: string;
+  menu: MealMenuItem[];
+  calories: string;
 }
