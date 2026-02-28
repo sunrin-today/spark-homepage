@@ -30,29 +30,35 @@ export function ResponsivePagination({
   desktopGridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
 }: ResponsivePaginationProps) {
   const isMobile = useIsMobile();
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  // hasMore와 loading을 ref로 관리해서 Observer 콜백에서 최신값 참조
+  const hasMoreRef = useRef(hasMore);
+  const loadingRef = useRef(loading);
+
+  useEffect(() => { hasMoreRef.current = hasMore; }, [hasMore]);
+  useEffect(() => { loadingRef.current = loading; }, [loading]);
 
   useEffect(() => {
-    if (!isMobile || !hasMore || !onLoadMore) return;
+    if (!isMobile || !onLoadMore) return;
 
-    if (observerRef.current) observerRef.current.disconnect();
-
-    observerRef.current = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !loading) {
+        if (
+          entries[0].isIntersecting &&
+          hasMoreRef.current &&
+          !loadingRef.current
+        ) {
           onLoadMore();
         }
       },
       { threshold: 0.1 }
     );
 
-    if (loadMoreRef.current) {
-      observerRef.current.observe(loadMoreRef.current);
-    }
+    const el = loadMoreRef.current;
+    if (el) observer.observe(el);
 
-    return () => observerRef.current?.disconnect();
-  }, [isMobile, hasMore, loading, onLoadMore]);
+    return () => observer.disconnect();
+  }, [isMobile, onLoadMore]);
 
   return (
     <div className='flex flex-col gap-6'>
@@ -64,11 +70,10 @@ export function ResponsivePagination({
         <div className="w-full">
           {loading && (
             <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400" />
             </div>
           )}
-          <div ref={loadMoreRef} className="h-4" />
-          
+          {hasMore && <div ref={loadMoreRef} className="h-4" />}
         </div>
       ) : (
         totalPages > 1 && (
