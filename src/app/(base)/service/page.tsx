@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { SearchBar } from "@/components/ui/search/SearchBar";
 import { PaginationBar } from "@/components/ui/paging/PaginationBar";
 import ServiceCard from "@/components/home/ServiceCard";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const SERVICES = [
   {
@@ -23,7 +24,7 @@ const SERVICES = [
     title: "충전기 대여",
     description: (
       <>
-        해당 서비스를 이용하여<br />잃어버린 물건을 찾아보세요!
+        해당 서비스를 이용하여<br />충전기를 대여해보세요!
       </>
     ),
     href: "/charger",
@@ -34,7 +35,7 @@ const SERVICES = [
     title: "소회의실 대여",
     description: (
       <>
-        해당 서비스를 이용하여<br />잃어버린 물건을 찾아보세요!
+        해당 서비스를 이용하여<br />소회의실을 대여해보세요!
       </>
     ),
     href: "/meeting-room",
@@ -45,6 +46,7 @@ const SERVICES = [
 const ITEMS_PER_PAGE = 9;
 
 function ServiceContent() {
+  const isMobile = useIsMobile();
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
@@ -55,10 +57,13 @@ function ServiceContent() {
   );
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
-  const currentItems = filtered.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  // 모바일은 전체 표시, 데스크탑은 페이지네이션
+  const currentItems = isMobile
+    ? filtered
+    : filtered.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+      );
 
   const handleSearch = () => {
     setSearchQuery(searchValue);
@@ -98,14 +103,17 @@ function ServiceContent() {
         </div>
       )}
 
-      <div className="mt-9">
-        <PaginationBar
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filtered.length}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
-      </div>
+      {/* 데스크탑에서만 페이지네이션 표시 */}
+      {!isMobile && (
+        <div className="mt-9">
+          <PaginationBar
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filtered.length}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        </div>
+      )}
     </div>
   );
 }
