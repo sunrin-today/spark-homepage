@@ -10,7 +10,6 @@ export default function ChargerCompletePage() {
                 imageSrc="/locations/location-council.png"
                 imageWidth={673}
                 imageHeight={380}
-                backPath="/charger"
             />
         </div>
     )

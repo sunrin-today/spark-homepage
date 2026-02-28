@@ -8,8 +8,8 @@ export default function EventDetail() {
     const { lostId } = useParams();
     const {data: lost} = useLostDetailQuery(lostId as string)
     return (
-        <div className="w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center">
-            <div className="w-full flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 justify-center">
+        <div className="w-full flex flex-col gap-6 px-6 py-6 md:py-12 md:px-32 justify-center">
+            <div className="w-full flex flex-col gap-6  md:py-12 md:px-32 justify-center">
                 <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">
                     <BackButton/> 분실물 상세
                 </h1>   

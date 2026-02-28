@@ -10,7 +10,6 @@ export default function LostsCompletePage() {
                 imageSrc="/locations/location-council.png"
                 imageWidth={673}
                 imageHeight={380}
-                backPath="/losts"
             />
         </div>
     )

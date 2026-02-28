@@ -48,7 +48,8 @@ export default function MeetingRoomRentalPage() {
       setCurrentMonth((m) => m + 1);
     }
   };
-  const handlePostMeetingRoomRequest = () => {
+  const handlePostMeetingRoomRequest = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!selectedDate) {
       alert("날짜를 선택해주세요");
       return;
@@ -65,15 +66,15 @@ export default function MeetingRoomRentalPage() {
       <Calendar year={currentYear} month={currentMonth} items={calendarItems} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} />
     </div>
 
-    <div className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={handlePostMeetingRoomRequest}>
       <div className="flex flex-col py-1 gap-[10px]">
         <p className="text-sm text-[#767676]">대여 희망 날짜</p>
         <div className="w-full max-w-[400px]">
           <DateInput value={selectedDate} onChange={setSelectedDate} />
         </div>
       </div>
-      <button disabled={!selectedDate} className="w-fit px-4 py-3 text-base font-medium rounded-2xl bg-black text-white" onClick={() => handlePostMeetingRoomRequest()}>대여하기</button>
-    </div>
+      <button disabled={!selectedDate} className={`w-fit px-4 py-3 text-base font-medium rounded-2xl bg-black text-white ${!selectedDate ? "opacity-50 cursor-not-allowed" : ""}`} type="submit">대여하기</button>
+    </form>
   </div>
   )
 }

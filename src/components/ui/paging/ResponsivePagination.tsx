@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { PaginationBar } from './PaginationBar';
 
@@ -26,26 +26,21 @@ export function ResponsivePagination({
   hasMore = false,
   onLoadMore,
   loading = false,
-  mobileGridCols = "grid-cols-2 sm:grid-cols-2 md:grid-cols-3",
-  desktopGridCols = "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+  mobileGridCols = "grid-cols-1 sm:grid-cols-2",
+  desktopGridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
 }: ResponsivePaginationProps) {
   const isMobile = useIsMobile();
-  const [displayedItems, setDisplayedItems] = useState<React.ReactNode[]>([]);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  // 무한 스크롤 로직
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile || !hasMore || !onLoadMore) return;
 
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
+    if (observerRef.current) observerRef.current.disconnect();
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && hasMore && !loading && onLoadMore) {
+        if (entries[0].isIntersecting && !loading) {
           onLoadMore();
         }
       },
@@ -56,58 +51,34 @@ export function ResponsivePagination({
       observerRef.current.observe(loadMoreRef.current);
     }
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
+    return () => observerRef.current?.disconnect();
   }, [isMobile, hasMore, loading, onLoadMore]);
 
-  useEffect(() => {
-    if (isMobile) {
-      setDisplayedItems((prev) => {     
-        const itemsArray = Array.isArray(children) ? children : [children];
-        return itemsArray;
-      });
-    }
-  }, [children, isMobile]);
-
-  if (isMobile) {
-    return (
-      <div>
-        <div className={`grid ${mobileGridCols} gap-8`}>
-          {displayedItems}
-        </div>
-        
-        {/* {loading && (
-          <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-          </div>
-        )} */}
-        
-        <div ref={loadMoreRef} className="h-1" />
-        
-        {/* {!hasMore && displayedItems.length > 0 && (
-          <div className="text-center text-gray py-4">
-            <p>더 이상 항목이 없습니다.</p>
-          </div>
-        )} */}
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className={`grid ${desktopGridCols} gap-3`}>
+    <div className='flex flex-col gap-6'>
+      <div className={`grid gap-8 ${isMobile ? mobileGridCols : desktopGridCols}`}>
         {children}
       </div>
-      {totalPages > 1 && (
-      <PaginationBar
-        totalPages={totalPages}
-        totalItems={totalItems}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-      />
+      
+      {isMobile ? (
+        <div className="w-full">
+          {loading && (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          )}
+          <div ref={loadMoreRef} className="h-4" />
+          
+        </div>
+      ) : (
+        totalPages > 1 && (
+            <PaginationBar
+              totalPages={totalPages}
+              totalItems={totalItems}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
+        )
       )}
     </div>
   );

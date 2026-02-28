@@ -57,8 +57,8 @@ export const SearchBar = ({
                 </form>
 
                 {showSearchText && searched && (
-                <div className="font-medium text-[#767676]">
-                    검색어 <span className="text-black">{searched}</span>
+                <div className="font-medium text-sm text-[#767676]">
+                    검색어 <span className="text-black font-normal">{searched}</span>
                 </div>
                 )}
             </div>

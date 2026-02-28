@@ -11,12 +11,14 @@ import type { Charger } from "@/types/charger"
 import { MeetingRoomRequest } from "@/types/meeting-room"
 import { Table } from "@/components/common/Table/Table"
 import { useTableSort } from "@/hooks/useTableSort"
+import { UserProfile } from "@/components/ui/user/UserProfile"
+import { formatKoreanDate } from "@/utils/date"
 
 export default function Charger() {
     const cautions = "OO시에서 OO시 사이에만 이용이 가능합니다."
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
     const { sort, onSortChange } = useTableSort({ key: "wantedDate", order: "ASC" })
-    const { data: currentMeeting , refetch} = useGetMeetingRoomSchedule({ month: currentMonth + 1 })
+    const { data: currentMeeting , refetch} = useGetMeetingRoomSchedule({ month: currentMonth + 1, limit: 3 })
     const meetingRoomColumn : Column<MeetingRoomRequest>[] = [
             {
                 width: "40px",
@@ -25,20 +27,20 @@ export default function Charger() {
             },
             {
                 width: "200px",
-                header: "이름",
+                header: "대여자",
                 sortKey: "name",
                 isSortable: true,
-                render: (row) =>  <span className="font-medium">{row.borrower.name}</span>
+                render: (row) =>  <UserProfile name={row.borrower.name} photoURL={row.borrower.avatarUrl} />
             },
             {
                 width: "380px",
                 header: "대여 날짜",
-                render: (row) => <span className="text-[#505050]">{row.wantedDate}</span>
+                render: (row) => <span className="text-[#505050]">{formatKoreanDate(row.wantedDate)}</span>
             }
         ]
     
     return (
-        <div className='w-full flex flex-col gap-9 px-3 py-6 md:py-12 md:px-32 justify-center'>
+        <div className='w-full flex flex-col gap-[31px] md:gap-9 px-3 py-6 md:py-12 md:px-32 items-center md:items-start justify-center'>
             <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">
                 <BackButton/>   학생회 서비스: 소회의실 대여
             </h1>   
@@ -50,16 +52,19 @@ export default function Charger() {
             </div>
             <Link
                 href="/meeting-room/rental"
-                className="w-fit lex px-4 py-3 text-base font-medium rounded-2xl bg-black text-white">
+                className="w-fit py-[9px] px-[43px] text-xs rounded-lg  md:px-4 md:py-3 md:text-base font-medium md:rounded-2xl bg-black text-white">
                 대여하기
             </Link>
-            <Table
-                columns={meetingRoomColumn}
-                data={currentMeeting?.data.items ?? []}
-                sort={ sort }
-                onRefresh={ () => refetch() }
-                onSortChange={ onSortChange }
-            />
+            <div className="w-full max-w-[1063px]">
+                <Table
+                    tableHeader={<h4 className="text-base md:text-xl font-semibold">소회의실 대여 기록</h4>}
+                    columns={meetingRoomColumn}
+                    data={currentMeeting?.data.items ?? []}
+                    sort={ sort }
+                    onRefresh={ () => refetch() }
+                    onSortChange={ onSortChange }
+                />
+            </div>
         </div>
     )
 }

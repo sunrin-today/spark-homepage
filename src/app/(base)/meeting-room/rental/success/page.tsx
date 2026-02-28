@@ -10,7 +10,6 @@ export default async function MeetingRoomRentalSuccessPage({ searchParams }: { s
             imageSrc="/locations/location-meeting-room.png"
             imageWidth={1036}
             imageHeight={167}
-            backPath="/meeting-room"
         />
     </div>
   );
