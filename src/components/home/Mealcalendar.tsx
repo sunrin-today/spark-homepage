@@ -106,6 +106,26 @@ function buildCalendar(
   return days;
 }
 
+function TodayMealCard({ meal }: { meal: MealResponse | null }) {
+  return (
+    <div className="w-full rounded-[20px] border border-[#BFBFBF] px-4 py-4">
+      <p className="text-[18px] font-medium text-[#0D0D0D] mb-4"> 오늘 급식</p>
+      <div className="h-px bg-[rgba(0,0,0,0.3)] mb-2" />
+      {!meal ? (
+        <p className="text-sm text-[#535353]">오늘의 급식 정보가 없습니다.</p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {meal.menu.map((item, idx) => (
+            <span key={idx} className="text-base font-semibold text-[#010101] leading-snug">
+              {item.dishName}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function MealCalendar() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -118,10 +138,21 @@ export default function MealCalendar() {
   } | null>(null);
 
   const yearMonth = `${year}${String(month + 1).padStart(2, "0")}`;
-
   const { data: mealData, isLoading } = useMealByYearMonth(yearMonth);
 
   const mealMap = useMemo(() => buildMealMap(mealData), [mealData]);
+
+  // 오늘의 급식 데이터
+  const todayMeal = useMemo(() => {
+    const t = new Date();
+    if (
+      t.getFullYear() === year &&
+      t.getMonth() === month
+    ) {
+      return mealMap[t.getDate()] ?? null;
+    }
+    return null;
+  }, [mealMap, year, month]);
 
   const days = buildCalendar(year, month, mealMap);
   const weeks: MealDay[][] = [];
@@ -148,140 +179,152 @@ export default function MealCalendar() {
 
   return (
     <div className="w-full">
-      <h3 className="font-semibold text-[24px] mb-4">급식</h3>
+      {/* 제목은 모바일에서 숨기고 데스크탑에서만 표시 */}
+      <h3 className="hidden lg:block font-semibold text-[24px] mb-4">급식</h3>
 
-      <div className="flex items-center gap-4 mb-4">
-        <div className="flex items-center">
-          <span className="px-2 py-1 text-[20px] font-medium text-black">{year}년</span>
-          <span className="px-2 py-1 text-[20px] font-medium text-black">
-            {String(month + 1).padStart(2, "0")}월
-          </span>
-        </div>
-        <div className="flex items-center gap-5 ml-auto">
-          <button
-            onClick={handlePrev}
-            className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-          >
-            <ChevronLeft size={16} color="#0D0D0D" strokeWidth={1.5} />
-          </button>
-          <button
-            onClick={handleNext}
-            className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-          >
-            <ChevronRight size={16} color="#0D0D0D" strokeWidth={1.5} />
-          </button>
-        </div>
-      </div>
-
-      {/* 달력 */}
-      <div className="w-full">
-        {/* 요일 헤더 */}
-        <div className="grid grid-cols-7 border-b border-[#D1D1D1]">
-          {WEEK_DAYS.map((day, i) => (
-            <div
-              key={day}
-              className="text-base font-medium py-2"
-              style={{
-                paddingLeft: 12,
-                color: i === 0 ? "#FA5353" : i === 6 ? "#4D71FF" : "#0D0D0D",
-              }}
-            >
-              {day}
-            </div>
-          ))}
-        </div>
-
-        {isLoading && (
-          <div className="flex justify-center items-center h-40 text-sm text-gray-400">
+      {/* 모바일 */}
+      <div className="block lg:hidden">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-32 text-sm text-gray-400">
             급식 정보를 불러오는 중...
           </div>
+        ) : (
+          <TodayMealCard meal={todayMeal} />
         )}
+      </div>
 
-        {/* 날짜 행 */}
-        {!isLoading &&
-          weeks.map((week, wi) => (
-            <div key={wi} className="grid grid-cols-7">
-              {week.map((day, di) => {
-                const isSun = di === 0;
-                const isSat = di === 6;
-                const opacity = !day.isCurrentMonth ? 0.4 : day.isToday ? 1 : 0.7;
-                const dateColor = isSun ? "#FA5353" : isSat ? "#4D71FF" : "#505050";
+      {/* 데스크탑 */}
+      <div className="hidden lg:block">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center">
+            <span className="px-2 py-1 text-[20px] font-medium text-black">{year}년</span>
+            <span className="px-2 py-1 text-[20px] font-medium text-black">
+              {String(month + 1).padStart(2, "0")}월
+            </span>
+          </div>
+          <div className="flex items-center gap-5 ml-auto">
+            <button
+              onClick={handlePrev}
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+            >
+              <ChevronLeft size={16} color="#0D0D0D" strokeWidth={1.5} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+            >
+              <ChevronRight size={16} color="#0D0D0D" strokeWidth={1.5} />
+            </button>
+          </div>
+        </div>
 
-                const regularMeals = day.displayMeals.filter((m) => !m.trimStart().startsWith("+"));
-                const plusItem = day.displayMeals.find((m) => m.trimStart().startsWith("+"));
+        <div className="w-full">
+          <div className="grid grid-cols-7 border-b border-[#D1D1D1]">
+            {WEEK_DAYS.map((day, i) => (
+              <div
+                key={day}
+                className="text-base font-medium py-2"
+                style={{
+                  paddingLeft: 12,
+                  color: i === 0 ? "#FA5353" : i === 6 ? "#4D71FF" : "#0D0D0D",
+                }}
+              >
+                {day}
+              </div>
+            ))}
+          </div>
 
-                return (
-                  <div
-                    key={di}
-                    className="min-h-[80px] cursor-pointer hover:bg-gray-50 transition-colors"
-                    style={{ opacity, padding: 12 }}
-                    onClick={() => handleDayClick(day)}
-                  >
-                    {day.isToday ? (
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: 24,
-                          height: 24,
-                          borderRadius: "50%",
-                          backgroundColor: "#FF805C",
-                          color: "#ffffff",
-                          fontSize: 12,
-                          fontWeight: 600,
-                          lineHeight: 1,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {day.date}
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: 16, lineHeight: 1, color: dateColor }}>
-                        {day.date}
-                      </span>
-                    )}
-
-                    <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 10 }}>
-                      {regularMeals.map((meal, mi) => (
-                        <span
-                          key={mi}
-                          style={{ fontSize: 16, fontWeight: 500, color: "#000000", lineHeight: 1.2 }}
-                        >
-                          {meal}
-                        </span>
-                      ))}
-                      {plusItem != null && (
-                        day.isToday ? (
-                          <span
-                            style={{
-                              fontSize: 12,
-                              fontWeight: 500,
-                              color: "#ffffff",
-                              backgroundColor: "#000000",
-                              paddingLeft: 4,
-                              paddingRight: 4,
-                              paddingTop: 2,
-                              paddingBottom: 2,
-                              borderRadius: 8,
-                              alignSelf: "flex-start",
-                              lineHeight: 1.2,
-                            }}
-                          >
-                            {plusItem}
-                          </span>
-                        ) : (
-                          <span style={{ fontSize: 12, fontWeight: 500, color: "#000000", lineHeight: 1.2 }}>
-                            {plusItem}
-                          </span>
-                        )
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+          {isLoading && (
+            <div className="flex justify-center items-center h-40 text-sm text-gray-400">
+              급식 정보를 불러오는 중...
             </div>
-          ))}
+          )}
+
+          {!isLoading &&
+            weeks.map((week, wi) => (
+              <div key={wi} className="grid grid-cols-7">
+                {week.map((day, di) => {
+                  const isSun = di === 0;
+                  const isSat = di === 6;
+                  const opacity = !day.isCurrentMonth ? 0.4 : day.isToday ? 1 : 0.7;
+                  const dateColor = isSun ? "#FA5353" : isSat ? "#4D71FF" : "#505050";
+
+                  const regularMeals = day.displayMeals.filter((m) => !m.trimStart().startsWith("+"));
+                  const plusItem = day.displayMeals.find((m) => m.trimStart().startsWith("+"));
+
+                  return (
+                    <div
+                      key={di}
+                      className="min-h-[80px] cursor-pointer hover:bg-gray-50 transition-colors"
+                      style={{ opacity, padding: 12 }}
+                      onClick={() => handleDayClick(day)}
+                    >
+                      {day.isToday ? (
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            backgroundColor: "#FF805C",
+                            color: "#ffffff",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            lineHeight: 1,
+                            flexShrink: 0,
+                          }}
+                        >
+                          {day.date}
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 16, lineHeight: 1, color: dateColor }}>
+                          {day.date}
+                        </span>
+                      )}
+
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 10 }}>
+                        {regularMeals.map((meal, mi) => (
+                          <span
+                            key={mi}
+                            style={{ fontSize: 16, fontWeight: 500, color: "#000000", lineHeight: 1.2 }}
+                          >
+                            {meal}
+                          </span>
+                        ))}
+                        {plusItem != null && (
+                          day.isToday ? (
+                            <span
+                              style={{
+                                fontSize: 12,
+                                fontWeight: 500,
+                                color: "#ffffff",
+                                backgroundColor: "#000000",
+                                paddingLeft: 4,
+                                paddingRight: 4,
+                                paddingTop: 2,
+                                paddingBottom: 2,
+                                borderRadius: 8,
+                                alignSelf: "flex-start",
+                                lineHeight: 1.2,
+                              }}
+                            >
+                              {plusItem}
+                            </span>
+                          ) : (
+                            <span style={{ fontSize: 12, fontWeight: 500, color: "#000000", lineHeight: 1.2 }}>
+                              {plusItem}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+        </div>
       </div>
 
       {modalData && (

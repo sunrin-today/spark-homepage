@@ -66,10 +66,10 @@ function ServiceContent() {
   };
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-8 lg:px-16 py-16 min-h-screen">
-      <h1 className="text-2xl font-semibold mb-3">학생회 서비스</h1>
+    <div className="w-full max-w-[1440px] mx-auto px-[6px] lg:px-16 py-6 lg:py-16">
+      <h1 className="text-base lg:text-2xl font-semibold mb-4 lg:mb-3">학생회 서비스</h1>
 
-      <div className="flex justify-center mb-9">
+      <div className="flex justify-center mb-0">
         <SearchBar
           value={searchValue}
           onChangeText={setSearchValue}
@@ -81,7 +81,7 @@ function ServiceContent() {
       </div>
 
       {currentItems.length > 0 ? (
-        <div className="flex flex-wrap gap-[22px] mt-9 justify-center lg:justify-start">
+        <div className="flex flex-wrap gap-3 lg:gap-[22px] mt-9 justify-center lg:justify-start">
           {currentItems.map((service) => (
             <ServiceCard
               key={service.id}

@@ -16,7 +16,7 @@ export default function NoticeDetailPage({ params }: PageProps) {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-5xl flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 mx-auto min-h-screen">
+      <div className="w-full max-w-5xl flex flex-col gap-6 px-6 py-6 md:py-12 md:px-32 mx-auto min-h-screen">
         <h1 className="flex items-center gap-3 text-[#010101] font-semibold text-left text-base md:text-2xl w-full">
           <BackButton /> 공지사항 상세
         </h1>
@@ -33,17 +33,21 @@ export default function NoticeDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="w-full max-w-5xl flex flex-col gap-6 px-3 py-6 md:py-12 md:px-32 mx-auto min-h-screen">
+    <div className="w-full max-w-5xl flex flex-col px-6 pt-6 pb-12 md:py-12 md:px-32 mx-auto min-h-screen">
       <h1 className="flex items-center gap-3 text-[#010101] font-semibold text-left text-base md:text-2xl w-full">
-        <BackButton /> 공지사항 상세: {notice.title}
+        <BackButton /> {notice.title}
       </h1>
 
-      <NoticeInfo notice={notice} />
+      <div className="mt-9">
+        <NoticeInfo notice={notice} />
+      </div>
 
-      <NoticeContent
-        content={notice.content}
-        imageUrls={notice.imageUrls}
-      />
+      <div className="mt-9">
+        <NoticeContent
+          content={notice.content}
+          imageUrls={notice.imageUrls}
+        />
+      </div>
     </div>
   );
 }

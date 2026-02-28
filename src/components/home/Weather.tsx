@@ -49,7 +49,6 @@ function getTodayFcstDate(): string {
   return `${y}${m}${d}`;
 }
 
-// 키워드에 color를 입히기 위한 헬퍼: 첫 번째 줄에서 날씨 키워드 부분만 색상 적용
 const KEYWORDS: Record<string, string> = {
   sunny: "맑아요",
   cloudy: "흐려요",
@@ -79,7 +78,6 @@ export default function Weather() {
   const { data: forecast } = useForecastWeatherQuery();
 
   const currentState = current?.state ?? "sunny";
-  const currentTemp = current?.data;
   const stateInfo = STATE_INFO[currentState] ?? STATE_INFO["sunny"];
   const forecastList: ForecastItem[] = forecast?.data ?? [];
   const todayForecast = forecastList.find((f) => f.fcstDate === getTodayFcstDate());
@@ -90,60 +88,92 @@ export default function Weather() {
     <section className="flex items-center">
       <div className="flex items-center gap-10 flex-wrap">
 
-          {/* 왼쪽: 현재 날씨 */}
-          <div className="flex flex-col flex-shrink-0">
-            <div className="flex items-center gap-[11px]">
+        {/* 왼쪽: 현재 날씨 */}
+        <div className="flex flex-col flex-shrink-0">
+
+          {/* sm 이상: 기존 레이아웃 (아이콘 + 텍스트 가로 배치) */}
+          <div className="hidden sm:flex items-center gap-[11px]">
+            <Image
+              src={`/weather-icons/${currentState}.svg`}
+              alt={STATE_LABELS[currentState] ?? currentState}
+              width={148}
+              height={148}
+            />
+            <div className="flex flex-col">
+              <p className="text-xl font-bold leading-snug">
+                <ColoredLine text={stateInfo.line1} keyword={keyword} color={stateInfo.color} />
+              </p>
+              <p className="text-xl font-bold leading-snug">{stateInfo.line2}</p>
+            </div>
+          </div>
+
+          {/* sm 미만(모바일): 아이콘+강수확률(왼쪽) + 상태텍스트(오른쪽) */}
+          <div className="flex sm:hidden items-stretch gap-[10px]">
+            {/* 왼쪽: 아이콘 + 강수확률 */}
+            <div className="flex flex-col items-center flex-shrink-0" style={{ gap: "10px" }}>
               <Image
                 src={`/weather-icons/${currentState}.svg`}
                 alt={STATE_LABELS[currentState] ?? currentState}
                 width={148}
                 height={148}
               />
-              <div className="flex flex-col">
-                <p className="text-xl font-bold leading-snug">
-                  <ColoredLine text={stateInfo.line1} keyword={keyword} color={stateInfo.color} />
-                </p>
-                <p className="text-xl font-bold leading-snug">{stateInfo.line2}</p>
-              </div>
+              {todayForecast && (
+                <div className="flex items-center gap-1">
+                  <span className="text-[16px] font-bold">오늘</span>
+                  <Image src="/weather-icons/water-drop.svg" alt="강수확률" width={10} height={15} />
+                  <span className="text-[16px] font-bold text-[#64B5F6]">
+                    {todayForecast.popValue}%
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* 오늘 강수확률 */}
-            {todayForecast && (
-              <div className="flex items-center gap-1">
-                <span className="text-[23px] font-bold">오늘</span>
-                <Image src="/weather-icons/water-drop.svg" alt="강수확률" width={24} height={24} />
-                <span className="text-[22px] font-bold text-[#64B5F6]">
-                  {todayForecast.popValue}%
-                </span>
-              </div>
-            )}
+            {/* 오른쪽: 상태 텍스트 (세로 중앙 정렬) */}
+            <div className="flex flex-col justify-center">
+              <p className="text-[16px] font-bold leading-snug">
+                <ColoredLine text={stateInfo.line1} keyword={keyword} color={stateInfo.color} />
+              </p>
+              <p className="text-[16px] font-bold leading-snug">{stateInfo.line2}</p>
+            </div>
           </div>
 
-          {/* 오른쪽: 예보 리스트 */}
-          {forecastList.length > 0 && (
-            <div className="hidden sm:flex items-center gap-10 overflow-x-auto pb-1">
-              {forecastList.map((day, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
-                  <div className="flex items-center gap-1">
-                    <Image src="/weather-icons/water-drop.svg" alt="강수확률" width={10} height={13} />
-                    <span className="text-sm font-semibold text-[#64B5F6]">{day.popValue}%</span>
-                  </div>
-                  <Image
-                    src={`/weather-icons/${day.state}.svg`}
-                    alt={STATE_LABELS[day.state] ?? day.state}
-                    width={70}
-                    height={70}
-                  />
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm font-semibold">{formatFcstDate(day.fcstDate)}</span>
-                    <span className="text-sm font-medium text-[#505050]">{day.tmpValue} °C</span>
-                  </div>
-                </div>
-              ))}
+          {/* sm 이상: 오늘 강수확률 (기존 위치) */}
+          {todayForecast && (
+            <div className="hidden sm:flex items-center gap-1">
+              <span className="text-[23px] font-bold">오늘</span>
+              <Image src="/weather-icons/water-drop.svg" alt="강수확률" width={24} height={24} />
+              <span className="text-[22px] font-bold text-[#64B5F6]">
+                {todayForecast.popValue}%
+              </span>
             </div>
           )}
-
         </div>
+
+        {/* 오른쪽: 예보 리스트 (sm 이상에서만 표시) */}
+        {forecastList.length > 0 && (
+          <div className="hidden sm:flex items-center gap-10 overflow-x-auto pb-1">
+            {forecastList.map((day, i) => (
+              <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
+                <div className="flex items-center gap-1">
+                  <Image src="/weather-icons/water-drop.svg" alt="강수확률" width={10} height={13} />
+                  <span className="text-sm font-semibold text-[#64B5F6]">{day.popValue}%</span>
+                </div>
+                <Image
+                  src={`/weather-icons/${day.state}.svg`}
+                  alt={STATE_LABELS[day.state] ?? day.state}
+                  width={70}
+                  height={70}
+                />
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-semibold">{formatFcstDate(day.fcstDate)}</span>
+                  <span className="text-sm font-medium text-[#505050]">{day.tmpValue} °C</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
     </section>
   );
 }

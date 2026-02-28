@@ -19,15 +19,15 @@ export default function ServiceCard({
       href={href}
       className="
         flex flex-col
-        w-[315px] sm:w-[360px]
-        h-[280px]
+        w-[351px] h-[255.93px]
+        lg:w-[360px] lg:h-[280px]
         rounded-[20px]
         border border-[#C0C0C0]
         p-6
         transition-all duration-300
       "
     >
-      <div className="relative w-full h-[140px] rounded-xl overflow-hidden border border-[rgba(0,0,0,0.25)]">
+      <div className="relative w-full h-[120px] lg:h-[140px] rounded-xl overflow-hidden border border-[rgba(0,0,0,0.25)]">
         <Image
           src={imageSrc}
           alt={title}
@@ -44,7 +44,7 @@ export default function ServiceCard({
 
         <p
           className="
-            text-sm md:text-[14px]
+            text-sm
             font-medium
             text-[#8E8E8E]
             leading-[17px]

@@ -34,7 +34,9 @@ export const Header = () => {
       console.error("로그아웃 실패:", error);
     }
   };
-
+  useEffect(() => {
+    setIsOpen(false);
+  }, [path]);
   return (
     <>
       <header className="lg:hidden sticky top-0 left-0 right-0  px-6 z-50 bg-[#ffffff]">

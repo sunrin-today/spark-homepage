@@ -7,9 +7,13 @@ export default function BaseLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <div className="w-full">
-        <Header />
-        {children}
-        <Footer />
-    </div>;
+    return (
+        <div className="w-full min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
+                {children}
+            </main>
+            <Footer />
+        </div>
+    );
 }
