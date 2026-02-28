@@ -25,10 +25,10 @@ export default function NoticeInfo({ notice }: NoticeInfoProps) {
   };
 
   return (
-    <div className="flex items-center gap-9 mb-6 text-base">
+    <div className="flex items-center gap-2 md:gap-9 mb-6 text-base flex-wrap">
       <div className="flex items-center gap-3">
-        <span className="font-medium text-[#505050]">등록자</span>
-        <div className="flex items-center gap-1.5">
+        <span className="text-sm md:text-base font-medium text-[#505050]">등록자</span>
+        <div className="flex items-center gap-2">
           {authorAvatarUrl ? (
             <Image
               src={authorAvatarUrl}
@@ -39,17 +39,17 @@ export default function NoticeInfo({ notice }: NoticeInfoProps) {
               unoptimized
             />
           ) : (
-            <div className="w-[32px] h-[32px] rounded-full bg-lightgray flex items-center justify-center text-xs text-gray">
+            <div className="w-[32px] h-[32px] rounded-full bg-lightgray flex items-center justify-center text-xs text-gray flex-shrink-0">
               {authorName.charAt(0)}
             </div>
           )}
-          <span className="font-medium text-[#010101]">{authorName}</span>
+          <span className="text-base font-medium text-[#010101]">{authorName}</span>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="font-medium text-[#505050]">등록일</span>
-        <span className="font-medium text-[#010101]">{formatDate(notice.createdAt)}</span>
+        <span className="text-sm md:text-base font-medium text-[#505050]">등록일</span>
+        <span className="text-base font-medium text-[#010101]">{formatDate(notice.createdAt)}</span>
       </div>
     </div>
   );
