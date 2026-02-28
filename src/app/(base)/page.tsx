@@ -23,7 +23,7 @@ export default function HomePage() {
 
         <section className="mb-14">
           <h3 className="font-semibold text-[24px] mb-[17px]">학생회 서비스</h3>
-          <div className="flex flex-wrap gap-[22px] justify-start">
+          <div className="flex flex-wrap gap-[22px] justify-center sm:justify-start">
             <ServiceCard
               title="월간 분실물함"
               description={
