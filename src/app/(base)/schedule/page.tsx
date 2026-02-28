@@ -71,9 +71,11 @@ export default function SchedulePage() {
       : [];
 
   return (
-    <div className="w-full flex flex-col py-4 md:py-12 px-6 md:px-32 pb-6 items-center justify-center">
-      <div className="w-full flex flex-col gap-3 mb-6">
-        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full">일정</h1>
+    <div className="w-full flex flex-col md:py-12 md:px-32 pb-6 items-center justify-center">
+      <div className="w-full flex flex-col pt-6 px-6 md:pt-0 md:px-0 md:gap-3 md:mb-6">
+        <h1 className="text-black font-semibold text-left text-base md:text-2xl w-full mb-4 md:mb-0">
+          일정
+        </h1>
 
         {isError && (
           <p className="text-sm text-[#FF0000]">일정을 불러오는데 실패했습니다.</p>

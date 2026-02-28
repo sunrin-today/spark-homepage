@@ -10,20 +10,20 @@ export default function HomePage() {
     <main className="w-full">
       <HeroSection />
 
-      <div className="max-w-[1920px] mx-auto px-[6px] lg:px-[128px]">
+      <div className="max-w-[1920px] mx-auto px-[24px] lg:px-[128px]">
 
-        <section className="mt-12 mb-14 flex justify-center">
+        <section className="mt-6 lg:mt-12 mb-12 lg:mb-14 flex justify-center">
           <Weather />
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-[141fr_127fr] gap-6 lg:gap-[56px] mb-14">
+        <section className="grid grid-cols-1 lg:grid-cols-[141fr_127fr] gap-6 lg:gap-[56px] mb-12 lg:mb-14">
           <EventCarousel />
           <NoticePreview />
         </section>
 
-        <section className="mb-14">
-          <h3 className="font-semibold text-[24px] mb-[17px]">학생회 서비스</h3>
-          <div className="flex flex-wrap gap-[22px] justify-start">
+        <section className="mb-12 lg:mb-14">
+          <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">학생회 서비스</h3>
+          <div className="flex flex-wrap gap-[22px] justify-center sm:justify-start">
             <ServiceCard
               title="월간 분실물함"
               description={
@@ -57,7 +57,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 급식 캘린더 */}
         <section className="mb-12">
           <MealCalendar />
         </section>
