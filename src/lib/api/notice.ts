@@ -17,10 +17,10 @@ const transformNoticeFromApi = (apiNotice: NoticeDetailResponse): Notice => {
 };
 
 export const noticesApi = {
-  getNotices: async (page: number = 1, limit: number = 10, search?: string): Promise<NoticeListResponse> => {
+  getNotices: async (page: number = 1, limit: number = 10, query?: string): Promise<NoticeListResponse> => {
     try {
       const response = await api.get<NoticeListResponse>('/api/notice', {
-        params: { page, limit, ...(search ? { search } : {}) },
+        params: { page, limit, ...(query ? { query } : {}) },
       });
       return response.data;
     } catch (error) {

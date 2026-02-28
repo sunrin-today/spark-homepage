@@ -10,10 +10,10 @@ export const useNotice = (id: string) => {
   });
 };
 
-export const useNotices = (page: number = 1, limit: number = 10, search?: string) => {
+export const useNotices = (page: number = 1, limit: number = 10, query?: string) => {
   return useQuery({
-    queryKey: [...noticeKeys.lists(), page, limit, search],
-    queryFn: () => noticesApi.getNotices(page, limit, search),
+    queryKey: [...noticeKeys.lists(), page, limit, query],
+    queryFn: () => noticesApi.getNotices(page, limit, query),
     placeholderData: (prev) => prev,
     staleTime: 5 * 60 * 1000,
   });
