@@ -179,7 +179,8 @@ export default function MealCalendar() {
 
   return (
     <div className="w-full">
-      <h3 className="font-semibold text-[24px] mb-4">급식</h3>
+      {/* 제목은 모바일에서 숨기고 데스크탑에서만 표시 */}
+      <h3 className="hidden lg:block font-semibold text-[24px] mb-4">급식</h3>
 
       {/* 모바일 */}
       <div className="block lg:hidden">

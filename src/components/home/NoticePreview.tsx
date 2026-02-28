@@ -10,7 +10,7 @@ export default function NoticePreview() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-[17px]">
-        <h3 className="font-semibold text-[24px]">공지사항</h3>
+        <h3 className="font-semibold text-base lg:text-[24px]">공지사항</h3>
         <Link
           href="/notice"
           className="font-medium text-base flex items-center gap-[5px]"

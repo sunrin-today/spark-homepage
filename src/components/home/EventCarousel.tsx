@@ -88,7 +88,7 @@ export default function EventCarousel() {
   if (events.length === 0) {
     return (
       <div className="flex flex-col h-full">
-        <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
+        <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">이벤트</h3>
         <div className="relative flex-1 rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center" style={{ minHeight: "366px" }}>
           <p className="text-gray-400 text-sm">이벤트가 없습니다.</p>
         </div>
@@ -100,7 +100,7 @@ export default function EventCarousel() {
 
   return (
     <div className="flex flex-col h-full">
-      <h3 className="font-semibold text-[24px] mb-[17px]">이벤트</h3>
+      <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">이벤트</h3>
 
       {/* 데스크탑: 기존 슬라이드 캐러셀 */}
       <div
@@ -181,7 +181,7 @@ export default function EventCarousel() {
       </div>
 
       {/* 모바일: 가로 스크롤 */}
-      <div className="sm:hidden overflow-x-auto scrollbar-hide -mx-[6px] px-[6px]">
+      <div className="sm:hidden overflow-x-auto scrollbar-hide">
         <div className="flex gap-[17px]">
           {events.map((event) => {
             const days = getDaysRemaining(event.deadline ?? "");
