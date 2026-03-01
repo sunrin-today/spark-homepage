@@ -9,10 +9,10 @@ import { Table } from "@/components/common/Table/Table"
 import type { Charger, ChargerRentalRecord } from "@/types/charger"
 import { useTableSort } from "@/hooks/useTableSort"
 import { useGetChargerRecordListQuery } from "@/lib/queries/charger-record/queries"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ChargerStatus } from "@/components/charger/ChargerStatus"
 import { UserProfile } from "@/components/ui/user/UserProfile"
-import { usePaginationQuery } from "@/hooks/usePaginationQuery"
+import { PaginationBar } from "@/components/ui/paging/PaginationBar"
 
 export default function Charger() {
     const cautions = `현재 학생회에서는 ‘C-Type’ 충전기에 대해서한 서비스를 제공하고 있습니다.
@@ -46,9 +46,10 @@ export default function Charger() {
     ]
     const { sort : sortKey, onSortChange } = useTableSort({key: "chargerId", order: "ASC"})
     const { data: remainingChargers } = useGetRemainingChargerQuery()
+    const [currentPage, setCurrentPage] = useState(1);
     const { mutate: chargerRequestMutate, isPending } = useChargerRequestMutation()
-    const { data: chargerRecordList, refetch } = useGetChargerRecordListQuery({page: 1, limit: 3})
-    const handleChargeRequest = () => {
+    const { data: chargerRecordList, refetch, isError } = useGetChargerRecordListQuery({page: currentPage, limit: 3})
+   const handleChargeRequest = () => {
         if(!remainingChargers) {
             alert("현재 대여 가능한 충전기 수량이 부족하여 대여가 불가능합니다")
             return
@@ -74,7 +75,8 @@ export default function Charger() {
                     {isPending ? "대여 중..." : "대여하기"}
                 </button>
             </div>
-            <div className="w-full max-w-[1063px]">
+            <div className="w-full max-w-[1063px] flex flex-col gap-[10px]">
+            {isError && <p className="text-sm text-[#FF0000]">충전기 대여 기록을 불러오는데 실패했습니다.</p>}
             <Table
                 tableHeader={<h4 className="text-base md:text-xl font-semibold">충전기 대여 기록</h4>}
                 sort={sortKey}
@@ -82,6 +84,12 @@ export default function Charger() {
                 onRefresh={refetch}
                 columns={chargerColumn}
                 data={chargerRecordList?.data.items ?? []} />
+            <PaginationBar
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+                totalPages={chargerRecordList?.data.totalPages ?? 0}
+                totalItems={chargerRecordList?.data.total ?? 0}
+            />
             </div>
         </div>
     )

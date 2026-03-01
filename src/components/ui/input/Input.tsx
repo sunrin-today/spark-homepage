@@ -28,14 +28,14 @@ const BaseInput = forwardRef<HTMLInputElement | HTMLTextAreaElement, BaseInputPr
   ({ leftIcon, rightIcon, value, name, onChange, placeholder, className, onClick, readOnly, required, noChange = false }, ref) => {
     return (
       <div
-        className={`flex items-center px-[20px] py-[12px] border bg-white border-inputborder text-[#767676] text-base font-medium rounded-[12px] w-full min-w-0 
+        className={`flex items-center px-[15px] py-[10px] md:px-[20px] md:py-[12px] border bg-white border-inputborder text-[#767676] text-base font-medium rounded-[12px] w-full min-w-0 
           outline-none focus-within:border focus-within:text-black
           hover:border-[#565656] ${className}`}
         onClick={onClick}
       >
         {leftIcon && <span className="flex-shrink-0 mr-2 focus-within:text-black">{leftIcon}</span>}
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 justify-center items-center flex min-w-0">
           <input
             id={name}
             ref={ref as React.Ref<HTMLInputElement>}
@@ -44,12 +44,12 @@ const BaseInput = forwardRef<HTMLInputElement | HTMLTextAreaElement, BaseInputPr
             value={value}
             onChange={(e) => noChange ? () => {} : onChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full outline-none focus:outline-none placeholder:text-[#767676] placeholder:text-base bg-white"
+            className="w-full text-xs md:text-base outline-none focus:outline-none placeholder:text-[#767676] placeholder:text-xs md:placeholder:text-base bg-white"
             readOnly={readOnly}
             required={required}
           />
         </div>
-        {value && <span className="flex-shrink-0 ml-2 text-gray cursor-pointer" onClick={(e) => { e.stopPropagation(); onChange("") }}><X size={20} /></span>}
+        {value && <span className="flex-shrink-0 ml-2 text-gray cursor-pointer" onClick={(e) => { e.stopPropagation(); onChange("") }}><X size={20} className="text-[#D9D9D9]" /></span>}
       </div>
     );
   }

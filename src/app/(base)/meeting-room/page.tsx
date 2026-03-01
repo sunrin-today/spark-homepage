@@ -3,8 +3,7 @@ import { Cautions } from "@/components/ui/cautions/Cautions"
 import { LocationList } from "@/components/ui/list/LocationList"
 import { BackButton } from "@/components/ui/button/BackButton"
 import { useGetMeetingRoomSchedule } from "@/lib/queries/meeting-room/queries"
-import { useState } from "react"
-import { buildMeetingRoomRequestIntoSchedule } from "@/utils/meeting-room"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import type { Column } from "@/types/table"
 import type { Charger } from "@/types/charger"
@@ -13,12 +12,14 @@ import { Table } from "@/components/common/Table/Table"
 import { useTableSort } from "@/hooks/useTableSort"
 import { UserProfile } from "@/components/ui/user/UserProfile"
 import { formatKoreanDate } from "@/utils/date"
+import { PaginationBar } from "@/components/ui/paging/PaginationBar"
 
 export default function Charger() {
     const cautions = "OO시에서 OO시 사이에만 이용이 가능합니다."
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
+    const [currentPage, setCurrentPage] = useState(1);
     const { sort, onSortChange } = useTableSort({ key: "wantedDate", order: "ASC" })
-    const { data: currentMeeting , refetch} = useGetMeetingRoomSchedule({ month: currentMonth + 1, limit: 3 })
+    const { data: currentMeeting , refetch, isError } = useGetMeetingRoomSchedule({ limit: 3, page: currentPage })
+  
     const meetingRoomColumn : Column<MeetingRoomRequest>[] = [
             {
                 width: "40px",
@@ -55,7 +56,8 @@ export default function Charger() {
                 className="w-fit py-[9px] px-[43px] text-xs rounded-lg  md:px-4 md:py-3 md:text-base font-medium md:rounded-2xl bg-black text-white">
                 대여하기
             </Link>
-            <div className="w-full max-w-[1063px]">
+            <div className="w-full max-w-[1063px] flex flex-col gap-[10px]">
+                { isError && <p className="text-sm text-[#FF0000]">소회의실 대여 기록을 불러오는데 실패했습니다.</p>}
                 <Table
                     tableHeader={<h4 className="text-base md:text-xl font-semibold">소회의실 대여 기록</h4>}
                     columns={meetingRoomColumn}
@@ -63,6 +65,12 @@ export default function Charger() {
                     sort={ sort }
                     onRefresh={ () => refetch() }
                     onSortChange={ onSortChange }
+                />
+                <PaginationBar
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    totalPages={currentMeeting?.data.totalPages ?? 0}
+                    totalItems={currentMeeting?.data.total ?? 0}
                 />
             </div>
         </div>

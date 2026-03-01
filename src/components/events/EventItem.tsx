@@ -1,5 +1,6 @@
 import { Event } from "@/types/events"
 import Image from "next/image" 
+import { getStatusText } from "@/utils/date";
 export const EventItem = ({event}: {event: Event}) => {
     
     return (
@@ -13,7 +14,7 @@ export const EventItem = ({event}: {event: Event}) => {
                     className="object-cover"
                 />
                 <div className="hidden md:block absolute bottom-0 left-0 right-0 p-4">
-                    <div className="bg-[#FEFEFE] text-[#010101] bg-opacity-80 text-xs font-medium px-3 py-2 w-fit rounded-[100px] truncate">{new Date(event.startedAt).toLocaleDateString()}</div>
+                    <div className="bg-[#FEFEFE] text-[#010101] bg-opacity-80 text-xs font-medium px-3 py-2 w-fit rounded-[100px] truncate">{getStatusText(event.startedAt, event.deadline)}</div>
                 </div>
             </div>
             <div className="gap-[5px]">

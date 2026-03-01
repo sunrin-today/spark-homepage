@@ -41,13 +41,11 @@ export const DateInput = ({
   ]);
 
   const handleDateSelect = (date: Date) => {
-    const formattedDate = formatKoreanDate(date.toISOString().split("T")[0]);
-    onChange(formattedDate);
+    const data = date.toISOString().split("T")[0];
+    onChange(data);
     setIsOpen(false);
   };
- useEffect(() => {
-  console.log(value);
- }, [value])
+
 
   return (
     <div className="relative w-full">
