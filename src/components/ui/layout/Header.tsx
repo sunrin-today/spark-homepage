@@ -68,8 +68,8 @@ export const Header = () => {
 
           {/* 모바일 사이드바 */}
           <div
-          className={`fixed inset-0 transform transition-transform duration-300 ease-in-out z-40 bg-[#FFFFFF]
-            ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          className={`fixed inset-0 transform transition-all duration-300 ease-in-out z-40 bg-[#FFFFFF]
+            ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
             lg:hidden
           `}
         >

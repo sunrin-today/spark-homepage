@@ -1,6 +1,7 @@
 import InputCalendar from "@/components/common/Calendar/InputCalendar";
 import { X, Save } from "lucide-react";
 import { useState } from "react";
+import { formatDateToYMD } from "@/utils/date";
 
 interface DatePickerProps {
   selectedDate: Date;
@@ -14,16 +15,45 @@ export const DatePicker = ({
   onCancel 
 }: DatePickerProps) => {
     const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
-  return (
+    const [currentYear, setCurrentYear] = useState(initialDate.getFullYear());
+    const [currentMonth, setCurrentMonth] = useState(initialDate.getMonth());
+
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentYear((y) => y - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentYear((y) => y + 1);
+      setCurrentMonth(0);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
+  };
+
+    return (
     <div className="w-[320px] p-3">
       <InputCalendar
-        year={selectedDate.getFullYear()}
-        month={selectedDate.getMonth()}
+        year={currentYear}
+        month={currentMonth}
         items={[]}
+        onPrevMonth={handlePrevMonth}
+        onNextMonth={handleNextMonth}
         selectedDate={selectedDate}
-        onDateClick={(year, month, day) => setSelectedDate(new Date(year, month, day))}
+        onDateClick={(year, month, day) => {
+          const next = new Date(year, month, day);
+          setSelectedDate(next);
+          setCurrentYear(next.getFullYear());
+          setCurrentMonth(next.getMonth());
+        }}
       />
       <div className="flex w-full justify-end gap-2">
+
         <button 
           onClick={(e) => {
             e.preventDefault();
@@ -38,11 +68,12 @@ export const DatePicker = ({
         <button 
           onClick={(e) => {
             e.preventDefault();
-            onDateSelect(selectedDate);
+            onDateSelect(new Date(formatDateToYMD(selectedDate)));
           }}
           type="button" 
           className="flex px-2 py-1.5 text-sm bg-black text-white rounded-lg gap-1 items-center"
         >
+
           <Save className='w-4 h-4'/>
           저장
         </button>
