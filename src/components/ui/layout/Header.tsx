@@ -5,7 +5,8 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContexts";
 import { useState, useEffect } from "react";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 
 const NAV_ITEMS = [
   { href: "/", label: "홈" },
@@ -20,12 +21,13 @@ export const Header = () => {
   const path = usePathname();
   const router = useRouter();
   const { user, logout, loading } = useAuth();
+  const { handleGoogleLogin, isLoading } = useGoogleLogin();
+
   const isActive = (href: string) => {
-    if (href === "/") {
-      return path === "/";
-    }
+    if (href === "/") return path === "/";
     return path.startsWith(href);
   };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -34,40 +36,56 @@ export const Header = () => {
       console.error("로그아웃 실패:", error);
     }
   };
+
   useEffect(() => {
     setIsOpen(false);
   }, [path]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === "L") {
+        handleLogout();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <>
-      <header className="lg:hidden sticky top-0 left-0 right-0  px-6 z-50 bg-[#ffffff]">
+      <header className="lg:hidden sticky top-0 left-0 right-0 px-6 z-50 bg-[#ffffff]">
         <div className="flex justify-between items-center h-[72px]">
           {!isOpen ? (
             <Link href="/" className="z-50">
               <Image src="/logo/logo.svg" alt="logo" width={89} height={46} />
             </Link>
-           ) : user ? (
-              <div className="flex gap-2 px-3 py-1.5 z-50 items-center">
-                <Image src={user.photoURL || "/logo/logo.svg"} className="rounded-full" alt="profile" width={32} height={32} />
-                <span className="text-base font-medium">{user.displayName || user.email?.split("@")[0]}</span>
-              </div>
+          ) : user ? (
+            <div className="flex gap-2 px-3 py-1.5 z-50 items-center">
+              <Image
+                src={user.photoURL || "/logo/logo.svg"}
+                className="rounded-full"
+                alt="profile"
+                width={32}
+                height={32}
+              />
+              <span className="text-base font-medium">
+                {user.displayName || user.email?.split("@")[0]}
+              </span>
+            </div>
           ) : null}
-          
-          {/* 모바일 메뉴 버튼 */}
+
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-2 z-50"
             aria-label="메뉴 열기"
           >
-            {isOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-          {/* 모바일 사이드바 */}
-          <div
+        {/* 모바일 사이드바 */}
+        <div
           className={`fixed inset-0 transform transition-all duration-300 ease-in-out z-40 bg-[#FFFFFF]
             ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
             lg:hidden
@@ -79,29 +97,25 @@ export const Header = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-
-                  className={`w-full text-base px-2 py-1.5 font-medium hover:border-b-2 hover:border-main ` + (isActive(item.href) ? " border-b-2 border-main text-[#010101]" : "text-[#525252]")}
+                  className={
+                    `w-full text-base px-2 py-1.5 font-medium hover:border-b-2 hover:border-main ` +
+                    (isActive(item.href)
+                      ? "border-b-2 border-main text-[#010101]"
+                      : "text-[#525252]")
+                  }
                 >
                   {item.label}
                 </Link>
               ))}
 
-              {!loading && user ? (
-                <div className="pt-8">
-                  {/* <button
-                    onClick={handleLogout}
-                    className={`w-full text-center py-3 px-4 rounded-lg bg-main text-white  `}
-                  >
-                    로그아웃
-                  </button> */}
-                </div>
-              ) : (
-                <Link
-                  href="/login"
-                  className={`w-full text-center py-3 px-4 rounded-lg text-white bg-main`}
+              {!loading && !user && (
+                <button
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
+                  className="w-full text-center py-3 px-4 rounded-lg text-white bg-main disabled:opacity-60"
                 >
-                  로그인
-                </Link>
+                  {isLoading ? "로그인 중..." : "로그인"}
+                </button>
               )}
             </nav>
           </div>
@@ -118,44 +132,48 @@ export const Header = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={'max-w-[120px] w-full py-1.5 px-2 font-medium hover:border-b-2 border-main transition-all text-center' + (isActive(item.href) ? " border-b-2 border-main" : "")}
+              className={
+                "max-w-[120px] w-full py-1.5 px-2 font-medium hover:border-b-2 border-main transition-all text-center" +
+                (isActive(item.href) ? " border-b-2 border-main" : "")
+              }
             >
               {item.label}
             </Link>
           ))}
         </div>
 
-          {!loading && user ? (
-            <div className="flex items-center gap-3">
-              <div className="flex gap-2 px-3 py-1.5 items-center">
-                <Image src={user.photoURL || "/logo/logo.svg"} className="rounded-full" alt="profile" width={32} height={32} />
-                <span className="text-base font-medium">{user.displayName || user.email?.split("@")[0]}</span>
-              </div>
-              {/* <button
-                onClick={handleLogout}
-                className={`rounded-[100px] px-[22px] py-[10px] hover:opacity-80 transition-opacity`}
-              >
-                로그아웃
-              </button> */}
+        {!loading && user ? (
+          <div className="flex items-center gap-3">
+            <div className="flex gap-2 px-3 py-1.5 items-center">
+              <Image
+                src={user.photoURL || "/logo/logo.svg"}
+                className="rounded-full"
+                alt="profile"
+                width={32}
+                height={32}
+              />
+              <span className="text-base font-medium">
+                {user.displayName || user.email?.split("@")[0]}
+              </span>
             </div>
-          ) : (
-            <Link
-              href="/login"
-              className={`rounded-[100px] px-[22px] py-[10px]`}
-            >
-              로그인
-            </Link>
-          )}
+          </div>
+        ) : (
+          <button
+            onClick={handleGoogleLogin}
+            disabled={isLoading}
+            className="rounded-[100px] px-[22px] py-[10px] hover:opacity-80 transition-opacity disabled:opacity-60"
+          >
+            {isLoading ? "로그인 중..." : "로그인"}
+          </button>
+        )}
       </header>
 
-      {/* Overlay for mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
-
     </>
   );
 };
