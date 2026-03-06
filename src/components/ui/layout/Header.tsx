@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContexts";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Menu, X } from "lucide-react";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 
@@ -16,12 +16,17 @@ const NAV_ITEMS = [
   { href: "/notice", label: "공지사항" },
 ];
 
-export const Header = () => {
+function HeaderInner() {
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, logout, loading } = useAuth();
-  const { handleGoogleLogin, isLoading } = useGoogleLogin();
+
+  const redirectPath = searchParams.get("redirect") || "/";
+  const shouldAutoLogin = searchParams.get("login") === "1";
+
+  const { handleGoogleLogin, isLoading } = useGoogleLogin(redirectPath);
 
   const isActive = (href: string) => {
     if (href === "/") return path === "/";
@@ -38,15 +43,19 @@ export const Header = () => {
   };
 
   useEffect(() => {
+    if (shouldAutoLogin && !loading && !user) {
+      handleGoogleLogin();
+    }
+  }, [shouldAutoLogin, loading, user]);
+
+  useEffect(() => {
     setIsOpen(false);
   }, [path]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "L") {
-        handleLogout();
-      }
+      if (e.ctrlKey && e.shiftKey && e.key === "L") handleLogout();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -84,7 +93,6 @@ export const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 사이드바 */}
         <div
           className={`fixed inset-0 transform transition-all duration-300 ease-in-out z-40 bg-[#FFFFFF]
             ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
@@ -176,4 +184,10 @@ export const Header = () => {
       )}
     </>
   );
-};
+}
+
+export const Header = () => (
+  <Suspense fallback={null}>
+    <HeaderInner />
+  </Suspense>
+);

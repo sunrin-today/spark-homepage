@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContexts";
 
-export function useGoogleLogin() {
+export function useGoogleLogin(redirectPath?: string) {
   const router = useRouter();
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -12,7 +12,6 @@ export function useGoogleLogin() {
   const handleGoogleLogin = async () => {
     try {
       setIsLoading(true);
-
       const token = await login();
 
       const response = await fetch(
@@ -26,16 +25,14 @@ export function useGoogleLogin() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`로그인 실패 (${response.status})`);
-      }
+      if (!response.ok) throw new Error(`로그인 실패 (${response.status})`);
 
       const userData = await response.json();
 
       if (userData.role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/");
+        router.push(redirectPath || "/");
       }
     } catch (err: any) {
       console.error("로그인 실패:", err);
