@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Calendar from '@/components/common/Calendar/Calendar';
-import ScheduleBottomSheet from '@/components/common/Calendar/ScheduleBottomSheet';
+import ScheduleBottomSheet from '@/components/schedule/ScheduleBottomSheet';
 import { useCalendarSchedules } from '@/lib/queries/schedule/queries';
 import { CalendarItem } from '@/types/calendar';
 
@@ -17,7 +17,7 @@ export default function SchedulePage() {
     date: { year: number; month: number; day: number } | null;
   }>({ isOpen: false, date: null });
 
-  const { data: schedules = [], isError } = useCalendarSchedules(
+  const { data: schedules = [], isError, isLoading } = useCalendarSchedules(
     String(currentYear),
     String(currentMonth + 1)
   );
@@ -81,14 +81,25 @@ export default function SchedulePage() {
           <p className="text-sm text-[#FF0000]">일정을 불러오는데 실패했습니다.</p>
         )}
 
-        <Calendar
-          year={currentYear}
-          month={currentMonth}
-          items={calendarItems}
-          onPrevMonth={handlePrevMonth}
-          onNextMonth={handleNextMonth}
-          onDateClick={handleDateClick}
-        />
+        <div className="relative">
+          <Calendar
+            year={currentYear}
+            month={currentMonth}
+            items={isLoading ? [] : calendarItems}
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onDateClick={handleDateClick}
+          />
+
+          {isLoading && (
+            <div className="absolute inset-0 top-[52px] flex items-center justify-center bg-white/60 rounded-lg">
+              <div className="flex flex-col items-center gap-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF805C]" />
+                <span className="text-sm text-[#767676]">일정을 불러오는 중...</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <ScheduleBottomSheet

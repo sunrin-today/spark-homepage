@@ -114,7 +114,7 @@ function NoticesContent() {
             <div className="mt-9 px-3 md:px-0 md:rounded-[20px] md:overflow-hidden md:border md:border-gray md:px-[25px] md:py-[25px]">
               <NoticeList notices={accumulatedNotices} />
             </div>
-            <div className="px-3 md:px-0">
+            <div className="mt-9 px-3 md:px-0">
               <PaginationBar
                 totalPages={totalPages}
                 currentPage={currentPage}

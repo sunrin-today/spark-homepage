@@ -16,14 +16,14 @@ export default function HomePage() {
           <Weather />
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-[141fr_127fr] gap-6 lg:gap-[56px] mb-12 lg:mb-14">
+        <section className="grid grid-cols-1 lg:grid-cols-[141fr_127fr] gap-[48px] lg:gap-[56px] mb-[48px] lg:mb-14">
           <EventCarousel />
           <NoticePreview />
         </section>
 
-        <section className="mb-12 lg:mb-14">
+        <section className="mb-[48px] lg:mb-14">
           <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">학생회 서비스</h3>
-          <div className="flex flex-wrap gap-[22px] justify-center sm:justify-start">
+          <div className="flex flex-wrap gap-[12px] lg:gap-[22px] justify-center sm:justify-start">
             <ServiceCard
               title="월간 분실물함"
               description={
