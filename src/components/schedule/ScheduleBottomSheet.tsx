@@ -20,6 +20,8 @@ export default function ScheduleBottomSheet({
 }: ScheduleBottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const dragStartY = useRef<number | null>(null);
+  const currentTranslateY = useRef<number>(0);
 
   // 데스크탑으로 화면 늘어나면 바텀시트 닫기
   useEffect(() => {
@@ -31,6 +33,12 @@ export default function ScheduleBottomSheet({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      // 열릴 때 translateY 초기화
+      if (sheetRef.current) {
+        sheetRef.current.style.transform = "translateY(0)";
+        sheetRef.current.style.transition = "transform 300ms ease-out";
+      }
+      currentTranslateY.current = 0;
     } else {
       document.body.style.overflow = "";
     }
@@ -54,6 +62,46 @@ export default function ScheduleBottomSheet({
     return () => window.removeEventListener("header-menu-open", handler);
   }, [isOpen, onClose]);
 
+  const handleDragStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+    dragStartY.current = clientY;
+    if (sheetRef.current) {
+      sheetRef.current.style.transition = "none";
+    }
+  };
+
+  const handleDragMove = (e: React.TouchEvent | React.MouseEvent) => {
+    if (dragStartY.current === null) return;
+    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+    const deltaY = clientY - dragStartY.current;
+    // 위로 드래그는 막기
+    const translateY = Math.max(0, deltaY);
+    currentTranslateY.current = translateY;
+    if (sheetRef.current) {
+      sheetRef.current.style.transform = `translateY(${translateY}px)`;
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (dragStartY.current === null) return;
+    dragStartY.current = null;
+
+    if (sheetRef.current) {
+      sheetRef.current.style.transition = "transform 300ms ease-out";
+    }
+
+    // 100px 이상 내리면 닫기
+    if (currentTranslateY.current > 100) {
+      onClose();
+    } else {
+      // 원위치
+      if (sheetRef.current) {
+        sheetRef.current.style.transform = "translateY(0)";
+      }
+      currentTranslateY.current = 0;
+    }
+  };
+
   if (!date) return null;
 
   const dateLabel = `${date.year}년 ${String(date.month + 1).padStart(2, "0")}월 ${String(date.day).padStart(2, "0")}일 일정`;
@@ -62,10 +110,19 @@ export default function ScheduleBottomSheet({
     <>
       <div
         ref={sheetRef}
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-[#ffffff] rounded-t-[20px] border-2 border-[#BFBFBF] transition-transform duration-300 ease-out`}
+        className="fixed bottom-0 left-0 right-0 z-50 bg-[#ffffff] rounded-t-[20px] border-2 border-[#BFBFBF] transition-transform duration-300 ease-out"
         style={{ height: "400px", transform: isOpen ? "translateY(0)" : "translateY(100%)" }}
       >
-        <div className="flex justify-center pt-2 pb-5">
+        <div
+          className="flex justify-center pt-2 pb-5 cursor-grab active:cursor-grabbing"
+          onMouseDown={handleDragStart}
+          onMouseMove={handleDragMove}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={handleDragEnd}
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}
+        >
           <div className="w-[45px] h-[3px] bg-[#A2A2A2] rounded-full" />
         </div>
 
