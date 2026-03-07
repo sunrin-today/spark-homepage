@@ -18,7 +18,7 @@ function AuthorAvatar({ avatarUrl, name }: { avatarUrl: string | null; name: str
 
   if (!avatarUrl || imgError) {
     return (
-      <span className="w-[32px] h-[32px] rounded-full bg-black text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">
+      <span className="w-[32px] h-[32px] rounded-full bg-main text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">
         {getFirstKoreanChar(name)}
       </span>
     );

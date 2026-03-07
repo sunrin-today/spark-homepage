@@ -24,14 +24,14 @@ export const UserProfile = ({ name, photoURL }: { name: string, photoURL?: strin
                         }}
                     />
                     <span
-                        className="w-6 h-6 rounded-full bg-black text-white text-[10px] font-semibold items-center justify-center flex-shrink-0"
+                        className="w-6 h-6 rounded-full bg-main text-white text-[10px] font-semibold items-center justify-center flex-shrink-0"
                         style={{ display: "none" }}
                     >
                         {getFirstKoreanChar(name)}
                     </span>
                 </div>
             ) : (
-                <span className="w-6 h-6 rounded-full bg-black text-white text-[10px] font-semibold flex items-center justify-center flex-shrink-0">
+                <span className="w-6 h-6 rounded-full bg-main text-white text-[10px] font-semibold flex items-center justify-center flex-shrink-0">
                     {getFirstKoreanChar(name)}
                 </span>
             )}

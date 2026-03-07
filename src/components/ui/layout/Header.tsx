@@ -27,7 +27,7 @@ function UserAvatar({ photoURL, displayName }: { photoURL?: string | null; displ
 
   if (!photoURL || imgError) {
     return (
-      <span className="w-8 h-8 rounded-full bg-black text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">
+      <span className="w-8 h-8 rounded-full bg-main text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">
         {initial}
       </span>
     );
