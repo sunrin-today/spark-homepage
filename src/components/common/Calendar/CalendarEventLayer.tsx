@@ -6,12 +6,12 @@ interface CalendarEventLayerProps {
   cellHeight: number;
 }
 
+const BAR_HEIGHT = 37;
 const BAR_GAP = 3;
 const CELL_PADDING = 12;
 const DATE_BADGE_SIZE = 24;
 
 const LAYER_TOP = CELL_PADDING + DATE_BADGE_SIZE + CELL_PADDING;
-const BAR_HEIGHT_RATIO = 37 / 140; // 셀 높이 대비 띠 높이 비율
 
 export default function CalendarEventLayer({
   segments,
@@ -19,8 +19,6 @@ export default function CalendarEventLayer({
   cellHeight,
 }: CalendarEventLayerProps) {
   if (eventRowCount === 0) return null;
-
-  const barHeight = Math.round(cellHeight * BAR_HEIGHT_RATIO);
 
   return (
     <div
@@ -31,7 +29,7 @@ export default function CalendarEventLayer({
         const cellWidthPct = 100 / 7;
         const leftPct = seg.startCol * cellWidthPct;
         const rightPct = (7 - seg.endCol - 1) * cellWidthPct;
-        const top = seg.rowIndex * (barHeight + BAR_GAP);
+        const top = seg.rowIndex * (BAR_HEIGHT + BAR_GAP);
 
         return (
           <div
@@ -41,7 +39,7 @@ export default function CalendarEventLayer({
               left: `calc(${leftPct}% + ${CELL_PADDING}px)`,
               right: `calc(${rightPct}% + ${CELL_PADDING}px)`,
               top,
-              height: barHeight,
+              height: BAR_HEIGHT,
               backgroundColor: seg.color,
               borderRadius: 96,
               paddingLeft: 18,
@@ -49,8 +47,8 @@ export default function CalendarEventLayer({
             }}
           >
             <span
-              className="truncate text-sm font-medium text-black"
-              style={{ lineHeight: `${barHeight}px` }}
+              className="truncate text-base font-medium text-white"
+              style={{ lineHeight: `${BAR_HEIGHT}px` }}
             >
               {seg.title}
             </span>
