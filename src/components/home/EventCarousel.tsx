@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEventsQuery } from "@/lib/queries/events/queries";
 
 export default function EventCarousel() {
-  const { data: eventsData } = useEventsQuery({ url: "", page: 1, limit: 5 });
+  const { data: eventsData, isLoading } = useEventsQuery({ url: "", page: 1, limit: 5 });
   const events = eventsData?.items ?? [];
 
   const isSingle = events.length === 1;
@@ -15,13 +15,20 @@ export default function EventCarousel() {
     ? [events[events.length - 1], ...events, events[0]]
     : events;
 
-  const [extendedIndex, setExtendedIndex] = useState(isSingle ? 0 : 1);
+  const [extendedIndex, setExtendedIndex] = useState(1);
   const [animated, setAnimated] = useState(true);
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   const touchStartX = useRef<number | null>(null);
   const isTransitioning = useRef(false);
 
   const currentIndex = isSingle ? 0 : extendedIndex - 1;
+
+  // events 로드 완료 후 index 초기화
+  useEffect(() => {
+    if (events.length === 0) return;
+    setExtendedIndex(isSingle ? 0 : 1);
+    setAnimated(false);
+  }, [events.length]);
 
   const goToExtended = (idx: number) => {
     if (isSingle || isTransitioning.current) return;
@@ -34,7 +41,7 @@ export default function EventCarousel() {
 
   const resetAutoPlay = () => {
     if (autoPlayRef.current) clearInterval(autoPlayRef.current);
-    if (isSingle) return;
+    if (isSingle || events.length === 0) return;
     autoPlayRef.current = setInterval(() => {
       goToExtended(extendedIndex + 1);
     }, 7000);
@@ -45,10 +52,6 @@ export default function EventCarousel() {
     resetAutoPlay();
     return () => clearInterval(autoPlayRef.current);
   }, [extendedIndex, events.length]);
-
-  useEffect(() => {
-    setExtendedIndex(isSingle ? 0 : 1);
-  }, [isSingle]);
 
   const handleTransitionEnd = () => {
     isTransitioning.current = false;
@@ -85,18 +88,33 @@ export default function EventCarousel() {
     return Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full">
+        <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">이벤트</h3>
+        <div
+          className="relative flex-1 rounded-[10px] overflow-hidden bg-[#f0f0f0] animate-pulse"
+          style={{ minHeight: "366px" }}
+        />
+      </div>
+    );
+  }
+
   if (events.length === 0) {
     return (
       <div className="flex flex-col h-full">
         <h3 className="font-semibold text-base lg:text-[24px] mb-[17px]">이벤트</h3>
-        <div className="relative flex-1 rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center" style={{ minHeight: "366px" }}>
+        <div
+          className="relative flex-1 rounded-[10px] overflow-hidden bg-gray-100 flex items-center justify-center"
+          style={{ minHeight: "366px" }}
+        >
           <p className="text-gray-400 text-sm">이벤트가 없습니다.</p>
         </div>
       </div>
     );
   }
 
-  const currentEvent = extended[extendedIndex];
+  const currentEvent = extended[extendedIndex] ?? extended[0];
 
   return (
     <div className="flex flex-col h-full">
@@ -113,7 +131,7 @@ export default function EventCarousel() {
           className="flex h-full"
           style={{
             transform: `translateX(-${extendedIndex * 100}%)`,
-            transition: animated && !isSingle ? "transform 500ms ease-in-out" : "none",
+            transition: animated && !isSingle ? "transform 350ms ease-in-out" : "none",
           }}
           onTransitionEnd={handleTransitionEnd}
           onTransitionStart={handleTransitionStart}
