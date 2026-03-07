@@ -1,8 +1,40 @@
+"use client";
+
 import Image from 'next/image';
+import { useState } from 'react';
 import { Notice } from '@/types/notice';
 
 interface NoticeInfoProps {
   notice: Notice;
+}
+
+function getFirstKoreanChar(name: string): string {
+  const match = name.match(/[가-힣]/);
+  return match ? match[0] : name[0] ?? "?";
+}
+
+function AuthorAvatar({ avatarUrl, name }: { avatarUrl: string | null; name: string }) {
+  const [imgError, setImgError] = useState(false);
+
+  if (!avatarUrl || imgError) {
+    return (
+      <span className="w-[32px] h-[32px] rounded-full bg-main text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">
+        {getFirstKoreanChar(name)}
+      </span>
+    );
+  }
+
+  return (
+    <Image
+      src={avatarUrl}
+      alt={name}
+      width={32}
+      height={32}
+      className="rounded-full object-cover w-[32px] h-[32px]"
+      unoptimized
+      onError={() => setImgError(true)}
+    />
+  );
 }
 
 export default function NoticeInfo({ notice }: NoticeInfoProps) {
@@ -29,20 +61,7 @@ export default function NoticeInfo({ notice }: NoticeInfoProps) {
       <div className="flex items-center gap-3">
         <span className="text-sm md:text-base font-medium text-[#505050]">등록자</span>
         <div className="flex items-center gap-2">
-          {authorAvatarUrl ? (
-            <Image
-              src={authorAvatarUrl}
-              alt={authorName}
-              width={32}
-              height={32}
-              className="rounded-full object-cover w-[32px] h-[32px]"
-              unoptimized
-            />
-          ) : (
-            <div className="w-[32px] h-[32px] rounded-full bg-lightgray flex items-center justify-center text-xs text-gray flex-shrink-0">
-              {authorName.charAt(0)}
-            </div>
-          )}
+          <AuthorAvatar avatarUrl={authorAvatarUrl} name={authorName} />
           <span className="text-base font-medium text-[#010101]">{authorName}</span>
         </div>
       </div>
