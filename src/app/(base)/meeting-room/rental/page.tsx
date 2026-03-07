@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContexts";
 import { usePostMeetingRoomRequest } from "@/lib/queries/meeting-room/mutations";
 import type { CalendarItem } from "@/types/calendar";
 import { DateInput } from "@/components/ui/input/DateInput";
-import ScheduleBottomSheet from "@/components/common/Calendar/ScheduleBottomSheet";
+import ScheduleBottomSheet from "@/components/schedule/ScheduleBottomSheet";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function MeetingRoomRentalPage() {
@@ -31,7 +31,7 @@ export default function MeetingRoomRentalPage() {
     title: s.borrower.name,
     startDate: s.wantedDate,
     endDate: s.wantedDate,
-    color: "#3B82F6",
+    color: "#FF6161",
   })) ?? [];
   
   const handlePrevMonth = () => {

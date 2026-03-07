@@ -7,7 +7,7 @@ function getFirstKoreanChar(name: string): string {
 
 export const UserProfile = ({ name, photoURL }: { name: string, photoURL?: string }) => {
     return (
-        <div className="flex gap-2 px-3 py-1.5 z-50 items-center">
+        <div className="flex gap-2 z-50 items-center">
             {photoURL ? (
                 <div className="relative w-6 h-6 flex-shrink-0">
                     <Image
@@ -16,6 +16,7 @@ export const UserProfile = ({ name, photoURL }: { name: string, photoURL?: strin
                         alt="profile"
                         width={24}
                         height={24}
+                        unoptimized
                         onError={(e) => {
                             const target = e.currentTarget;
                             target.style.display = "none";
@@ -35,7 +36,7 @@ export const UserProfile = ({ name, photoURL }: { name: string, photoURL?: strin
                     {getFirstKoreanChar(name)}
                 </span>
             )}
-            <span className="text-base font-medium">{name}</span>
+            <span className="text-base font-medium underline">{name}</span>
         </div>
     )
 }

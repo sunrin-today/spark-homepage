@@ -25,7 +25,7 @@ export default function Charger() {
         {
             width: "40px",
             header: "#",
-            render: (_, index) => <span className="text-base text-[#767676] no-underline whitespace-normal">{index + 1}</span>
+            render: (_, index) => <span className="text-base text-[#676767] no-underline whitespace-normal overflow-visible text-clip">{index * (currentPage - 1) * 3 + 1}</span>
         },
         {
             width: "200px",

@@ -18,29 +18,40 @@ import { useIsMobile } from "@/hooks/useIsMobile"
 export default function Charger() {
     const cautions = "OO시에서 OO시 사이에만 이용이 가능합니다."
     const [currentPage, setCurrentPage] = useState(1);
-    const { sort, onSortChange } = useTableSort({ key: "wantedDate", order: "ASC" })
-    const { data: currentMeeting , refetch, isError, isLoading } = useGetMeetingRoomSchedule({ limit: 3, page: currentPage })
+    const { sort, onSortChange } = useTableSort({ key: "wantedDate", order: "DESC" })
+    const { data: currentMeeting , refetch, isError, isLoading } = useGetMeetingRoomSchedule({ limit: 3, page: currentPage, column: sort.key, orderDirection: sort.order })
     const isMobile = useIsMobile();
     const meetingRoomColumn : Column<MeetingRoomRequest>[] = [
             {
                 width: "40px",
                 header: "#",
-                render: (_, index) =>  <span className="text-[#505050] whitespace-normal overflow-visible text-clip">{index + 1}</span>
+                render: (_, index) =>  <span className="text-[#676767] whitespace-normal overflow-visible text-clip">{index + (currentPage - 1) * 3 + 1}</span>
             },
             {
                 width: "200px",
                 header: "대여자",
-                sortKey: "name",
-                isSortable: true,
                 render: (row) =>  <UserProfile name={row.borrower.name} photoURL={row.borrower.avatarUrl} />
             },
             {
                 width: "380px",
                 header: "대여 날짜",
+                sortKey: "wantedDate",
+                isSortable: true,
                 render: (row) => <span className="text-[#505050]">{formatKoreanDate(row.wantedDate)}</span>
             }
         ]
-    const mobileMeetingRoomColumn : Column<MeetingRoomRequest>[] = meetingRoomColumn.slice(1, 3)
+    const mobileMeetingRoomColumn : Column<MeetingRoomRequest>[] = [
+        {
+            width: "100%",
+            header: "대여 날짜",
+            render: (row) => <p>{row.wantedDate.split('T')[0].replace(/-/g, '')}</p>
+        },
+        {
+            width: "100px",
+            header: "대여자",
+            render: (row) => <p>{row.borrower.name}</p>
+        }
+    ]
     return (
         <div className='w-full flex flex-col gap-[31px] md:gap-9 px-3 py-6 md:py-12 md:px-32 items-center md:items-start justify-center'>
             <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">

@@ -40,6 +40,7 @@ function UserAvatar({ photoURL, displayName }: { photoURL?: string | null; displ
       alt="profile"
       width={32}
       height={32}
+      unoptimized
       onError={() => setImgError(true)}
     />
   );

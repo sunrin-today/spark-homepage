@@ -42,7 +42,16 @@ export const LostInfo = ({lost}: {lost: Lost}) => {
             >
               분실물 찾으러 가기 <ArrowRight width={18} height={18}/>
             </button>
+            
+          <div>
+            {lost.taker && (
+              <p className="text-xs w-full text-end">
+                이미 주인이 찾아간 분실물입니다.
+              </p>
+            )}
+          </div>
         </div>
+        
       </div>
     )
 }
