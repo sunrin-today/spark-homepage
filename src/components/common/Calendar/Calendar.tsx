@@ -195,7 +195,7 @@ export default function Calendar({
                       }
                       onDateClick(cell.year, cell.month, cell.date);
                     }}
-                    className={isMobile ? "active:bg-[#F5F5F5] rounded-lg transition-colors" : ""}
+                    className={isMobile ? "active:bg-[#F5F5F5] rounded-lg transition-colors flex items-center justify-center" : ""}
                   >
                     <DateBadge
                       cell={cell}
