@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContexts";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Menu, X } from "lucide-react";
 import { useGoogleLogin } from "@/hooks/useGoogleLogin";
 
@@ -15,6 +15,35 @@ const NAV_ITEMS = [
   { href: "/events", label: "이벤트" },
   { href: "/notice", label: "공지사항" },
 ];
+
+function getFirstKoreanChar(name: string): string {
+  const match = name.match(/[가-힣]/);
+  return match ? match[0] : name[0] ?? "?";
+}
+
+function UserAvatar({ photoURL, displayName }: { photoURL?: string | null; displayName: string }) {
+  const [imgError, setImgError] = useState(false);
+  const initial = getFirstKoreanChar(displayName);
+
+  if (!photoURL || imgError) {
+    return (
+      <span className="w-8 h-8 rounded-full bg-black text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">
+        {initial}
+      </span>
+    );
+  }
+
+  return (
+    <Image
+      src={photoURL}
+      className="rounded-full"
+      alt="profile"
+      width={32}
+      height={32}
+      onError={() => setImgError(true)}
+    />
+  );
+}
 
 function HeaderInner() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +56,8 @@ function HeaderInner() {
   const shouldAutoLogin = searchParams.get("login") === "1";
 
   const { handleGoogleLogin, isLoading } = useGoogleLogin(redirectPath);
+
+  const displayName = user?.displayName || user?.email?.split("@")[0] || "";
 
   const isActive = (href: string) => {
     if (href === "/") return path === "/";
@@ -71,16 +102,8 @@ function HeaderInner() {
             </Link>
           ) : user ? (
             <div className="flex gap-2 px-3 py-1.5 z-50 items-center">
-              <Image
-                src={user.photoURL || "/logo/logo.svg"}
-                className="rounded-full"
-                alt="profile"
-                width={32}
-                height={32}
-              />
-              <span className="text-base font-medium">
-                {user.displayName || user.email?.split("@")[0]}
-              </span>
+              <UserAvatar photoURL={user.photoURL} displayName={displayName} />
+              <span className="text-base font-medium">{displayName}</span>
             </div>
           ) : null}
 
@@ -153,16 +176,8 @@ function HeaderInner() {
         {!loading && user ? (
           <div className="flex items-center gap-3">
             <div className="flex gap-2 px-3 py-1.5 items-center">
-              <Image
-                src={user.photoURL || "/logo/logo.svg"}
-                className="rounded-full"
-                alt="profile"
-                width={32}
-                height={32}
-              />
-              <span className="text-base font-medium">
-                {user.displayName || user.email?.split("@")[0]}
-              </span>
+              <UserAvatar photoURL={user.photoURL} displayName={displayName} />
+              <span className="text-base font-medium">{displayName}</span>
             </div>
           </div>
         ) : (
