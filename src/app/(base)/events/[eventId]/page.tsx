@@ -25,6 +25,13 @@ export default function EventDetail() {
                                 </div>
                             ))
                         }
+                        {
+                            eventDetail?.detailImages.length === 0 && (
+                                <div className="flex items-center justify-center w-full h-[347px]">
+                                    <p className="text-[#767676]">이미지가 없습니다.</p>
+                                </div>
+                            )
+                        }
                     </ul>
                 </div>
                 </> }

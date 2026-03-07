@@ -14,7 +14,7 @@ const meetingRoomApi = {
         return response;
     },
     postMeetingRoomRequest: async (data : MeetingRoomRequestPost) => {
-        const response = await api.post("/api/meeting-room", data);
+        const response = await api.post("/api/meeting-room/me", data);
         return response;
     },
 }

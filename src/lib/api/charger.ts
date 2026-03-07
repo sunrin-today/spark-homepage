@@ -14,7 +14,7 @@ const chargerApi = {
         return response;
     },
     getChargerRentalRecordList: async (page: number, limit: number, column: string, orderDirection: string) => {
-        const response = await api.get<ListResponse<ChargerRentalRecord>>(`/api/rental-record?page=${page}&limit=${limit}&column=${column}&orderDirection=${orderDirection}`);
+        const response = await api.get<ListResponse<ChargerRentalRecord>>(`/api/rental-record/user/me?page=${page}&limit=${limit}&column=${column}&orderDirection=${orderDirection}`);
         return response;
     }
     

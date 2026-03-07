@@ -29,7 +29,7 @@ export const EventInfo = ({ event }: { event: Event }) => {
               </p>
             </div>
             
-            <p className="text-sm text-black line-clamp-[8]">
+            <p className="text-sm text-[#505050] line-clamp-[8]">
               {event.description}
             </p>
           </div>

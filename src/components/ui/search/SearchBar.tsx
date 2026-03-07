@@ -1,6 +1,6 @@
 // src/components/ui/search/SearchBar.tsx
 import { Search } from "lucide-react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useRef } from "react";
 interface SearchBarProps {
   placeholder?: string;
   buttonText?: string;
@@ -28,7 +28,7 @@ export const SearchBar = ({
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         onChangeText?.(e.target.value);
     };
-
+    const inputRef = useRef<HTMLInputElement>(null);
     return (
        <div className={`w-full flex justify-center ${className}`}>
             <div className="w-full max-w-[556px] flex flex-col gap-4">
@@ -37,7 +37,7 @@ export const SearchBar = ({
                 className="flex flex-col sm:flex-row gap-[10px]"
                 >
                     <div className="flex-1 min-w-0 flex items-center gap-[10px] px-6 py-3 border border-[#D4D4D4] focus-within:border-black rounded-[86px]">
-                        <Search className="text-[#767676]" width={20} height={20} />
+                        <Search className="text-[#767676]" width={20} height={20} onClick={() => inputRef?.current?.focus()} />
                         <input
                         value={value}
                         type="text"
@@ -45,12 +45,14 @@ export const SearchBar = ({
                         className="font-medium w-full border-none outline-none"
                         onChange={handleChange}
                         placeholder="검색어를 입력해주세요..."
+                        ref={inputRef}
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="shrink-0 text-white bg-black px-4 py-3 rounded-2xl whitespace-nowrap"
+                        disabled={value.trim() === ""}
+                        className="shrink-0 text-white bg-black px-4 py-3 rounded-2xl whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         검색하기
                     </button>

@@ -14,40 +14,45 @@ export const PaginationBar: React.FC<PaginationProps> = ({
   totalItems,
   onPageChange,
 }) => {
+  const safeTotalPages = Math.max(1, totalPages);
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), safeTotalPages);
+  const isFirstPage = safeCurrentPage <= 1;
+  const isLastPage = safeCurrentPage >= safeTotalPages;
+
   const handleFirstPage = () => {
-    if (currentPage > 1) {
+    if (safeCurrentPage > 1) {
       onPageChange(1);
     }
   };
 
   const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
+    if (safeCurrentPage > 1) {
+      onPageChange(safeCurrentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
+    if (safeCurrentPage < safeTotalPages) {
+      onPageChange(safeCurrentPage + 1);
     }
   };
 
   const handleLastPage = () => {
-    if (currentPage < totalPages) {
-      onPageChange(totalPages);
+    if (safeCurrentPage < safeTotalPages) {
+      onPageChange(safeTotalPages);
     }
   };
 
   return (
     <div className="flex items-center justify-end gap-3">
       <span className="text-sm text-[#767676]">
-        {currentPage} / {totalPages} (총 {totalItems}개)
+        {safeCurrentPage} / {safeTotalPages} (총 {totalItems}개)
       </span>
 
       <div className="flex items-center gap-1">
         <button
           onClick={handleFirstPage}
-          disabled={currentPage === 1}
+          disabled={isFirstPage}
           className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
           aria-label="첫 페이지"
         >
@@ -56,7 +61,7 @@ export const PaginationBar: React.FC<PaginationProps> = ({
 
         <button
           onClick={handlePreviousPage}
-          disabled={currentPage === 1}
+          disabled={isFirstPage}
           className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
           aria-label="이전 페이지"
         >
@@ -65,7 +70,7 @@ export const PaginationBar: React.FC<PaginationProps> = ({
 
         <button
           onClick={handleNextPage}
-          disabled={currentPage === totalPages}
+          disabled={isLastPage}
           className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
           aria-label="다음 페이지"
         >
@@ -74,7 +79,7 @@ export const PaginationBar: React.FC<PaginationProps> = ({
 
         <button
           onClick={handleLastPage}
-          disabled={currentPage === totalPages}
+          disabled={isLastPage}
           className="p-1 border border-[#EBEBEB] rounded-lg disabled:cursor-not-allowed disabled:opacity-30 transition-colors"
           aria-label="마지막 페이지"
         >

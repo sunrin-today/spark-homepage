@@ -11,6 +11,18 @@ import { useLostsQuery } from "@/lib/queries/losts/queries";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
+function LostItemSkeleton() {
+    return (
+        <div className="w-full flex flex-col justify-center gap-3 animate-pulse">
+            <div className="relative w-full aspect-[323/201] overflow-hidden rounded-[20px] bg-[#E5E5E5]" />
+            <div className="gap-1">
+                <div className="h-6 w-3/4 rounded bg-[#E5E5E5]" />
+                <div className="mt-2 h-4 w-1/2 rounded bg-[#E5E5E5]" />
+            </div>
+        </div>
+    );
+}
+
 function LostsContent() {
     const isMobile = useIsMobile();
     const searchParams = useSearchParams();
@@ -18,7 +30,7 @@ function LostsContent() {
     const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
     const { page: currentPage, setPage: setCurrentPage } = usePaginationQuery("page", 1);
     
-    const { data: lostsData, isFetching } = useLostsQuery(currentPage, 9, searchQuery);
+    const { data: lostsData, isFetching, isLoading } = useLostsQuery(currentPage, 15, searchQuery);
     
     const [accumulatedLosts, setAccumulatedLosts] = useState<any[]>([]);
 
@@ -44,6 +56,7 @@ function LostsContent() {
     }, [lostsData, isMobile]);
 
     const totalPages = lostsData?.totalPages || 0;
+    const showSkeleton = isLoading || (isFetching && accumulatedLosts.length === 0);
 
     return (
         <div className="w-full flex flex-col gap-9 px-3 py-6 md:py-12 md:px-32 justify-center">
@@ -61,7 +74,24 @@ function LostsContent() {
                 />
             </div>
 
-            {accumulatedLosts.length > 0 ? (
+            {showSkeleton ? (
+                <ResponsivePagination
+                    totalPages={1}
+                    totalItems={0}
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    hasMore={false}
+                    loading={false}
+                    mobileGridCols="grid-cols-1 sm:grid-cols-2"
+                    desktopGridCols="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                >
+                    {Array.from({ length: 15 }).map((_, idx) => (
+                        <div key={idx} className="w-full">
+                            <LostItemSkeleton />
+                        </div>
+                    ))}
+                </ResponsivePagination>
+            ) : accumulatedLosts.length > 0 ? (
                 <ResponsivePagination
                     totalPages={totalPages}
                     totalItems={lostsData?.total || 0}
@@ -83,7 +113,7 @@ function LostsContent() {
                 </ResponsivePagination>
             ) : (
                 <div className="text-center text-gray py-12">
-                    <p>{isFetching ? "로딩 중..." : "분실물이 없습니다."}</p>
+                    <p>분실물이 없습니다.</p>
                 </div>
             )}
         </div>

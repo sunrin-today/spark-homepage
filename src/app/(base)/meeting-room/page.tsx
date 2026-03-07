@@ -13,18 +13,19 @@ import { useTableSort } from "@/hooks/useTableSort"
 import { UserProfile } from "@/components/ui/user/UserProfile"
 import { formatKoreanDate } from "@/utils/date"
 import { PaginationBar } from "@/components/ui/paging/PaginationBar"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 export default function Charger() {
     const cautions = "OO시에서 OO시 사이에만 이용이 가능합니다."
     const [currentPage, setCurrentPage] = useState(1);
     const { sort, onSortChange } = useTableSort({ key: "wantedDate", order: "ASC" })
-    const { data: currentMeeting , refetch, isError } = useGetMeetingRoomSchedule({ limit: 3, page: currentPage })
-  
+    const { data: currentMeeting , refetch, isError, isLoading } = useGetMeetingRoomSchedule({ limit: 3, page: currentPage })
+    const isMobile = useIsMobile();
     const meetingRoomColumn : Column<MeetingRoomRequest>[] = [
             {
                 width: "40px",
                 header: "#",
-                render: (_, index) => index + 1
+                render: (_, index) =>  <span className="text-[#505050] whitespace-normal overflow-visible text-clip">{index + 1}</span>
             },
             {
                 width: "200px",
@@ -39,7 +40,7 @@ export default function Charger() {
                 render: (row) => <span className="text-[#505050]">{formatKoreanDate(row.wantedDate)}</span>
             }
         ]
-    
+    const mobileMeetingRoomColumn : Column<MeetingRoomRequest>[] = meetingRoomColumn.slice(1, 3)
     return (
         <div className='w-full flex flex-col gap-[31px] md:gap-9 px-3 py-6 md:py-12 md:px-32 items-center md:items-start justify-center'>
             <h1 className="flex items-center gap-3 text-black font-semibold text-left text-base md:text-2xl w-full">
@@ -60,9 +61,10 @@ export default function Charger() {
                 { isError && <p className="text-sm text-[#FF0000]">소회의실 대여 기록을 불러오는데 실패했습니다.</p>}
                 <Table
                     tableHeader={<h4 className="text-base md:text-xl font-semibold">소회의실 대여 기록</h4>}
-                    columns={meetingRoomColumn}
+                    columns={isMobile ? mobileMeetingRoomColumn :   meetingRoomColumn}
                     data={currentMeeting?.data.items ?? []}
                     sort={ sort }
+                    isLoading={isLoading}
                     onRefresh={ () => refetch() }
                     onSortChange={ onSortChange }
                 />
