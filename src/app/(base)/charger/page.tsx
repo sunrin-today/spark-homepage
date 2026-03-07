@@ -9,10 +9,11 @@ import { Table } from "@/components/common/Table/Table"
 import type { Charger, ChargerRentalRecord } from "@/types/charger"
 import { useTableSort } from "@/hooks/useTableSort"
 import { useGetChargerRecordListQuery } from "@/lib/queries/charger-record/queries"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ChargerStatus } from "@/components/charger/ChargerStatus"
 import { UserProfile } from "@/components/ui/user/UserProfile"
 import { PaginationBar } from "@/components/ui/paging/PaginationBar"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 export default function Charger() {
     const cautions = `현재 학생회에서는 ‘C-Type’ 충전기에 대해서한 서비스를 제공하고 있습니다.
@@ -24,7 +25,7 @@ export default function Charger() {
         {
             width: "40px",
             header: "#",
-            render: (_, index) => index + 1
+            render: (_, index) => <span className="text-base text-[#676767] no-underline whitespace-normal overflow-visible text-clip">{index * (currentPage - 1) * 3 + 1}</span>
         },
         {
             width: "200px",
@@ -36,19 +37,36 @@ export default function Charger() {
         {
             width: "189px",
             header: "대여자",
+            sortKey: "borrower",
+            isSortable: true,
             render: (row) => <UserProfile name={row.borrower.name} photoURL={row.borrower.avatarUrl} />
         },
         {
             width: "154px",
             header: "상태",
+            sortKey: "isReturned",
+            isSortable: true,
             render: (row) => <ChargerStatus status={row.isReturned}/>
         }
     ]
-    const { sort : sortKey, onSortChange } = useTableSort({key: "chargerId", order: "ASC"})
+    const mobileChargerColumn : Column<ChargerRentalRecord>[] = [
+        {
+            width: "189px",
+            header: "충전기",
+            render: (row) => <p>{row.createdAt.split('T')[0].replace(/-/g, '')} {row.chargerId}번 충전기</p>
+        },
+        {
+            width: "154px",
+            header: "상태",            
+            render: (row) => <ChargerStatus status={row.isReturned}/>
+        }
+    ]
+    const { sort : sortKey, onSortChange } = useTableSort({key: "createdAt", order: "DESC"})
     const { data: remainingChargers } = useGetRemainingChargerQuery()
     const [currentPage, setCurrentPage] = useState(1);
-    const { mutate: chargerRequestMutate, isPending } = useChargerRequestMutation()
-    const { data: chargerRecordList, refetch, isError } = useGetChargerRecordListQuery({page: currentPage, limit: 3})
+    const { mutate: chargerRequestMutate, isPending, } = useChargerRequestMutation();
+    const isMobile = useIsMobile();
+    const { data: chargerRecordList, refetch, isError, isLoading } = useGetChargerRecordListQuery({page: currentPage, limit: 3, column: sortKey.key, orderDirection: sortKey.order})
    const handleChargeRequest = () => {
         if(!remainingChargers) {
             alert("현재 대여 가능한 충전기 수량이 부족하여 대여가 불가능합니다")
@@ -69,7 +87,7 @@ export default function Charger() {
             </div>
 
             <div className="flex gap-3">
-                <button className={`w-fit py-[9px] px-[43px] text-xs rounded-lg  md:px-4 md:py-3 md:text-base font-medium md:rounded-2xl bg-black text-white ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
+                <button className={`w-fit py-[9px] px-[43px] rounded-lg  md:px-4 md:py-3 text-base font-medium md:rounded-2xl bg-black text-white ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
                     onClick={handleChargeRequest}
                     disabled={isPending}>
                     {isPending ? "대여 중..." : "대여하기"}
@@ -80,9 +98,10 @@ export default function Charger() {
             <Table
                 tableHeader={<h4 className="text-base md:text-xl font-semibold">충전기 대여 기록</h4>}
                 sort={sortKey}
+                isLoading={isLoading}
                 onSortChange={onSortChange}
                 onRefresh={refetch}
-                columns={chargerColumn}
+                columns={isMobile ? mobileChargerColumn : chargerColumn}
                 data={chargerRecordList?.data.items ?? []} />
             <PaginationBar
                 currentPage={currentPage}

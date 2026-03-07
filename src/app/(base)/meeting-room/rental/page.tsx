@@ -12,13 +12,14 @@ import { usePostMeetingRoomRequest } from "@/lib/queries/meeting-room/mutations"
 import type { CalendarItem } from "@/types/calendar";
 import { DateInput } from "@/components/ui/input/DateInput";
 import ScheduleBottomSheet from "@/components/schedule/ScheduleBottomSheet";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function MeetingRoomRentalPage() {
   const today = new Date();
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState<string | undefined>(`${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getDate().toString().padStart(2, "0")}`);
-  const { data : meetingSchedule, isError } = useGetMeetingRoomSchedule({ month: currentMonth + 1, limit: 100 });
+  const { data : meetingSchedule, isError, isLoading } = useGetMeetingRoomSchedule({ month: currentMonth + 1, limit: 100 });
   const { open, close } = useModal();
   const { mutate, isPending } = usePostMeetingRoomRequest();
   const [bottomSheet, setBottomSheet] = useState<{
@@ -30,7 +31,7 @@ export default function MeetingRoomRentalPage() {
     title: s.borrower.name,
     startDate: s.wantedDate,
     endDate: s.wantedDate,
-    color: "#3B82F6",
+    color: "#FF6161",
   })) ?? [];
   
   const handlePrevMonth = () => {
@@ -85,12 +86,30 @@ export default function MeetingRoomRentalPage() {
     </h1>
     <div className="px-3"> 
       {isError && <p className="text-sm text-[#FF0000]">에러가 발생했습니다.</p>}
-      <Calendar year={currentYear} month={currentMonth} items={calendarItems} onPrevMonth={handlePrevMonth} onNextMonth={handleNextMonth} onDateClick={handleDateClick} />
+      <div className="relative">
+          <Calendar
+            year={currentYear}
+            month={currentMonth}
+            items={isLoading ? [] : calendarItems}
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onDateClick={handleDateClick}
+          />
+
+          {isLoading && (
+            <div className="absolute inset-0 top-[52px] flex items-center justify-center bg-white/60 rounded-lg">
+              <div className="flex flex-col items-center gap-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF805C]" />
+                <span className="text-sm text-[#767676]">일정을 불러오는 중...</span>
+              </div>
+            </div>
+          )}
+      </div>
     </div>
 
     <form className="flex flex-col gap-4" onSubmit={handlePostMeetingRoomRequest}>
       <div className="flex flex-col py-1 gap-[10px]">
-        <p className="text-sm text-[#767676]">대여 희망 날짜</p>
+        <p className="text-xs md:sm text-[#767676]">대여 희망 날짜</p>
         <div className="w-full max-w-[206px] md:max-w-[400px]">
           <DateInput value={selectedDate} onChange={setSelectedDate} />
         </div>

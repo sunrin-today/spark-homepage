@@ -40,6 +40,7 @@ function UserAvatar({ photoURL, displayName }: { photoURL?: string | null; displ
       alt="profile"
       width={32}
       height={32}
+      unoptimized
       onError={() => setImgError(true)}
     />
   );
@@ -61,6 +62,13 @@ function HeaderInner() {
 
   const isActive = (href: string) => {
     if (href === "/") return path === "/";
+    if (href === "/service")
+      return (
+        path.startsWith("/service") ||
+        path.startsWith("/charger") ||
+        path.startsWith("/losts") ||
+        path.startsWith("/meeting-room")
+      );
     return path.startsWith(href);
   };
 
@@ -105,7 +113,9 @@ function HeaderInner() {
               <UserAvatar photoURL={user.photoURL} displayName={displayName} />
               <span className="text-base font-medium">{displayName}</span>
             </div>
-          ) : null}
+          ) : (
+            <div className="w-0 h-0" />
+          )}
 
           <button
             onClick={() => {
@@ -124,7 +134,7 @@ function HeaderInner() {
 
         <div
           className={`fixed inset-0 transform transition-all duration-300 ease-in-out z-40 bg-[#FFFFFF]
-            ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}
+            ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}
             lg:hidden
           `}
         >
@@ -135,10 +145,10 @@ function HeaderInner() {
                   key={item.href}
                   href={item.href}
                   className={
-                    `w-full text-base px-2 py-1.5 font-medium hover:border-b-2 hover:border-main ` +
+                    `w-full text-base px-2 py-1.5 font-medium border-b-2 hover:border-main ` +
                     (isActive(item.href)
-                      ? "border-b-2 border-main text-[#010101]"
-                      : "text-[#525252]")
+                      ? "border-main text-[#010101]"
+                      : "border-main/0 text-[#525252]")
                   }
                 >
                   {item.label}
@@ -170,8 +180,10 @@ function HeaderInner() {
               key={item.href}
               href={item.href}
               className={
-                "max-w-[120px] w-full py-1.5 px-2 font-medium hover:border-b-2 border-main transition-all text-center" +
-                (isActive(item.href) ? " border-b-2 border-main" : "")
+                "max-w-[120px] w-full py-1.5 px-2 font-medium border-b-2 hover:border-main transition-all text-center" +
+                (isActive(item.href)
+                  ? " border-main"
+                  : " border-main/0 text-[#525252]")
               }
             >
               {item.label}

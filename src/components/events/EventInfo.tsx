@@ -29,7 +29,7 @@ export const EventInfo = ({ event }: { event: Event }) => {
               </p>
             </div>
             
-            <p className="text-sm text-black line-clamp-[8]">
+            <p className="text-sm text-[#505050] line-clamp-[8]">
               {event.description}
             </p>
           </div>
@@ -50,6 +50,13 @@ export const EventInfo = ({ event }: { event: Event }) => {
             >
               참여하러가기 <ArrowRight width={18} height={18}/>
             </button>
+          </div>
+          <div>
+            {event.isLinkOn && (
+              <p className="text-xs w-full text-end">
+                현재 참여할 수 없는 이벤트입니다.
+              </p>
+            )}
           </div>
         </div>
       </div>

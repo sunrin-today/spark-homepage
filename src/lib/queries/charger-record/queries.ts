@@ -18,5 +18,6 @@ export function useGetChargerRecordListQuery({
   return useQuery({
     queryKey: chargerRecordKeys.list({ page, limit, column, orderDirection }),
     queryFn: () => chargerApi.getChargerRentalRecordList(page, limit, column, orderDirection),
+    placeholderData: (previousData) => previousData,
   });
 }
