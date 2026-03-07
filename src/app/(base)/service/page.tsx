@@ -71,7 +71,7 @@ function ServiceContent() {
   };
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-[6px] lg:px-16 py-6 lg:py-16">
+    <div className="w-full max-w-[1440px] mx-auto px-[12px] lg:px-16 py-6 lg:py-16">
       <h1 className="text-base lg:text-2xl font-semibold mb-4 lg:mb-3">학생회 서비스</h1>
 
       <div className="flex justify-center mb-0">
