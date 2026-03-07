@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { CalendarItem } from "@/types/calendar";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface ScheduleBottomSheetProps {
   isOpen: boolean;
@@ -18,6 +19,14 @@ export default function ScheduleBottomSheet({
   items,
 }: ScheduleBottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+
+  // 데스크탑으로 화면 늘어나면 바텀시트 닫기
+  useEffect(() => {
+    if (!isMobile && isOpen) {
+      onClose();
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     if (isOpen) {
@@ -38,19 +47,29 @@ export default function ScheduleBottomSheet({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  // 모바일에서 헤더 메뉴 열리면 바텀시트 닫기
+  useEffect(() => {
+    const handler = () => { if (isOpen) onClose(); };
+    window.addEventListener("header-menu-open", handler);
+    return () => window.removeEventListener("header-menu-open", handler);
+  }, [isOpen, onClose]);
+
   if (!date) return null;
 
   const dateLabel = `${date.year}년 ${String(date.month + 1).padStart(2, "0")}월 ${String(date.day).padStart(2, "0")}일 일정`;
 
   return (
     <>
-      <div ref={sheetRef} className={`fixed bottom-0 left-0 right-0 z-50 bg-[#ffffff] rounded-t-[20px] border-2 border-[#BFBFBF] transition-transform duration-300 ease-out`} style={{ height: "400px", transform: isOpen ? "translateY(0)" : "translateY(100%)" }}>
-
+      <div
+        ref={sheetRef}
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-[#ffffff] rounded-t-[20px] border-2 border-[#BFBFBF] transition-transform duration-300 ease-out`}
+        style={{ height: "400px", transform: isOpen ? "translateY(0)" : "translateY(100%)" }}
+      >
         <div className="flex justify-center pt-2 pb-5">
           <div className="w-[45px] h-[3px] bg-[#A2A2A2] rounded-full" />
         </div>
 
-        <div className="flex items-center justify-between px-[12px] py-2 border-b border-[#EBEBEB]">
+        <div className="flex items-center justify-between px-[12px] py-5 border-b border-[#EBEBEB]">
           <h2 className="text-base font-semibold text-[#010101]">{dateLabel}</h2>
           <button
             onClick={onClose}
@@ -61,7 +80,7 @@ export default function ScheduleBottomSheet({
           </button>
         </div>
 
-        <div className="overflow-y-auto px-5 py-4" style={{ height: "calc(400px - 90px)" }}>
+        <div className="overflow-y-auto px-5 pt-5 pb-4" style={{ height: "calc(400px - 90px)" }}>
           {items.length === 0 ? (
             <p className="text-sm text-[#A0A0A0] text-center py-8">일정이 없습니다.</p>
           ) : (

@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContexts";
 import { usePostMeetingRoomRequest } from "@/lib/queries/meeting-room/mutations";
 import type { CalendarItem } from "@/types/calendar";
 import { DateInput } from "@/components/ui/input/DateInput";
-import ScheduleBottomSheet from "@/components/common/Calendar/ScheduleBottomSheet";
+import ScheduleBottomSheet from "@/components/schedule/ScheduleBottomSheet";
 
 export default function MeetingRoomRentalPage() {
   const today = new Date();

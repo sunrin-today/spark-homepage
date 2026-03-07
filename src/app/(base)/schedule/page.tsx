@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Calendar from '@/components/common/Calendar/Calendar';
-import ScheduleBottomSheet from '@/components/common/Calendar/ScheduleBottomSheet';
+import ScheduleBottomSheet from '@/components/schedule/ScheduleBottomSheet';
 import { useCalendarSchedules } from '@/lib/queries/schedule/queries';
 import { CalendarItem } from '@/types/calendar';
 

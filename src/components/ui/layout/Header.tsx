@@ -108,7 +108,13 @@ function HeaderInner() {
           ) : null}
 
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              const next = !isOpen;
+              setIsOpen(next);
+              if (next) {
+                window.dispatchEvent(new CustomEvent("header-menu-open"));
+              }
+            }}
             className="lg:hidden p-2 z-50"
             aria-label="메뉴 열기"
           >
