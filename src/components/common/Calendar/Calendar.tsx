@@ -5,6 +5,7 @@ import { CalendarProps, CalendarDateCell } from "@/types/calendar";
 import { buildCalendarCells, buildEventSegmentsForWeek } from "@/utils/calendar";
 import CalendarEventLayer from "./CalendarEventLayer";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useRef } from "react";
 
 const WEEK_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -91,12 +92,13 @@ export default function Calendar({
 }) {
   const isMobile = useIsMobile();
   const weeks = buildCalendarCells(year, month);
+  const mouseDownPos = useRef<{ x: number; y: number } | null>(null);
 
   const MOBILE_CELL_HEIGHT = 40;
   const MOBILE_ROW_GAP = 12;
 
   return (
-    <div className="w-full select-none">
+    <div className="w-full">
       {/* Header */}
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center">
@@ -180,10 +182,18 @@ export default function Calendar({
                       padding: CELL_PADDING,
                       cursor: isMobile ? "pointer" : "default",
                     }}
-                    onClick={() => {
-                      if (isMobile && onDateClick) {
-                        onDateClick(cell.year, cell.month, cell.date);
+                    onMouseDown={(e) => {
+                      mouseDownPos.current = { x: e.clientX, y: e.clientY };
+                    }}
+                    onClick={(e) => {
+                      if (!isMobile || !onDateClick) return;
+                      // 드래그로 판단되면 클릭 무시(5px 이상 움직였을 때)
+                      if (mouseDownPos.current) {
+                        const dx = Math.abs(e.clientX - mouseDownPos.current.x);
+                        const dy = Math.abs(e.clientY - mouseDownPos.current.y);
+                        if (dx > 5 || dy > 5) return;
                       }
+                      onDateClick(cell.year, cell.month, cell.date);
                     }}
                     className={isMobile ? "active:bg-[#F5F5F5] rounded-lg transition-colors" : ""}
                   >
