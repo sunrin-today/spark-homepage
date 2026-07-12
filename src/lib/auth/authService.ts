@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   onAuthStateChanged,
+  updateProfile,
   type User,
 } from "firebase/auth";
 import { auth } from "./firebase";
@@ -33,6 +34,23 @@ export async function signInWithGoogle(): Promise<{ user: User; token: string }>
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
+
+    // debug
+    // console.log("Firebase displayName:", user.displayName);
+    // console.log("Provider displayName:", user.providerData[0]?.displayName);
+    // console.log("Provider data:", user.providerData);
+
+    const latestName = user.providerData[0]?.displayName;
+
+    if (latestName && latestName !== user.displayName) {
+      await updateProfile(user, {
+        displayName: latestName,
+      });
+
+      // 갱신된 displayName이 토큰에 반영되도록 강제 재발급
+      await user.getIdToken(true);
+    }
+    
     const idToken = await user.getIdToken();
     saveTokenToLocalStorage(idToken);
     saveTokenToCookie(idToken);

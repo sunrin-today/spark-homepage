@@ -34,7 +34,7 @@ export default function HomePage() {
               href="/losts"
               imageSrc="/example-image/rough.png"
             />
-            <ServiceCard
+            {/* <ServiceCard
               title="충전기 대여"
               description={
                 <>
@@ -53,7 +53,7 @@ export default function HomePage() {
               }
               href="/meeting-room"
               imageSrc="/example-image/rough.png"
-            />
+            /> */}
           </div>
         </section>
 

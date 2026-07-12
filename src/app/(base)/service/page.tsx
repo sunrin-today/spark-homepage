@@ -19,28 +19,28 @@ const SERVICES = [
     href: "/losts",
     imageSrc: "/example-image/rough.png",
   },
-  {
-    id: "charger",
-    title: "충전기 대여",
-    description: (
-      <>
-        해당 서비스를 이용하여<br />충전기를 대여해보세요!
-      </>
-    ),
-    href: "/charger",
-    imageSrc: "/example-image/rough.png",
-  },
-  {
-    id: "meeting-room",
-    title: "소회의실 대여",
-    description: (
-      <>
-        해당 서비스를 이용하여<br />소회의실을 대여해보세요!
-      </>
-    ),
-    href: "/meeting-room",
-    imageSrc: "/example-image/rough.png",
-  },
+  // {
+  //   id: "charger",
+  //   title: "충전기 대여",
+  //   description: (
+  //     <>
+  //       해당 서비스를 이용하여<br />충전기를 대여해보세요!
+  //     </>
+  //   ),
+  //   href: "/charger",
+  //   imageSrc: "/example-image/rough.png",
+  // },
+  // {
+  //   id: "meeting-room",
+  //   title: "소회의실 대여",
+  //   description: (
+  //     <>
+  //       해당 서비스를 이용하여<br />소회의실을 대여해보세요!
+  //     </>
+  //   ),
+  //   href: "/meeting-room",
+  //   imageSrc: "/example-image/rough.png",
+  // },
 ];
 
 const ITEMS_PER_PAGE = 9;
